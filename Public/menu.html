@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sarah's Short Cakes - Custom cupcakes made with love">
+    <title>Sarah's Short Cakes - Menu</title>
+    <meta name="theme-color" content="#ff85a2">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/cart.js"></script>
+    <script src="js/menu.js" defer></script>
+    <style>
+        :root {
+            --primary: #FF6B8B;
+            --primary-light: #FF8FA3;
+            --primary-dark: #E83E8C;
+            --secondary: #FFD166;
+            --accent: #06D6A0;
+            --dark: #073B4C;
+            --light: #F8F9FA;
+            --white: #FFFFFF;
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        .menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--light);
+        }
+
+        .menu-container h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            min-height: 200px;
+            background-color: var(--light);
+        }
+
+        .menu-item {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--primary-light);
+        }
+
+        .menu-item-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-item-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .menu-item-description {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .menu-item-price {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quantity-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            padding: 0.5rem;
+            font-size: 1rem;
+            -moz-appearance: textfield;
+            -webkit-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .add-to-cart:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Custom Order Section */
+        .custom-order {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 3rem;
+        }
+
+        .custom-order-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--primary);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        /* Cupcake Visualization */
+        .cupcake-visualization {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .cupcake-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            transition: transform 0.3s ease;
+        }
+
+        .cupcake-container:hover {
+            transform: scale(1.05);
+        }
+
+        .cupcake-base {
+            position: absolute;
+            bottom: 21px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 160px;
+            background: #8B4513;
+            clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
+        }
+
+        .cloud-icing {
+            position: absolute;
+            bottom: 161px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 240px;
+            height: 120px;
+            background: #FFB6C1;
+            border-radius: 120px 120px 0 0;
+            filter: drop-shadow(0 3px 2px rgba(0,0,0,0.2));
+            overflow: hidden;
+        }
+
+        .cloud-icing::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: -10px;
+            right: -10px;
+            height: 30px;
+            background: inherit;
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+
+        .cloud-icing::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -20px;
+            right: -20px;
+            height: 60px;
+            background: inherit;
+            border-radius: 50% 50% 0 0;
+            transform: translateY(30px);
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification.success {
+            background-color: #4CAF50;
+        }
+        
+        .notification.error {
+            background-color: #f44336;
+        }
+
+        @media (max-width: 768px) {
+            .custom-order-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cupcake-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .cupcake-base {
+                width: 150px;
+                height: 120px;
+                bottom: 16px;
+            }
+
+            .cloud-icing {
+                width: 180px;
+                height: 90px;
+                bottom: 121px;
+            }
+
+            .cloud-icing::before {
+                bottom: -8px;
+                left: -8px;
+                right: -8px;
+                height: 24px;
+            }
+
+            .cloud-icing::after {
+                left: -15px;
+                right: -15px;
+                height: 45px;
+                transform: translateY(22px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <h1>Sarah's Short Cakes</h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="menu.html" class="active"><i class="fas fa-utensils"></i> Menu</a></li>
+                    <li><a href="order.html"><i class="fas fa-shopping-cart"></i> Order</a></li>
+                    <li><a href="cart.html"><i class="fas fa-shopping-basket"></i> Cart (<span id="cart-count">0</span>)</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                    <li class="profile-icon">
+                        <a href="#" onclick="showAuthModal()">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="menu-page">
+        <div class="page-header">
+            <h2><i class="fas fa-cake-candles"></i> Our Menu</h2>
+            <p class="subtitle">Discover our delicious selection of cupcakes</p>
+        </div>
+
+        <div class="menu-container">
+            <section class="menu-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-cookie"></i> Cupcake Flavors</h3>
+                    <p>Choose from our selection of delicious cake bases</p>
+                </div>
+                <div class="menu-grid" id="menu-grid">
+                    <!-- Menu items will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <section class="custom-order">
+                <div class="section-header">
+                    <h2><i class="fas fa-birthday-cake"></i> Custom Cakes</h2>
+                    <p>Create your perfect cake with our customization options</p>
+                </div>
+                
+                <div class="custom-order-grid">
+                    <div class="cupcake-visualization">
+                        <div class="cupcake-container">
+                            <div class="cupcake-base" id="cakeBase"></div>
+                            <div class="cloud-icing" id="cakeIcing"></div>
+                        </div>
+                    </div>
+                    
+                    <form id="customCakeForm">
+                        <div class="form-section">
+                            <legend><i class="fas fa-cookie"></i> Base Flavor & Color</legend>
+                            <div class="form-group">
+                                <label for="flavor">Base Flavor</label>
+                                <select id="flavor" name="flavor" required>
+                                    <option value="">Select Flavor</option>
+                                    <option value="vanilla">Vanilla</option>
+                                    <option value="chocolate">Chocolate</option>
+                                    <option value="red-velvet">Red Velvet</option>
+                                    <option value="strawberry">Strawberry</option>
+                                    <option value="french-vanilla">French Vanilla</option>
+                                    <option value="white-chocolate">White Chocolate</option>
+                                    <option value="double-chocolate">Double Chocolate</option>
+                                    <option value="smores">S'mores</option>
+                                    <option value="peanut-butter">Peanut Butter</option>
+                                    <option value="pumpkin-spice">Pumpkin Spice</option>
+                                    <option value="blueberry">Blueberry</option>
+                                    <option value="apple-cinnamon">Apple Cinnamon</option>
+                                    <option value="cookies-and-cream">Cookies and Cream</option>
+                                    <option value="champagne">Champagne</option>
+                                    <option value="chocolate-cheesecake">Chocolate Cheesecake</option>
+                                    <option value="mississippi-mud">Mississippi Mud</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="baseColor">Base Color</label>
+                                <select id="baseColor" name="baseColor" required>
+                                    <option value="#FFFFFF">White</option>
+                                    <option value="#8B4513">Brown</option>
+                                    <option value="#FFB6C1">Pink</option>
+                                    <option value="#FFD700">Yellow</option>
+                                    <option value="#FF6347">Red</option>
+                                    <option value="#FFA500">Orange</option>
+                                    <option value="#800080">Purple</option>
+                                    <option value="#000000">Black</option>
+                                    <option value="#964B00">Dark Brown</option>
+                                    <option value="#D2B48C">Tan</option>
+                                    <option value="#FFE4B5">Cream</option>
+                                    <option value="#DEB887">Light Brown</option>
+                                    <option value="#CD853F">Golden Brown</option>
+                                    <option value="#A0522D">Sienna</option>
+                                    <option value="#8B7355">Khaki</option>
+                                    <option value="#DAA520">Golden</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <legend><i class="fas fa-layer-group"></i> Icing & Color</legend>
+                            <div class="form-group">
+                                <label for="icing">Icing</label>
+                                <select id="icing" name="icing" required>
+                                    <option value="">Select Icing</option>
+                                    <option value="buttercream">Buttercream</option>
+                                    <option value="fondant">Fondant</option>
+                                    <option value="whipped">Whipped Cream</option>
+                                    <option value="ganache">Ganache</option>
+                                    <option value="cream-cheese">Cream Cheese</option>
+                                    <option value="chocolate">Chocolate</option>
+                                    <option value="strawberry">Strawberry</option>
+                                    <option value="lemon">Lemon</option>
+                                    <option value="coconut-pecan">Coconut Pecan</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="icingColor">Icing Color</label>
+                                <select id="icingColor" name="icingColor" required>
+                                    <option value="#FFB6C1">Pink</option>
+                                    <option value="#FFD700">Yellow</option>
+                                    <option value="#FF6347">Red</option>
+                                    <option value="#FFA500">Orange</option>
+                                    <option value="#87CEEB">Blue</option>
+                                    <option value="#98FB98">Green</option>
+                                    <option value="#DDA0DD">Purple</option>
+                                    <option value="#F5F5F5">White</option>
+                                    <option value="#000000">Black</option>
+                                    <option value="#8B4513">Brown</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <legend><i class="fas fa-magic"></i> Decorations</legend>
+                            <div class="form-group">
+                                <label for="decorations">Decoration Options</label>
+                                <select id="decorations" name="decorations" required>
+                                    <option value="">Select Decoration</option>
+                                    <option value="sprinkles">Sprinkles</option>
+                                    <option value="chocolate-chips">Chocolate Chips</option>
+                                    <option value="fresh-fruit">Fresh Fruit</option>
+                                    <option value="whipped-cream">Whipped Cream</option>
+                                    <option value="coconut-flakes">Coconut Flakes</option>
+                                    <option value="nuts">Nuts</option>
+                                    <option value="candies">Candies</option>
+                                    <option value="simple">Simple Design</option>
+                                    <option value="floral">Floral Design</option>
+                                    <option value="geometric">Geometric Design</option>
+                                    <option value="custom">Custom Design</option>
+                                    <option value="themed">Themed Design</option>
+                                    <option value="holiday">Holiday Design</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="specialInstructions">Special Instructions</label>
+                                <textarea id="specialInstructions" name="specialInstructions" rows="3" 
+                                        placeholder="Any specific requirements or preferences?"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="quantity">Quantity</label>
+                                <div class="quantity-control">
+                                    <button type="button" class="quantity-btn minus">-</button>
+                                    <input type="number" id="quantity" name="quantity" class="quantity-input" value="1" min="1" max="10" required>
+                                    <button type="button" class="quantity-btn plus">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="add-to-cart">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <h3>Sarah's Short Cakes</h3>
+            </div>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="menu.html">Menu</a>
+                <a href="cart.html">Cart</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sarah's Short Cakes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Notification System -->
+    <div id="notification" class="notification">
+        <i id="notification-icon" class="fas fa-check-circle"></i>
+        <span id="notification-message"></span>
+    </div>
+
+    <script>
+        // Menu items data
+        const menuItems = [
+            {
+                id: "vanilla",
+                name: "Vanilla Cupcake",
+                price: 3.99,
+                image: "images/menu images/Vanilla cupcake with Vanilla icing.jpg",
+                description: "Classic vanilla cupcake with vanilla buttercream frosting"
+            },
+            {
+                id: "chocolate",
+                name: "Chocolate Cupcake",
+                price: 3.99,
+                image: "images/menu images/Chocolate cupcake with vanilla icing.jpg",
+                description: "Rich chocolate cupcake with vanilla buttercream frosting"
+            },
+            {
+                id: "red-velvet",
+                name: "Red Velvet Cupcake",
+                price: 4.49,
+                image: "images/menu images/Red Velvet cak.jpg",
+                description: "Classic red velvet cupcake with cream cheese frosting"
+            },
+            {
+                id: "french-vanilla",
+                name: "French Vanilla Cupcake",
+                price: 4.49,
+                image: "images/menu images/French Vanilla cupcake with vanilla icing.jpg",
+                description: "Delicate French vanilla cupcake with vanilla buttercream"
+            },
+            {
+                id: "white-chocolate",
+                name: "White Chocolate Cupcake",
+                price: 4.99,
+                image: "images/menu images/White chocolate with cream cheese.jpg",
+                description: "White chocolate cupcake with cream cheese frosting"
+            },
+            {
+                id: "double-chocolate",
+                name: "Double Chocolate Cupcake",
+                price: 4.99,
+                image: "images/menu images/double chocolate with coocie crumbs.jpg",
+                description: "Rich chocolate cupcake with chocolate frosting and cookie crumbs"
+            },
+            {
+                id: "strawberry",
+                name: "Strawberry Cupcake",
+                price: 4.99,
+                image: "images/menu images/strawberry cupcake with peanut icing.jpg",
+                description: "Fresh strawberry cupcake with peanut butter frosting"
+            },
+            {
+                id: "peanut-butter",
+                name: "Peanut Butter Cupcake",
+                price: 4.99,
+                image: "images/menu images/peanut butter cupcake with oreo icing.jpg",
+                description: "Peanut butter cupcake with Oreo frosting"
+            },
+            {
+                id: "blueberry",
+                name: "Blueberry Cupcake",
+                price: 4.99,
+                image: "images/menu images/blueberry cupcake with mint icing.jpg",
+                description: "Fresh blueberry cupcake with mint frosting"
+            },
+            {
+                id: "pumpkin-spice",
+                name: "Pumpkin Spice Cupcake",
+                price: 4.99,
+                image: "images/menu images/pumpkin spice with champagne icing.jpg",
+                description: "Seasonal pumpkin spice cupcake with champagne frosting"
+            },
+            {
+                id: "apple-cinnamon",
+                name: "Apple Cinnamon Cupcake",
+                price: 4.99,
+                image: "images/menu images/apple cinammon cupcake with german cocolate icing.jpg",
+                description: "Apple cinnamon cupcake with German chocolate frosting"
+            },
+            {
+                id: "cookies-cream",
+                name: "Cookies and Cream Cupcake",
+                price: 4.99,
+                image: "images/menu images/cookies and cream cupcake with  espresso icing.jpg",
+                description: "Cookies and cream cupcake with espresso frosting"
+            },
+            {
+                id: "champagne",
+                name: "Champagne Cupcake",
+                price: 5.49,
+                image: "images/menu images/champagne cupcake with lemon icing.jpg",
+                description: "Elegant champagne cupcake with lemon frosting"
+            },
+            {
+                id: "chocolate-cheesecake",
+                name: "Chocolate Cheesecake Cupcake",
+                price: 5.99,
+                image: "images/menu images/Chocolate cheesecake with maple bacon.jpg",
+                description: "Chocolate cheesecake cupcake with maple bacon frosting"
+            },
+            {
+                id: "mississippi-mud",
+                name: "Mississippi Mud Cupcake",
+                price: 5.99,
+                image: "images/menu images/missipi mud cake with dark choclate icing.jpg",
+                description: "Rich chocolate cupcake with dark chocolate frosting"
+            },
+            {
+                id: "coconut",
+                name: "Coconut Cupcake",
+                price: 4.99,
+                image: "images/menu images/cocunut cupcake with coconut pecan icing.jpg",
+                description: "Tropical coconut cupcake with coconut pecan frosting"
+            },
+            {
+                id: "smores",
+                name: "S'mores Cupcake",
+                price: 5.49,
+                image: "images/menu images/smores cupcake strawberry icing.jpg",
+                description: "Graham cracker cupcake with strawberry frosting"
+            }
+        ];
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize menu items
+            const menuGrid = document.getElementById('menu-grid');
+            
+            menuItems.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='images/default-preview.jpg'">
+                    <div class="menu-item-content">
+                        <h3 class="menu-item-title">${item.name}</h3>
+                        <p class="menu-item-description">${item.description}</p>
+                        <p class="menu-item-price">$${item.price.toFixed(2)}</p>
+                        <div class="quantity-control">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" class="quantity-input" value="1" min="1" max="12">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <button class="add-to-cart" data-item='${JSON.stringify(item)}'>
+                            Add to Cart
+                        </button>
+                    </div>
+                `;
+                menuGrid.appendChild(menuItem);
+            });
+
+            // Add to cart functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('add-to-cart')) {
+                    const itemData = JSON.parse(e.target.dataset.item);
+                    const quantity = parseInt(e.target.closest('.menu-item').querySelector('.quantity-input').value);
+                    
+                    const cartItem = {
+                        ...itemData,
+                        quantity: quantity
+                    };
+                    
+                    try {
+                        if (CartManager.addItem(cartItem)) {
+                            showNotification('Item added to cart!', 'success');
+                            updateCartCount();
+                        } else {
+                            showNotification('Failed to add item to cart', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error adding to cart:', error);
+                        showNotification('Error adding to cart', 'error');
+                    }
+                }
+            });
+
+            // Custom cake form handling
+            const customCakeForm = document.getElementById('customCakeForm');
+            if (customCakeForm) {
+                // Update cake colors when changed
+                document.getElementById('baseColor').addEventListener('change', function() {
+                    document.getElementById('cakeBase').style.backgroundColor = this.value;
+                });
+                
+                document.getElementById('icingColor').addEventListener('change', function() {
+                    document.getElementById('cakeIcing').style.backgroundColor = this.value;
+                });
+
+                // Form submission
+                customCakeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(customCakeForm);
+                    
+                    const customCake = {
+                        id: `custom-${Date.now()}`,
+                        name: 'Custom Cake',
+                        price: calculateCustomCakePrice(formData),
+                        quantity: parseInt(formData.get('quantity')) || 1,
+                        image: 'images/default-preview.jpg',
+                        customizations: getCustomizations(formData)
+                    };
+
+                    try {
+                        if (CartManager.addItem(customCake)) {
+                            showNotification('Custom cake added to cart!', 'success');
+                            customCakeForm.reset();
+                            document.getElementById('cakeBase').style.backgroundColor = '#8B4513';
+                            document.getElementById('cakeIcing').style.backgroundColor = '#FFB6C1';
+                            updateCartCount();
+                        } else {
+                            showNotification('Failed to add custom cake', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error adding custom cake:', error);
+                        showNotification('Error adding custom cake', 'error');
+                    }
+                });
+            }
+
+            // Initialize cake colors
+            if (document.getElementById('cakeBase')) {
+                document.getElementById('cakeBase').style.backgroundColor = '#8B4513';
+                document.getElementById('cakeIcing').style.backgroundColor = '#FFB6C1';
+            }
+
+            // Update cart count on page load
+            updateCartCount();
+        });
+
+        // Calculate custom cake price
+        function calculateCustomCakePrice(formData) {
+            // Base price for custom cakes
+            let price = 25.00;
+            
+            // Add pricing based on selections if needed
+            const flavor = formData.get('flavor');
+            const icing = formData.get('icing');
+            const decorations = formData.get('decorations');
+            
+            // Example pricing adjustments
+            if (flavor === 'red-velvet' || flavor === 'french-vanilla') {
+                price += 2.00;
+            } else if (flavor === 'chocolate-cheesecake' || flavor === 'mississippi-mud') {
+                price += 3.00;
+            }
+            
+            if (icing === 'fondant') {
+                price += 5.00;
+            } else if (icing === 'ganache') {
+                price += 3.00;
+            }
+            
+            if (decorations === 'floral' || decorations === 'geometric') {
+                price += 4.00;
+            } else if (decorations === 'custom' || decorations === 'themed') {
+                price += 6.00;
+            }
+            
+            return price;
+        }
+
+        // Get customizations from form
+        function getCustomizations(formData) {
+            const customizations = [];
+            const fields = [
+                { name: 'Flavor', key: 'flavor' },
+                { name: 'Base Color', key: 'baseColor' },
+                { name: 'Icing', key: 'icing' },
+                { name: 'Icing Color', key: 'icingColor' },
+                { name: 'Decorations', key: 'decorations' }
+            ];
+
+            fields.forEach(field => {
+                const value = formData.get(field.key);
+                if (value) customizations.push({ name: field.name, value: value });
+            });
+
+            const specialInstructions = formData.get('specialInstructions');
+            if (specialInstructions) {
+                customizations.push({ name: 'Special Instructions', value: specialInstructions });
+            }
+
+            return customizations;
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notification-icon');
+            const msg = document.getElementById('notification-message');
+            
+            if (!notification) return;
+            
+            notification.className = `notification ${type}`;
+            msg.textContent = message;
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            
+            notification.style.display = 'flex';
+            setTimeout(() => notification.classList.add('show'), 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.style.display = 'none', 300);
+            }, 3000);
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                const count = CartManager.getItemCount();
+                cartCount.textContent = count;
+            }
+        }
+
+        // Show auth modal
+        function showAuthModal() {
+            alert('Login/Signup functionality would appear here');
+        }
+    </script>
+</body>
+</html>

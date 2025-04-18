@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation | Sarah's Short Cakes</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #FF6B8B;
+            --primary-light: #FF8FA3;
+            --primary-dark: #E83E8C;
+            --secondary: #FFD166;
+            --accent: #06D6A0;
+            --dark: #073B4C;
+            --light: #F8F9FA;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--dark);
+            background-color: var(--light);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .confirmation-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .confirmation-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .confirmation-header h1 {
+            margin: 0 0 1rem 0;
+            font-size: 2rem;
+        }
+        
+        .confirmation-header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .confirmation-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .confirmation-body {
+            padding: 2rem;
+        }
+        
+        .order-details {
+            margin-bottom: 2rem;
+        }
+        
+        .order-details h2 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-item {
+            background-color: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .info-item h3 {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .info-item p {
+            margin: 0;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .order-items {
+            margin-bottom: 2rem;
+        }
+        
+        .order-items h2 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .items-table th, .items-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .items-table th {
+            background-color: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .items-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .item-details {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+        
+        .item-image.error {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            color: #999;
+            font-size: 1.5rem;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .item-options {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .order-summary {
+            background-color: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .order-summary h2 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-row.total {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        .next-steps {
+            margin-bottom: 2rem;
+        }
+        
+        .next-steps h2 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .steps-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .step-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+        
+        .step-content p {
+            margin: 0;
+            color: #666;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .action-button {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .primary-button {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .primary-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .secondary-button {
+            background-color: var(--light);
+            color: var(--dark);
+            border: 1px solid #ddd;
+        }
+        
+        .secondary-button:hover {
+            background-color: #eee;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-logo img {
+            height: 40px;
+        }
+        
+        .footer-logo h3 {
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .footer-social a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-social a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .footer-bottom p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .order-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .items-table th:nth-child(3), .items-table td:nth-child(3) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <h1>Sarah's Short Cakes</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="order.html">Order</a></li>
+                    <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li class="profile-icon">
+                        <a href="#" onclick="showAuthModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="confirmation-container">
+            <div class="confirmation-header">
+                <i class="fas fa-check-circle confirmation-icon"></i>
+                <h1>Order Confirmed!</h1>
+                <p>Thank you for your order. We'll start preparing your cupcakes right away.</p>
+            </div>
+            
+            <div class="confirmation-body">
+                <div class="order-details">
+                    <h2>Order Details</h2>
+                    <div class="order-info">
+                        <div class="info-item">
+                            <h3>Order Number</h3>
+                            <p id="orderNumber">ORD-12345</p>
+                        </div>
+                        <div class="info-item">
+                            <h3>Order Date</h3>
+                            <p id="orderDate">October 15, 2023</p>
+                        </div>
+                        <div class="info-item">
+                            <h3>Order Status</h3>
+                            <p id="orderStatus">Processing</p>
+                        </div>
+                        <div class="info-item">
+                            <h3>Estimated Delivery</h3>
+                            <p id="estimatedDelivery">October 16, 2023</p>
+                        </div>
+                    </div>
+                    
+                    <div class="order-items">
+                        <h2>Your Order</h2>
+                        <table class="items-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderItems">
+                                <!-- Order items will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="order-summary">
+                        <h2>Order Summary</h2>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$32.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Delivery Fee</span>
+                            <span id="deliveryFee">$5.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax</span>
+                            <span id="tax">$2.56</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">$39.56</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="next-steps">
+                    <h2>What's Next?</h2>
+                    <ul class="steps-list">
+                        <li class="step-item">
+                            <div class="step-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="step-content">
+                                <h3>Confirmation Email</h3>
+                                <p>We've sent a confirmation email with your order details to your registered email address.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="step-content">
+                                <h3>Order Processing</h3>
+                                <p>Our bakers will start preparing your cupcakes. You'll receive an update when your order is ready for delivery.</p>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="step-content">
+                                <h3>Delivery</h3>
+                                <p>Your cupcakes will be delivered to your specified address on the estimated delivery date.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="track.html" class="action-button primary-button">
+                        <i class="fas fa-map-marker-alt"></i> Track Your Order
+                    </a>
+                    <a href="index.html" class="action-button secondary-button">
+                        <i class="fas fa-home"></i> Return to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <h3>Sarah's Short Cakes</h3>
+            </div>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="menu.html">Menu</a>
+                <a href="cart.html">Cart</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Sarah's Short Cakes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get order details from URL parameters or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId') || localStorage.getItem('lastOrderId');
+            
+            if (orderId) {
+                // In a real application, you would fetch order details from the server
+                // For now, we'll use sample data
+                const orderDetails = getOrderDetails(orderId);
+                
+                // Update order information
+                document.getElementById('orderNumber').textContent = orderDetails.orderNumber;
+                document.getElementById('orderDate').textContent = formatDate(orderDetails.orderDate);
+                document.getElementById('orderStatus').textContent = orderDetails.status;
+                document.getElementById('estimatedDelivery').textContent = formatDate(orderDetails.estimatedDelivery);
+                
+                // Update order items
+                const orderItemsContainer = document.getElementById('orderItems');
+                orderItemsContainer.innerHTML = '';
+                
+                orderDetails.items.forEach(item => {
+                    const row = document.createElement('tr');
+                    const imageHtml = `
+                        <img src="${item.image}" 
+                             alt="${item.name}" 
+                             class="item-image" 
+                             onerror="this.onerror=null; this.src='images/default-preview.jpg'; this.classList.add('error'); this.innerHTML='<i class=\'fas fa-cookie\'></i>'">
+                    `;
+                    row.innerHTML = `
+                        <td>
+                            <div class="item-details">
+                                ${imageHtml}
+                                <div>
+                                    <div class="item-name">${item.name}</div>
+                                    <div class="item-options">${item.options}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${item.quantity}</td>
+                        <td>${formatCurrency(item.price)}</td>
+                        <td>${formatCurrency(item.price * item.quantity)}</td>
+                    `;
+                    orderItemsContainer.appendChild(row);
+                });
+                
+                // Update order summary
+                document.getElementById('subtotal').textContent = formatCurrency(orderDetails.subtotal);
+                document.getElementById('deliveryFee').textContent = formatCurrency(orderDetails.deliveryFee);
+                document.getElementById('tax').textContent = formatCurrency(orderDetails.tax);
+                document.getElementById('total').textContent = formatCurrency(orderDetails.total);
+            }
+        });
+        
+        // Sample function to get order details
+        function getOrderDetails(orderId) {
+            // In a real application, this would be an API call
+            return {
+                orderNumber: orderId,
+                orderDate: new Date(),
+                status: 'Processing',
+                estimatedDelivery: new Date(Date.now() + 86400000), // Tomorrow
+                items: [
+                    {
+                        name: 'Chocolate Cupcake',
+                        options: 'Chocolate Icing, Sprinkles',
+                        quantity: 2,
+                        price: 4.00,
+                        image: 'images/menu/chocolate-cupcake.jpg'
+                    },
+                    {
+                        name: 'Vanilla Cupcake',
+                        options: 'Vanilla Icing, Fresh Fruit',
+                        quantity: 3,
+                        price: 4.00,
+                        image: 'images/menu/vanilla-cupcake.jpg'
+                    },
+                    {
+                        name: 'Red Velvet Cupcake',
+                        options: 'Cream Cheese Icing',
+                        quantity: 1,
+                        price: 4.50,
+                        image: 'images/menu/red-velvet-cupcake.jpg'
+                    },
+                    {
+                        name: 'Custom Cupcake',
+                        options: 'Special Design, Custom Flavors',
+                        quantity: 1,
+                        price: 6.00,
+                        image: 'images/default-preview.jpg'
+                    }
+                ],
+                subtotal: 25.50,
+                deliveryFee: 5.00,
+                tax: 2.04,
+                total: 32.54
+            };
+        }
+        
+        // Format date
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(amount);
+        }
+        
+        // Auth modal functionality
+        function showAuthModal() {
+            // Implementation for showing auth modal
+            console.log('Show auth modal');
+        }
+    </script>
+</body>
+</html> 
