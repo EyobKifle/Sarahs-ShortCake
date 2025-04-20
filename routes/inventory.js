@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const inventoryController = require('../controllers/inventorycontroller');
-const authController = require('../controllers/authcontroller');
+const { protect } = require('../middleware/auth');
 
 // All inventory routes require admin authentication
-router.use(authController.protect);
+router.use(protect);
 
 router.get('/', inventoryController.getAllInventoryItems);
 router.post('/', inventoryController.createInventoryItem);

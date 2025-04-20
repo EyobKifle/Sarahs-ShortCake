@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Contact Messages | Sarah's Short Cakes</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo-container">
+        <img src="../images/logo.png" alt="Sarah's Short Cakes Logo" class="logo" />
+        <h1>Sarah's Short Cakes - Admin</h1>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="admin.html">Dashboard</a></li>
+          <li><a href="admin-orders.html">Orders</a></li>
+          <li><a href="admin-inventory.html">Inventory</a></li>
+          <li><a href="admin-reports.html">Reports</a></li>
+          <li><a href="admin-contact-messages.html" class="active">Contact Messages</a></li>
+          <li><a href="admin-settings.html">Settings</a></li>
+          <li><a href="../login.html" id="logout-link">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="section-title">
+      <h2>Contact Messages</h2>
+      <div class="divider"></div>
+    </section>
+
+    <section class="messages-section">
+      <table id="messagesTable" class="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Received At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Messages will be populated here -->
+        </tbody>
+      </table>
+      <div id="noMessages" class="no-messages" style="display:none;">No contact messages found.</div>
+    </section>
+  </main>
+
+  <script src="../js/admin-contact-messages.js"></script>
+</body>
+</html>

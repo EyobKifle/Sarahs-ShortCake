@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management | Sarah's Short Cakes Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="css/admin-style.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header navbar navbar-dark sticky-top flex-md-nowrap p-0">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 d-flex align-items-center" href="admin.html">
+            <img src="/Public//images/logo.png" alt="Logo" height="30" class="me-2">
+            Admin Dashboard
+        </a>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap d-flex align-items-center">
+                <span class="px-3 text-white">Welcome, Admin</span>
+                <a class="nav-link px-3" href="#" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt me-1"></i> Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin.html">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin-orders.html">
+                                <i class="fas fa-shopping-bag"></i>
+                                Orders
+                            </a>
+                        </li>
+                        <!-- Removed Products sidebar item -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="customers.html">
+                                <i class="fas fa-users"></i>
+                                Customers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="admin-inventory.html">
+                                <i class="fas fa-boxes"></i>
+                                Inventory
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin-reports.html">
+                                <i class="fas fa-chart-line"></i>
+                                Reports
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin-settings.html">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <!-- Notification Area -->
+                <div id="notificationArea" class="notification-area"></div>
+
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2 mb-0">Inventory Management</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#restockModal">
+                            <i class="fas fa-plus-circle me-1"></i> Restock Ingredients
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newIngredientModal">
+                            <i class="fas fa-plus me-1"></i> Add New Ingredient
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Inventory Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Total Ingredients</h6>
+                                        <h3 class="mb-0" id="totalIngredients">0</h3>
+                                    </div>
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-box text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Low Stock Items</h6>
+                                        <h3 class="mb-0" id="lowStockItems">0</h3>
+                                    </div>
+                                    <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="text-muted mb-2">Critical Items</h6>
+                                        <h3 class="mb-0" id="criticalItems">0</h3>
+                                    </div>
+                                    <div class="bg-danger bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-times-circle text-danger"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory Table -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Current Inventory</h5>
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" placeholder="Search ingredients..." id="inventorySearch">
+                            <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="inventoryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Ingredient</th>
+                                        <th>Current Stock</th>
+                                        <th>Threshold</th>
+                                        <th>Status</th>
+                                        <th>Unit</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventoryTableBody">
+                                    <!-- Inventory items will be loaded here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recipes Card -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Cupcake Recipes</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="recipesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Cupcake Type</th>
+                                        <th>Ingredients</th>
+                                        <th>Batch Size</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recipesTableBody">
+                                    <!-- Recipes will be loaded here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Restock Modal -->
+    <div class="modal fade" id="restockModal" tabindex="-1" aria-labelledby="restockModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="restockModalLabel">Restock Ingredients</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="restockForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="ingredientSelect" class="form-label">Ingredient</label>
+                            <select class="form-select" id="ingredientSelect" required>
+                                <option value="" selected disabled>Select ingredient</option>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="restockQuantity" class="form-label">Quantity to Add</label>
+                            <input type="number" class="form-control" id="restockQuantity" min="0.1" step="0.1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="restockNotes" class="form-label">Notes (Optional)</label>
+                            <textarea class="form-control" id="restockNotes" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmRestock">Confirm Restock</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Ingredient Modal -->
+    <div class="modal fade" id="newIngredientModal" tabindex="-1" aria-labelledby="newIngredientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newIngredientModalLabel">Add New Ingredient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="newIngredientForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="newIngredientName" class="form-label">Ingredient Name</label>
+                            <input type="text" class="form-control" id="newIngredientName" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="initialQuantity" class="form-label">Initial Quantity</label>
+                                <input type="number" class="form-control" id="initialQuantity" min="0" step="0.1" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="ingredientUnit" class="form-label">Unit</label>
+                                <select class="form-select" id="ingredientUnit" required>
+                                    <option value="cups">cups</option>
+                                    <option value="tsp">tsp</option>
+                                    <option value="tbsp">tbsp</option>
+                                    <option value="oz">oz</option>
+                                    <option value="pieces">pieces</option>
+                                    <option value="lbs">lbs</option>
+                                    <option value="ml">ml</option>
+                                    <option value="g">g</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="thresholdQuantity" class="form-label">Low Stock Threshold</label>
+                            <input type="number" class="form-control" id="thresholdQuantity" min="0" step="0.1" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmNewIngredient">Add Ingredient</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    
+    <!-- Inventory Management Script -->
+    <script src="js/inventory.js"></script>
+</body>
+</html>

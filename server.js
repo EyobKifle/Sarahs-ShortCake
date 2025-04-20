@@ -15,6 +15,7 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const flavorRoutes = require('./routes/flavor');
 const mapsRoutes = require('./routes/maps');
+const contactRoutes = require('./routes/contact');
 
 const app = express();
 const path = require('path');
@@ -45,6 +46,7 @@ app.use('/api/inventory', inventoryRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/maps', mapsRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Optional routes
 app.use('/api/admin', adminRoutes);
@@ -57,7 +59,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
     try {
-        await open(`http://localhost:${PORT}`);
+        await open(`http://localhost:${PORT}`, { app: { name: 'opera' } });
     } catch (err) {
         console.error('Failed to open browser:', err);
     }

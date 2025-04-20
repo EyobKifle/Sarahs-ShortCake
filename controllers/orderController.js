@@ -1,47 +1,97 @@
+
 const Order = require('../models/Order');
 const Customer = require('../models/Customer');
 const { generateOrderReport } = require('../utils/generateReport');
 
+const emailService = require('../utils/emailService');
+const InventoryItem = require('../models/InventoryItem');
+
+// Helper function to check low stock items and send alert
+const checkAndSendLowStockAlert = async () => {
+    try {
+        const lowStockItems = await InventoryItem.find({ currentStock: { $lt: 5 } });
+        if (lowStockItems.length > 0) {
+            const adminEmail = process.env.EMAIL_STAFF;
+            await emailService.sendLowStockAlert(adminEmail, lowStockItems.map(item => ({
+                name: item.name,
+                quantity: item.currentStock
+            })));
+        }
+    } catch (error) {
+        console.error('Error checking/sending low stock alert:', error);
+    }
+};
+
 // Create a new order
 exports.createOrder = async (req, res) => {
     try {
-        const { customer, items, deliveryOption, neededDate, neededTime, notes } = req.body;
-        
+        const { customer, guestInfo, items, deliveryOption, neededDate, neededTime, notes, deliveryLocation, estimatedDistance, estimatedTime } = req.body;
+
         // Calculate total price
         const totalPrice = items.reduce((total, item) => {
             // Base price is $4 per cupcake
             let itemPrice = item.quantity * 4;
-            
+
             // Add $1 for special decorations
             if (item.decoration && item.decoration.trim() !== '') {
                 itemPrice += item.quantity * 1;
             }
-            
+
             return total + itemPrice;
         }, 0);
-        
+
         // Add delivery fee if applicable
         const finalPrice = deliveryOption === 'delivery' ? totalPrice + 5 : totalPrice;
-        
-        // Create the order
-        const order = new Order({
-            customer,
+
+        // Create the order object
+        const orderData = {
             items,
             deliveryOption,
             neededDate,
             neededTime,
             notes,
             totalPrice: finalPrice,
-            status: 'pending'
-        });
-        
+            status: 'pending',
+            deliveryLocation,
+            estimatedDistance,
+            estimatedTime
+        };
+
+        // If customer is logged in, set customer reference
+        if (customer) {
+            orderData.customer = customer;
+        } else if (guestInfo) {
+            // For guest orders, save guest info
+            orderData.guestInfo = guestInfo;
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: 'Customer or guest information is required'
+            });
+        }
+
+        const order = new Order(orderData);
+
         await order.save();
-        
-        // Update customer's order history
-        await Customer.findByIdAndUpdate(customer, {
-            $push: { orders: order._id }
-        });
-        
+
+        // If customer is logged in, update their order history
+        if (customer) {
+            await Customer.findByIdAndUpdate(customer, {
+                $push: { orders: order._id }
+            });
+        }
+
+        // Send order confirmation email
+        if (customer) {
+            const customerData = await Customer.findById(customer);
+            if (customerData) {
+                emailService.sendOrderConfirmation(order, customerData).catch(console.error);
+            }
+        }
+
+        // Check and send low stock alert if needed
+        checkAndSendLowStockAlert();
+
         res.status(201).json({
             success: true,
             data: order,
@@ -167,30 +217,6 @@ exports.updateOrderStatus = async (req, res) => {
             success: false,
             message: 'Error updating order status'
         });
-    }
-};
-exports.createOrder = async (req, res) => {
-    try {
-        const { deliveryLocation, ...orderData } = req.body;
-        
-        const order = new Order({
-            ...orderData,
-            deliveryLocation: deliveryLocation && {
-                type: "Point",
-                coordinates: [
-                    deliveryLocation.lng,
-                    deliveryLocation.lat
-                ],
-                address: deliveryLocation.address
-            },
-            estimatedDistance: deliveryLocation?.distance,
-            estimatedTime: deliveryLocation?.time
-        });
-
-        await order.save();
-        res.status(201).json({ success: true, data: order });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
     }
 };
 // Generate daily order report

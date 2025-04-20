@@ -1,572 +1,940 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Sarah's Short Cakes</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #FF6B8B;
-            --primary-light: #FF8FA3;
-            --primary-dark: #E83E8C;
-            --secondary: #FFD166;
-            --accent: #06D6A0;
-            --dark: #073B4C;
-            --light: #F8F9FA;
-            --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            color: var(--dark);
-            background-color: var(--light);
-            line-height: 1.6;
-        }
-        
-        header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .logo {
-            height: 50px;
-            width: auto;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 500;
-            transition: all 0.3s;
-            padding: 0.5rem 0;
-            position: relative;
-        }
-        
-        .nav-links a:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: var(--primary);
-            transition: width 0.3s;
-        }
-        
-        .nav-links a:hover:after {
-            width: 100%;
-        }
-        
-        .nav-links a.active {
-            color: var(--primary);
-            font-weight: 600;
-        }
-        
-        .profile-icon svg {
-            fill: var(--dark);
-            transition: fill 0.3s;
-        }
-        
-        .profile-icon:hover svg {
-            fill: var(--primary);
-        }
-        
-        /* Auth Page Styles */
-        .auth-page {
-            padding: 4rem 2rem;
-            min-height: calc(100vh - 200px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-        
-        .divider {
-            width: 100px;
-            height: 4px;
-            background-color: var(--primary);
-            margin: 0 auto;
-            border-radius: 2px;
-        }
-        
-        .auth-container {
-            max-width: 500px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 2.5rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .auth-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
-        
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 2rem;
-            border-radius: 8px;
-            overflow: hidden;
-            background-color: var(--light);
-        }
-        
-        .auth-tab {
-            flex: 1;
-            text-align: center;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        
-        .auth-tab.active {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .auth-form {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .auth-form.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--dark);
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-            box-sizing: border-box;
-        }
-        
-        .form-group input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.2);
-            outline: none;
-        }
-        
-        .auth-submit {
-            background: var(--gradient);
-            color: white;
-            border: none;
-            padding: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.3s;
-            margin-top: 1rem;
-        }
-        
-        .auth-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(232, 62, 140, 0.3);
-        }
-        
-        .auth-submit:active {
-            transform: translateY(0);
-        }
-        
-        .social-login {
-            margin-top: 2rem;
-            text-align: center;
-        }
-        
-        .social-login p {
-            margin-bottom: 1rem;
-            color: #666;
-            position: relative;
-        }
-        
-        .social-login p:before,
-        .social-login p:after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 30%;
-            height: 1px;
-            background-color: #ddd;
-        }
-        
-        .social-login p:before {
-            left: 0;
-        }
-        
-        .social-login p:after {
-            right: 0;
-        }
-        
-        .social-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-        
-        .social-button {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            transition: all 0.3s;
-        }
-        
-        .social-button.facebook {
-            background-color: #3b5998;
-        }
-        
-        .social-button.google {
-            background-color: #db4437;
-        }
-        
-        .social-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .forgot-password {
-            text-align: right;
-            margin-top: -1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .forgot-password a {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-        
-        .forgot-password a:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
-        }
-        
-        .form-footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: #666;
-        }
-        
-        .form-footer a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .form-footer a:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
-        }
-        
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .auth-container {
-                padding: 2rem;
-            }
-            
-            .section-title h2 {
-                font-size: 2rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile | Sarah's Short Cakes</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #ff6b8b;
+      --primary-light: #ff8fa3;
+      --primary-dark: #e83e8c;
+      --secondary: #ffd166;
+      --accent: #06d6a0;
+      --dark: #073b4c;
+      --light: #f8f9fa;
+      --light-gray: #e9ecef;
+      --medium-gray: #adb5bd;
+      --dark-gray: #495057;
+      --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
+      --error: #ef476f;
+      --success: #06d6a0;
+      --warning: #ffd166;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--dark);
+      background-color: var(--light);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .main-header {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .logo {
+      height: 50px;
+      width: auto;
+    }
+    
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+    
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+    
+    .login-signup-button {
+      background: var(--gradient);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+    }
+    
+    .login-signup-button:hover {
+      background: var(--primary-dark);
+      color: white;
+    }
+    
+    .login-signup-button.active {
+      background: var(--primary-dark);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 100px auto 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      width: 450px;
+      max-width: 95vw;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--light-gray);
+      margin-bottom: 1.5rem;
+    }
+    
+    .auth-tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--medium-gray);
+      position: relative;
+      transition: var(--transition);
+    }
+    
+    .auth-tab.active {
+      color: var(--primary);
+    }
+    
+    .auth-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px 3px 0 0;
+    }
+    
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark-gray);
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      font-family: 'Poppins', sans-serif;
+      transition: var(--transition);
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.2);
+    }
+    
+    .password-container {
+      position: relative;
+    }
+    
+    .toggle-password {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--medium-gray);
+      transition: var(--transition);
+    }
+    
+    .toggle-password:hover {
+      color: var(--primary);
+    }
+    
+    .forgot-password {
+      text-align: right;
+      margin: -0.5rem 0 1rem 0;
+    }
+    
+    .forgot-password a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: var(--transition);
+    }
+    
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+    
+    .auth-submit {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--gradient);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 0.5rem;
+    }
+    
+    .auth-submit:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    .auth-submit:disabled {
+      background: var(--medium-gray);
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .form-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--dark-gray);
+      font-size: 0.875rem;
+    }
+    
+    .form-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    
+    .form-footer a:hover {
+      text-decoration: underline;
+    }
+    
+    .password-strength {
+      height: 4px;
+      margin-top: 0.5rem;
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+    
+    .password-strength.weak {
+      background: var(--error);
+      width: 25%;
+    }
+    
+    .password-strength.medium {
+      background: var(--warning);
+      width: 50%;
+    }
+    
+    .password-strength.strong {
+      background: var(--success);
+      width: 100%;
+    }
+    
+    .password-hints {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--medium-gray);
+    }
+    
+    .password-hints p {
+      margin-bottom: 0.25rem;
+    }
+    
+    .password-hints ul {
+      list-style: none;
+      padding-left: 1rem;
+    }
+    
+    .password-hints li {
+      position: relative;
+      margin-bottom: 0.25rem;
+    }
+    
+    .password-hints li::before {
+      content: '•';
+      position: absolute;
+      left: -1rem;
+    }
+    
+    .password-hints li.valid {
+      color: var(--success);
+    }
+    
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+    }
+    
+    .alert.error {
+      background: rgba(239, 71, 111, 0.1);
+      color: var(--error);
+    }
+    
+    .alert.success {
+      background: rgba(6, 214, 160, 0.1);
+      color: var(--success);
+    }
+    
+    .profile-container {
+      display: none;
+    }
+    
+    .profile-container.active {
+      display: block;
+    }
+    
+    .profile-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--primary-dark);
+    }
+    
+    .profile-info {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: var(--light);
+      border-radius: var(--border-radius);
+    }
+    
+    .profile-info label {
+      font-weight: 500;
+      color: var(--dark-gray);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    
+    .profile-info span {
+      color: var(--dark);
+    }
+    
+    .logout-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--light-gray);
+      color: var(--dark);
+      border: none;
+      border-radius: var(--border-radius);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 1.5rem;
+    }
+    
+    .logout-button:hover {
+      background: var(--medium-gray);
+      color: white;
+    }
+    
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      
+      .nav-links {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+      
+      .container {
+        margin-top: 150px;
+        padding: 1.5rem;
+      }
+    }
+    form {
+      display: none;
+    }
+    form.active {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <div class="logo-container">
-                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
-                <h1>Sarah's Short Cakes</h1>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="menu.html">Menu</a></li>
-                    <li><a href="cart.html">Cart</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                    <li class="profile-icon">
-                        <a href="login.html" class="active">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+  <header class="main-header">
+    <div class="header-container">
+      <div class="logo-container">
+        <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+        <h1>Sarah's Short Cakes</h1>
+      </div>
+      <nav class="main-nav">
+        <ul class="nav-links">
+          <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="menu.html"><i class="fas fa-utensils"></i> Menu</a></li>
+          <li><a href="order.html"><i class="fas fa-shopping-cart"></i> Order</a></li>
+          <li><a href="cart.html"><i class="fas fa-shopping-basket"></i> Cart (<span id="cart-count">0</span>)</a></li>
+          <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+          <li><a href="login.html" class="login-signup-button active">Login / Sign Up</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="container">
+    <div class="auth-tabs" id="auth-tabs">
+      <div class="auth-tab active" data-tab="login">Login</div>
+      <div class="auth-tab" data-tab="signup">Sign Up</div>
+    </div>
+
+    <div id="alert-container"></div>
+
+    <form id="login-form" class="active" novalidate>
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="Enter your email" required />
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <div class="password-container">
+          <input type="password" id="login-password" placeholder="Enter your password" required />
+          <i class="fas fa-eye toggle-password" data-target="login-password"></i>
         </div>
-    </header>
+      </div>
+      <button type="submit" class="auth-submit">
+        <span class="button-text">Login</span>
+      </button>
+    </form>
 
-    <main>
-        <div class="auth-page">
-            <div class="section-title">
-                <h2>Welcome Back</h2>
-                <div class="divider"></div>
-            </div>
-            
-            <div class="auth-container">
-                <div class="auth-tabs">
-                    <div class="auth-tab active" onclick="showForm('login')">Login</div>
-                    <div class="auth-tab" onclick="showForm('signup')">Sign Up</div>
-                </div>
-
-                <form id="login-form" class="auth-form active" onsubmit="handleAuth(event, 'login')">
-                    <div class="form-group">
-                        <label for="login-email">Email</label>
-                        <input type="email" id="login-email" placeholder="Enter your email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="login-password">Password</label>
-                        <input type="password" id="login-password" placeholder="Enter your password" required>
-                    </div>
-                    <div class="forgot-password">
-                        <a href="#">Forgot Password?</a>
-                    </div>
-                    <button type="submit" class="auth-submit">Login</button>
-                    
-                    <div class="social-login">
-                        <p>Or login with</p>
-                        <div class="social-buttons">
-                            <a href="#" class="social-button facebook">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="social-button google">
-                                <i class="fab fa-google"></i>
-                            </a>
-                        </div>
-                    </div>
-                </form>
-
-                <form id="signup-form" class="auth-form" onsubmit="handleAuth(event, 'signup')">
-                    <div class="form-group">
-                        <label for="signup-name">Full Name</label>
-                        <input type="text" id="signup-name" placeholder="Enter your full name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signup-email">Email</label>
-                        <input type="email" id="signup-email" placeholder="Enter your email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signup-password">Password</label>
-                        <input type="password" id="signup-password" placeholder="Create a password" required>
-                    </div>
-                    <button type="submit" class="auth-submit">Create Account</button>
-                    
-                    <div class="form-footer">
-                        <p>Already have an account? <a href="#" onclick="showForm('login')">Login</a></p>
-                    </div>
-                </form>
-            </div>
+    <form id="signup-form" novalidate>
+      <div class="form-group">
+        <label for="signup-name">Full Name</label>
+        <input type="text" id="signup-name" placeholder="Enter your full name" required />
+      </div>
+      <div class="form-group">
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" placeholder="Enter your email" required />
+      </div>
+      <div class="form-group">
+        <label for="signup-password">Password</label>
+        <div class="password-container">
+          <input type="password" id="signup-password" placeholder="Create a password (min 8 characters)" required minlength="8" />
+          <i class="fas fa-eye toggle-password" data-target="signup-password"></i>
         </div>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
-                <h3>Sarah's Short Cakes</h3>
-            </div>
-            <div class="footer-links">
-                <a href="index.html">Home</a>
-                <a href="menu.html">Menu</a>
-                <a href="cart.html">Cart</a>
-                <a href="contact.html">Contact</a>
-            </div>
-            <div class="footer-social">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-            </div>
+        <div class="password-strength" id="password-strength"></div>
+        <div class="password-hints">
+          <p>Password must contain:</p>
+          <ul>
+            <li id="length-hint">At least 8 characters</li>
+            <li id="uppercase-hint">One uppercase letter</li>
+            <li id="number-hint">One number</li>
+            <li id="special-hint">One special character</li>
+          </ul>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2023 Sarah's Short Cakes. All rights reserved.</p>
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <div class="password-container">
+          <input type="password" id="confirm-password" placeholder="Confirm your password" required />
+          <i class="fas fa-eye toggle-password" data-target="confirm-password"></i>
         </div>
-    </footer>
+        <div class="password-match" id="password-match">Passwords do not match</div>
+      </div>
+      <button type="submit" class="auth-submit" id="signup-button" disabled>
+        <span class="button-text">Create Account</span>
+      </button>
+      <div class="form-footer">
+        <p>Already have an account? <a href="#" data-tab="login">Login</a></p>
+      </div>
+    </form>
 
-    <script>
-        function showForm(formType) {
-            document.querySelectorAll('.auth-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.auth-form').forEach(form => {
-                form.classList.remove('active');
-            });
-            
-            document.querySelector(`.auth-tab[onclick="showForm('${formType}')"]`).classList.add('active');
-            document.getElementById(`${formType}-form`).classList.add('active');
+    <div class="profile-container" id="profile-container">
+      <h2>Your Profile</h2>
+      <div class="profile-info">
+        <label>Name:</label>
+        <span id="profile-name">Loading...</span>
+      </div>
+      <div class="profile-info">
+        <label>Email:</label>
+        <span id="profile-email">Loading...</span>
+      </div>
+      <div class="profile-info">
+        <label>Phone:</label>
+        <span id="profile-phone">Not provided</span>
+      </div>
+      <div class="profile-info">
+        <label>Address:</label>
+        <span id="profile-address">Not provided</span>
+      </div>
+      <button class="logout-button" id="logout-btn">
+        <span class="button-text">Logout</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const authTabs = document.querySelectorAll('.auth-tab');
+      const forms = document.querySelectorAll('form');
+      const profileContainer = document.getElementById('profile-container');
+      const alertContainer = document.getElementById('alert-container');
+      const loginForm = document.getElementById('login-form');
+      const signupForm = document.getElementById('signup-form');
+      const logoutBtn = document.getElementById('logout-btn');
+      const passwordInput = document.getElementById('signup-password');
+      const confirmPasswordInput = document.getElementById('confirm-password');
+      const passwordStrength = document.getElementById('password-strength');
+      const passwordMatch = document.getElementById('password-match');
+      const signupButton = document.getElementById('signup-button');
+      const passwordHints = {
+        length: document.getElementById('length-hint'),
+        uppercase: document.getElementById('uppercase-hint'),
+        number: document.getElementById('number-hint'),
+        special: document.getElementById('special-hint')
+      };
+      
+      // Auth State Management
+      const authState = {
+        isAuthenticated: false,
+        currentTab: 'login',
+        user: null
+      };
+
+      // Initialize the application
+      init();
+
+      // Initialize application state
+      function init() {
+        loadSession();
+        setupEventListeners();
+        renderView();
+      }
+
+      // Load session from storage
+      function loadSession() {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        if (token && user) {
+          authState.isAuthenticated = true;
+          authState.user = user;
         }
+      }
 
-        async function handleAuth(event, action) {
-            event.preventDefault();
-            
-            if (action === 'login') {
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                
-                try {
-                    // Show loading state
-                    const submitButton = event.target.querySelector('.auth-submit');
-                    const originalText = submitButton.textContent;
-                    submitButton.disabled = true;
-                    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
-                    
-                    // Simulate API call (replace with actual API call)
-                    setTimeout(() => {
-                        // Reset button state
-                        submitButton.disabled = false;
-                        submitButton.textContent = originalText;
-                        
-                        // Redirect to profile page
-                        window.location.href = 'profile.html';
-                    }, 1500);
-                    
-                    // Uncomment this when API is ready
-                    /*
-                    const response = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email,
-                            password
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    if (data.success) {
-                        localStorage.setItem('token', data.token);
-                        window.location.href = data.redirectUrl || '/profile.html';
-                    } else {
-                        alert(data.message || 'Login failed');
-                    }
-                    */
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('An error occurred during login');
-                }
-            } else {
-                // Signup logic
-                const name = document.getElementById('signup-name').value;
-                const email = document.getElementById('signup-email').value;
-                const password = document.getElementById('signup-password').value;
-                
-                try {
-                    // Show loading state
-                    const submitButton = event.target.querySelector('.auth-submit');
-                    const originalText = submitButton.textContent;
-                    submitButton.disabled = true;
-                    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
-                    
-                    // Simulate API call (replace with actual API call)
-                    setTimeout(() => {
-                        // Reset button state
-                        submitButton.disabled = false;
-                        submitButton.textContent = originalText;
-                        
-                        // Show success message and switch to login form
-                        alert('Account created successfully! Please login.');
-                        showForm('login');
-                    }, 1500);
-                    
-                    // Uncomment this when API is ready
-                    /*
-                    const response = await fetch('/api/auth/signup', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            name,
-                            email,
-                            password
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    if (data.success) {
-                        alert('Account created successfully! Please login.');
-                        showForm('login');
-                    } else {
-                        alert(data.message || 'Signup failed');
-                    }
-                    */
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('An error occurred during signup');
-                }
-            }
+      // Setup event listeners
+      function setupEventListeners() {
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(toggle => {
+          toggle.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const passwordInput = document.getElementById(targetId);
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+          });
+        });
+        
+      // Password strength checker
+      passwordInput.addEventListener('input', () => {
+        checkPasswordStrength.call(passwordInput);
+        validateSignupForm();
+      });
+      
+      confirmPasswordInput.addEventListener('input', () => {
+        checkPasswordMatch();
+        validateSignupForm();
+      });
+      
+      // Tab switching
+      authTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          if (!authState.isAuthenticated) {
+            authState.currentTab = this.dataset.tab;
+            renderView();
+          }
+        });
+      });
+
+      // Check password match
+      function checkPasswordMatch() {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+        if (password !== confirmPassword) {
+          passwordMatch.style.display = 'block';
+          return false;
+        } else {
+          passwordMatch.style.display = 'none';
+          return true;
         }
-    </script>
+      }
+
+      // Validate signup form to enable/disable submit button
+      function validateSignupForm() {
+        const name = document.getElementById('signup-name').value.trim();
+        const email = document.getElementById('signup-email').value.trim();
+        const password = passwordInput.value;
+        const isStrong = passwordStrength.classList.contains('medium') || passwordStrength.classList.contains('strong');
+        const passwordsMatch = checkPasswordMatch();
+
+        if (name && email && isStrong && passwordsMatch) {
+          signupButton.disabled = false;
+        } else {
+          signupButton.disabled = true;
+        }
+      }
+        
+        // Form footer links
+        document.querySelectorAll('[data-tab]').forEach(link => {
+          if (link.tagName === 'A') {
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              authState.currentTab = this.dataset.tab;
+              renderView();
+            });
+          }
+        });
+        
+        // Form submissions
+        loginForm.addEventListener('submit', handleLoginSubmit);
+        signupForm.addEventListener('submit', handleSignupSubmit);
+        
+        // Logout button
+        logoutBtn.addEventListener('click', handleLogout);
+      }
+
+      // Render the appropriate view based on auth state
+      function renderView() {
+        if (authState.isAuthenticated) {
+          showProfileView();
+        } else {
+          showAuthView();
+        }
+      }
+
+      // Show authentication view (login/signup)
+      function showAuthView() {
+        // Show auth container
+        profileContainer.classList.remove('active');
+        
+        // Update tabs
+        authTabs.forEach(tab => {
+          tab.style.display = 'block';
+          tab.classList.toggle('active', tab.dataset.tab === authState.currentTab);
+        });
+        
+        // Show correct form
+        forms.forEach(form => {
+          form.classList.remove('active');
+          if (form.id === `${authState.currentTab}-form`) {
+            form.classList.add('active');
+          }
+        });
+        
+        // Clear forms when switching
+        if (authState.currentTab === 'login') {
+          signupForm.reset();
+        } else {
+          loginForm.reset();
+        }
+        
+        clearAlerts();
+      }
+
+      // Show profile view
+      function showProfileView() {
+        // Hide auth forms
+        forms.forEach(form => form.classList.remove('active'));
+        authTabs.forEach(tab => tab.style.display = 'none');
+        
+        // Show profile
+        profileContainer.classList.add('active');
+        
+        // Update profile info
+        if (authState.user) {
+          document.getElementById('profile-name').textContent = authState.user.name || 'Not provided';
+          document.getElementById('profile-email').textContent = authState.user.email || 'Not provided';
+          document.getElementById('profile-phone').textContent = authState.user.phone || 'Not provided';
+          document.getElementById('profile-address').textContent = authState.user.address || 'Not provided';
+        }
+        
+        clearAlerts();
+      }
+
+      // Check password strength
+      function checkPasswordStrength() {
+        const password = this.value;
+        let strength = 0;
+        
+        // Check password length
+        if (password.length >= 8) {
+          strength += 1;
+          passwordHints.length.classList.add('valid');
+        } else {
+          passwordHints.length.classList.remove('valid');
+        }
+        
+        // Check for uppercase letters
+        if (/[A-Z]/.test(password)) {
+          strength += 1;
+          passwordHints.uppercase.classList.add('valid');
+        } else {
+          passwordHints.uppercase.classList.remove('valid');
+        }
+        
+        // Check for numbers
+        if (/\d/.test(password)) {
+          strength += 1;
+          passwordHints.number.classList.add('valid');
+        } else {
+          passwordHints.number.classList.remove('valid');
+        }
+        
+        // Check for special characters
+        if (/[^A-Za-z0-9]/.test(password)) {
+          strength += 1;
+          passwordHints.special.classList.add('valid');
+        } else {
+          passwordHints.special.classList.remove('valid');
+        }
+        
+        // Update strength meter
+        passwordStrength.className = 'password-strength';
+        if (password.length > 0) {
+          if (strength <= 1) {
+            passwordStrength.classList.add('weak');
+          } else if (strength <= 3) {
+            passwordStrength.classList.add('medium');
+          } else {
+            passwordStrength.classList.add('strong');
+          }
+        }
+      }
+
+      // Handle login form submission
+      async function handleLoginSubmit(e) {
+        e.preventDefault();
+        const submitButton = e.target.querySelector('.auth-submit');
+        const buttonText = submitButton.querySelector('.button-text');
+        const originalText = buttonText.textContent;
+        
+        // Disable button during processing
+        submitButton.disabled = true;
+        buttonText.textContent = 'Logging in...';
+        
+        try {
+          const email = document.getElementById('login-email').value.trim();
+          const password = document.getElementById('login-password').value;
+          
+          // Validate inputs
+          if (!email || !password) {
+            throw new Error('Please enter both email and password');
+          }
+          
+          // Call backend login API
+          const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Login failed');
+          }
+          
+          const data = await response.json();
+          
+          // Save token and user info
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          
+          authState.user = data.user;
+          authState.isAuthenticated = true;
+          
+          // Redirect based on role
+          if (data.user.role === 'admin') {
+            window.location.href = '/Admin/admin.html';
+          } else {
+            window.location.href = '/profile.html';
+          }
+          
+        } catch (error) {
+          showAlert('error', error.message || 'Login failed. Please try again.');
+        } finally {
+          // Re-enable button
+          submitButton.disabled = false;
+          buttonText.textContent = originalText;
+        }
+      }
+
+      // Handle signup form submission
+      async function handleSignupSubmit(e) {
+        e.preventDefault();
+        const submitButton = e.target.querySelector('.auth-submit');
+        const buttonText = submitButton.querySelector('.button-text');
+        const originalText = buttonText.textContent;
+        
+        // Disable button during processing
+        submitButton.disabled = true;
+        buttonText.textContent = 'Creating account...';
+        
+        try {
+          const name = document.getElementById('signup-name').value.trim();
+          const email = document.getElementById('signup-email').value.trim();
+          const password = document.getElementById('signup-password').value;
+          
+          // Validate inputs
+          if (!name || !email || !password) {
+            throw new Error('Please fill all required fields');
+          }
+          
+          if (password.length < 8) {
+            throw new Error('Password must be at least 8 characters');
+          }
+          
+          // Call backend register API
+          const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, password })
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Registration failed');
+          }
+          
+          const data = await response.json();
+          
+          // Save token and user info
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data));
+          
+          authState.user = data;
+          authState.isAuthenticated = true;
+          
+          // Show success and transition to profile
+          showAlert('success', 'Account created successfully!');
+          setTimeout(() => {
+            renderView();
+          }, 1500);
+        } catch (error) {
+          showAlert('error', error.message || 'Registration failed. Please try again.');
+        } finally {
+          // Re-enable button
+          submitButton.disabled = false;
+          buttonText.textContent = originalText;
+        }
+      }
+
+      // Handle logout
+      function handleLogout() {
+        const buttonText = this.querySelector('.button-text');
+        const originalText = buttonText.textContent;
+        
+        // Disable button during processing
+        this.disabled = true;
+        buttonText.textContent = 'Logging out...';
+        
+        // Simulate API call (replace with real API call)
+        setTimeout(() => {
+          // Clear auth state
+          authState.isAuthenticated = false;
+          authState.user = null;
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          
+          // Reset to login view
+          authState.currentTab = 'login';
+          
+          // Re-enable button
+          this.disabled = false;
+          buttonText.textContent = originalText;
+          
+          // Show login form
+          renderView();
+          showAlert('success', 'You have been logged out successfully.');
+        }, 800);
+      }
+
+      // Show alert message
+      function showAlert(type, message) {
+        clearAlerts();
+        
+        const alertEl = document.createElement('div');
+        alertEl.className = `alert ${type}`;
+        
+        const icon = type === 'error' ? 'exclamation-circle' : 'check-circle';
+        alertEl.innerHTML = `
+          <i class="fas fa-${icon}"></i>
+          <span>${message}</span>
+        `;
+        
+        alertContainer.appendChild(alertEl);
+        
+        // Auto-dismiss after 5 seconds (except for errors)
+        if (type !== 'error') {
+          setTimeout(() => {
+            alertEl.style.opacity = '0';
+            setTimeout(() => alertEl.remove(), 300);
+          }, 5000);
+        }
+      }
+
+      // Clear all alerts
+      function clearAlerts() {
+        alertContainer.innerHTML = '';
+      }
+    });
+  </script>
 </body>
 </html>

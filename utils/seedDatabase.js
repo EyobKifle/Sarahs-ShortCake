@@ -1,5 +1,5 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
+const connectDB = require('./db');
 const bcrypt = require('bcryptjs');
 
 // Import models
@@ -7,20 +7,6 @@ const Admin = require('../models/Admin');
 const Customer = require('../models/Customer');
 const Flavor = require('../models/flavor');
 const InventoryItem = require('../models/InventoryItem');
-
-// Connect to MongoDB
-const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        console.log('MongoDB Connected for seeding...');
-    } catch (error) {
-        console.error(`Error connecting to MongoDB: ${error.message}`);
-        process.exit(1);
-    }
-};
 
 // Seed the database
 const seedDatabase = async () => {
@@ -141,4 +127,4 @@ const seedDatabase = async () => {
 // Run the seeding process
 connectDB().then(() => {
     seedDatabase();
-}); 
+});

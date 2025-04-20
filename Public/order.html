@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Header -->
     <header class="main-header">
         <div class="header-container">
             <div class="logo-container">
@@ -21,15 +22,14 @@
                     <li><a href="order.html" class="active"><i class="fas fa-shopping-cart"></i> Order</a></li>
                     <li><a href="cart.html"><i class="fas fa-shopping-basket"></i> Cart (<span id="cart-count">0</span>)</a></li>
                     <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-                    <li class="profile-icon">
-                        <a href="#" onclick="showAuthModal()">
-                            <i class="fas fa-user"></i>
-                        </a>
+                    <li>
+                        <a href="login.html" class="login-signup-button">Login / Sign Up</a>
                     </li>
                 </ul>
             </nav>
         </div>
     </header>
+    <script src="js/header-footer.js"></script>
 
     <main class="order-page">
         <!-- Guest View - Tracking Number Search -->
@@ -250,10 +250,32 @@
         </div>
     </main>
 
+    <!-- Footer -->
     <footer class="main-footer">
-        <p>&copy; 2024 Sarah's Short Cakes. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <h3>Sarah's Short Cakes</h3>
+            </div>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="menu.html">Menu</a>
+                <a href="order.html">Order</a>
+                <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Sarah's Short Cakes. All rights reserved.</p>
+        </div>
     </footer>
 
     <script src="js/tracking.js"></script>
+    <script src="js/header-footer.js"></script>
 </body>
 </html>

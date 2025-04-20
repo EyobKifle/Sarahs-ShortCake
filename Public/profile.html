@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sarah's Short Cakes - User Profile">
+    <title>My Profile - Sarah's ShortCakes</title>
+    <meta name="theme-color" content="#ff85a2">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Profile-specific styles that extend the existing design */
+        .profile-page {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-title {
+            font-size: 2rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .profile-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+        
+        .profile-sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+        }
+        
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            display: block;
+            border: 4px solid var(--primary-light);
+        }
+        
+        .profile-name {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .profile-email {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .profile-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+        
+        .profile-nav a:hover,
+        .profile-nav a.active {
+            background-color: rgba(255, 107, 139, 0.1);
+            color: var(--primary);
+        }
+        
+        .profile-nav i {
+            width: 24px;
+            text-align: center;
+            margin-right: 0.5rem;
+        }
+        
+        .profile-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-card {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .edit-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.5rem;
+        }
+        
+        .edit-btn:hover {
+            color: var(--primary-dark);
+        }
+        
+        .orders-list {
+            margin-top: 2rem;
+        }
+        
+        .order-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+        
+        .order-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .order-id {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .order-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .order-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-processing {
+            background-color: #fff4e5;
+            color: #ffa502;
+        }
+        
+        .status-shipped {
+            background-color: #e3fafc;
+            color: #15aabf;
+        }
+        
+        .status-delivered {
+            background-color: #ebfbee;
+            color: #40c057;
+        }
+        
+        .order-items {
+            margin-bottom: 1rem;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .order-total {
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .view-order {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .view-order:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-sidebar {
+                text-align: center;
+            }
+            
+            .profile-nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+            
+            .profile-nav a {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <h1>Sarah's Short Cakes</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="order.html">Order</a></li>
+                    <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li class="profile-icon">
+                        <a href="profile.html" class="active">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <script src="js/header-footer.js"></script>
+
+    <main class="profile-page">
+        <div class="profile-header">
+            <h1 class="profile-title">My Profile</h1>
+        </div>
+        
+        <div class="profile-container">
+            <div class="profile-sidebar">
+                <img src="images/default-avatar.jpg" alt="Profile Picture" class="profile-avatar" id="profile-avatar">
+                <h2 class="profile-name" id="profile-name">Sarah Johnson</h2>
+                <p class="profile-email" id="profile-email">sarah.johnson@example.com</p>
+                
+                <ul class="profile-nav">
+                    <li><a href="#account" class="active"><i class="fas fa-user"></i> Account</a></li>
+                    <li><a href="#orders"><i class="fas fa-clipboard-list"></i> My Orders</a></li>
+                    <li><a href="#addresses"><i class="fas fa-map-marker-alt"></i> Addresses</a></li>
+                    <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+            
+            <div class="profile-content">
+                <div id="account-section">
+                    <h2 class="section-title">Account Information</h2>
+                    
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <span class="info-label">Full Name</span>
+                            <p class="info-value" id="profile-fullname">Sarah Johnson</p>
+                            <button class="edit-btn" data-field="name"><i class="fas fa-pencil-alt"></i> Edit</button>
+                        </div>
+                        
+                        <div class="info-card">
+                            <span class="info-label">Email</span>
+                            <p class="info-value" id="profile-email-value">sarah.johnson@example.com</p>
+                            <button class="edit-btn" data-field="email"><i class="fas fa-pencil-alt"></i> Edit</button>
+                        </div>
+                        
+                        <div class="info-card">
+                            <span class="info-label">Phone</span>
+                            <p class="info-value" id="profile-phone">(555) 123-4567</p>
+                            <button class="edit-btn" data-field="phone"><i class="fas fa-pencil-alt"></i> Edit</button>
+                        </div>
+                        
+                        <div class="info-card">
+                            <span class="info-label">Member Since</span>
+                            <p class="info-value" id="profile-joined">June 2022</p>
+                        </div>
+                    </div>
+                    
+                    <h2 class="section-title">Password</h2>
+                    <div class="info-card">
+                        <span class="info-label">Password</span>
+                        <p class="info-value">••••••••</p>
+                        <button class="edit-btn" id="change-password-btn"><i class="fas fa-pencil-alt"></i> Change Password</button>
+                    </div>
+                </div>
+                
+                <div id="orders-section" style="display: none;">
+                    <h2 class="section-title">Recent Orders</h2>
+                    
+                    <div class="orders-list" id="orders-list">
+                        <div class="order-card">
+                            <div class="order-header">
+                                <span class="order-id">Order #12345</span>
+                                <span class="order-date">June 15, 2023</span>
+                                <span class="order-status status-delivered">Delivered</span>
+                            </div>
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <span>Chocolate Cupcake (x2)</span>
+                                    <span>$7.98</span>
+                                </div>
+                                <div class="order-item">
+                                    <span>Vanilla Cupcake (x1)</span>
+                                    <span>$3.99</span>
+                                </div>
+                            </div>
+                            <div class="order-total">Total: $11.97</div>
+                            <a href="order.html?id=12345" class="view-order">View Order Details</a>
+                        </div>
+                        
+                        <div class="order-card">
+                            <div class="order-header">
+                                <span class="order-id">Order #12344</span>
+                                <span class="order-date">June 10, 2023</span>
+                                <span class="order-status status-shipped">Shipped</span>
+                            </div>
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <span>Custom Birthday Cake</span>
+                                    <span>$45.00</span>
+                                </div>
+                            </div>
+                            <div class="order-total">Total: $45.00</div>
+                            <a href="order.html?id=12344" class="view-order">View Order Details</a>
+                        </div>
+                    </div>
+                    
+                    <a href="order.html" class="view-order">View All Orders</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <h3>Sarah's Short Cakes</h3>
+            </div>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="menu.html">Menu</a>
+                <a href="order.html">Order</a>
+                <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Sarah's Short Cakes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Edit Information</h2>
+            <form id="edit-form">
+                <div class="form-group">
+                    <label for="edit-value">New Value</label>
+                    <input type="text" id="edit-value" name="edit-value" required>
+                    <input type="hidden" id="edit-field" name="edit-field">
+                </div>
+                <button type="submit" class="checkout-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize cart count
+            updateCartCount();
+
+            // Profile navigation
+            const navLinks = document.querySelectorAll('.profile-nav a');
+            const sections = {
+                'account': document.getElementById('account-section'),
+                'orders': document.getElementById('orders-section'),
+                'addresses': document.getElementById('addresses-section'),
+                'settings': document.getElementById('settings-section')
+            };
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('href').substring(1);
+
+                    // Update active nav item
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Show the corresponding section
+                    Object.values(sections).forEach(section => {
+                        if (section) section.style.display = 'none';
+                    });
+
+                    if (sections[target]) {
+                        sections[target].style.display = 'block';
+                    }
+                });
+            });
+
+            // Edit buttons
+            const editButtons = document.querySelectorAll('.edit-btn');
+            const editModal = document.getElementById('edit-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const editField = document.getElementById('edit-field');
+            const editValue = document.getElementById('edit-value');
+            const editForm = document.getElementById('edit-form');
+
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const field = this.getAttribute('data-field');
+                    const currentValue = document.getElementById(`profile-${field === 'name' ? 'fullname' : field + '-value'}`).textContent;
+
+                    // Set up modal
+                    modalTitle.textContent = `Edit ${field.charAt(0).toUpperCase() + field.slice(1)}`;
+                    editField.value = field;
+                    editValue.value = currentValue;
+
+                    // Special handling for password
+                    if (this.id === 'change-password-btn') {
+                        modalTitle.textContent = 'Change Password';
+                        editField.value = 'password';
+                        editValue.type = 'password';
+                        editValue.placeholder = 'Enter new password';
+                    } else {
+                        editValue.type = 'text';
+                    }
+
+                    // Show modal
+                    editModal.style.display = 'block';
+                });
+            });
+
+            // Close modal
+            document.querySelector('.close').addEventListener('click', function() {
+                editModal.style.display = 'none';
+            });
+
+            // Handle form submission
+            editForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const field = editField.value;
+                const value = editValue.value;
+
+                try {
+                    const user = JSON.parse(localStorage.getItem('user'));
+                    if (!user || !user.email) {
+                        alert('User not logged in');
+                        return;
+                    }
+
+                    // Prepare data to update
+                    const updateData = {};
+                    if (field === 'name') {
+                        // Split full name into first and last name
+                        const names = value.trim().split(' ');
+                        updateData.firstName = names[0];
+                        updateData.lastName = names.length > 1 ? names.slice(1).join(' ') : '';
+                        updateData.email = user.email;
+                    } else if (field === 'password') {
+                        // Handle password change separately if backend supports
+                        alert('Password change feature not implemented yet.');
+                        editModal.style.display = 'none';
+                        return;
+                    } else {
+                        updateData[field] = value;
+                        updateData.email = user.email;
+                    }
+
+                    const response = await fetch('/api/customer', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updateData)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Failed to update profile');
+                    }
+
+                    const data = await response.json();
+
+                    // Update UI with new data
+                    if (field === 'name') {
+                        document.getElementById('profile-fullname').textContent = value;
+                        document.getElementById('profile-name').textContent = value;
+                    } else {
+                        const displayElement = document.getElementById(`profile-${field}-value`);
+                        if (displayElement) {
+                            displayElement.textContent = value;
+                        }
+                    }
+
+                    // Update localStorage user data
+                    localStorage.setItem('user', JSON.stringify(data.data));
+
+                    alert('Profile updated successfully!');
+                } catch (error) {
+                    alert('Error updating profile: ' + error.message);
+                }
+
+                // Close modal
+                editModal.style.display = 'none';
+            });
+
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                window.location.href = 'index.html';
+            });
+
+            // Load user data from backend
+            async function loadUserData() {
+                try {
+                    const user = JSON.parse(localStorage.getItem('user'));
+                    if (!user || !user.email) {
+                        alert('User not logged in');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    // Fetch customer data by email (no direct API, so fetch all and filter)
+                    const response = await fetch('/api/customer');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch customer data');
+                    }
+                    const data = await response.json();
+                    const customers = data.data;
+                    const currentUser = customers.find(c => c.email === user.email);
+
+                    if (!currentUser) {
+                        alert('User data not found');
+                        return;
+                    }
+
+                    // Update UI with customer data
+                    const fullName = currentUser.firstName + (currentUser.lastName ? ' ' + currentUser.lastName : '');
+                    document.getElementById('profile-name').textContent = fullName;
+                    document.getElementById('profile-fullname').textContent = fullName;
+                    document.getElementById('profile-email').textContent = currentUser.email;
+                    document.getElementById('profile-email-value').textContent = currentUser.email;
+                    document.getElementById('profile-phone').textContent = currentUser.phone || 'Not provided';
+                    document.getElementById('profile-joined').textContent = new Date(currentUser.createdAt).toLocaleDateString() || 'N/A';
+                    // Avatar remains default for now
+
+                    // Update localStorage user data
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                } catch (error) {
+                    alert('Error loading user data: ' + error.message);
+                }
+            }
+
+            loadUserData();
+        });
+
+        function updateCartCount() {
+            const cartCountElement = document.getElementById('cart-count');
+            if (cartCountElement) {
+                // In a real app, you would get this from your cart manager
+                const totalItems = 0; // Replace with actual count
+                cartCountElement.textContent = totalItems;
+            }
+        }
+    </script>
+</body>
+</html>

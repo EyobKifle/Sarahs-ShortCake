@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const flavorController = require('../controllers/flavorcontroller');
-const authController = require('../controllers/authcontroller');
+const { protect } = require('../middleware/auth');
 
 // All flavor routes require admin authentication
-router.use(authController.protect);
+router.use(protect);
 
 router.get('/', flavorController.getAllFlavors);
 router.post('/', flavorController.createFlavor);

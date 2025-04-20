@@ -1,228 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sarah's Short Cakes - Custom cupcakes made with love">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Sarah's Short Cakes - Custom cupcakes made with love" />
     <title>Sarah's Short Cakes - Home</title>
-    <meta name="theme-color" content="#ff85a2">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <header>
-        <div class="header-container">
-            <div class="logo-container">
-                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
-                <h1>Sarah's Short Cakes</h1>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="menu.html">Menu</a></li>
-                    <li><a href="order.html">Order</a></li>
-                    <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                    <li class="profile-icon">
-                        <a href="#" onclick="showAuthModal()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-    <section class="hero">
-      <div class="hero-carousel">
-        <img src="images/front/Soft and Fluffy Vanilla Cupcakes.jpg" alt="Vanilla Cupcakes" class="carousel-image active">
-        <img src="images/front/Moist Chocolate Cupcakes - Moist, Fudgy, and Delicious.jpg" alt="Chocolate Cupcakes" class="carousel-image">
-        <img src="images/front/Black Forest Cupcakes.jpg" alt="Black Forest Cupcakes" class="carousel-image">
-        <img src="images/front/White Chocolate Blueberry Cupcakes_ Sweet and Tangy Delight!.jpg" alt="Blueberry Cupcakes" class="carousel-image">
-        <img src="images/front/Cookies and Cream Cupcakes.jpg" alt="Cookies and Cream Cupcakes" class="carousel-image">
-      </div>
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <div class="hero-text">
-          <h1>Sarah's Short Cakes</h1>
-          <p class="subtitle">Handcrafted cupcakes for every occasion</p>
-          <a href="menu.html" class="cta-button">Order Now</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="features">
-      <div class="section-title">
-        <h2>Why Choose Us</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-heart"></i>
-          </div>
-          <h3>Made with Love</h3>
-          <p>Each cupcake is handcrafted with care using family recipes passed down for generations.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-leaf"></i>
-          </div>
-          <h3>Fresh Ingredients</h3>
-          <p>We use only the finest, locally-sourced ingredients for the best flavor.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-palette"></i>
-          </div>
-          <h3>Custom Designs</h3>
-          <p>Create your perfect cupcake with our wide variety of flavors and decorations.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="testimonials">
-      <div class="section-title">
-        <h2>What Our Customers Say</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="testimonial-carousel">
-        <div class="testimonial-item">
-          <div class="rating">★★★★★</div>
-          <p>"These cupcakes are absolutely divine! The perfect balance of sweetness and flavor."</p>
-          <div class="customer">- Emily R.</div>
-        </div>
-        <div class="testimonial-item">
-          <div class="rating">★★★★★</div>
-          <p>"I ordered for my daughter's birthday and everyone raved about how delicious they were!"</p>
-          <div class="customer">- Michael T.</div>
-        </div>
-        <div class="testimonial-item">
-          <div class="rating">★★★★★</div>
-          <p>"The custom designs were exactly what I wanted for my wedding. Sarah's attention to detail is amazing!"</p>
-          <div class="customer">- Jessica L.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="gallery">
-      <div class="section-title">
-        <h2>Our Delicious Creations</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="gallery-grid">
-        <div class="gallery-item">
-          <img src="images/front/Soft and Fluffy Vanilla Cupcakes.jpg" alt="Vanilla Cupcake">
-        </div>
-        <div class="gallery-item">
-          <img src="images/front/Moist Chocolate Cupcakes - Moist, Fudgy, and Delicious.jpg" alt="Chocolate Cupcake">
-        </div>
-        <div class="gallery-item">
-          <img src="images/front/19 Amazing Strawberry Cake Recipes.jpg" alt="Strawberry Cupcake">
-        </div>
-        <div class="gallery-item">
-          <img src="images/front/Black Forest Cupcakes.jpg" alt="Black Forest Cupcake">
-        </div>
-      </div>
-    </section>
-
-    <section class="custom-order">
-      <div class="section-title">
-        <h2>Create Your Perfect Cupcake</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="custom-order-container">
-        <div class="custom-order-image">
-          <img src="images/front/10 Irresistible Cupcake Recipes to Satisfy Your Sweet Tooth - Our Garden Of Life.jpg" alt="Custom Cupcake">
-        </div>
-        <div class="custom-order-content">
-          <h3>Design Your Dream Cupcake</h3>
-          <p>Choose from our wide variety of flavors, icings, and toppings to create a cupcake that's uniquely yours.</p>
-          <div class="custom-order-options">
-            <div class="option">
-              <span class="option-icon"><i class="fas fa-cookie"></i></span>
-              <span class="option-text">Flavors</span>
-            </div>
-            <div class="option">
-              <span class="option-icon"><i class="fas fa-ice-cream"></i></span>
-              <span class="option-text">Icings</span>
-            </div>
-            <div class="option">
-              <span class="option-icon"><i class="fas fa-candy-cane"></i></span>
-              <span class="option-text">Toppings</span>
-            </div>
-          </div>
-          <a href="menu.html" class="custom-order-button">Start Designing</a>
-        </div>
-      </div>
-    </section>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
-                <h3>Sarah's Short Cakes</h3>
-            </div>
-            <div class="footer-links">
-                <a href="index.html">Home</a>
-                <a href="menu.html">Menu</a>
-                <a href="cart.html">Cart</a>
-                <a href="contact.html">Contact</a>
-            </div>
-            <div class="footer-social">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2023 Sarah's Short Cakes. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="modal" style="display:none">
-        <div class="modal-content">
-            <span class="close" onclick="hideAuthModal()">&times;</span>
-            <div class="auth-tabs">
-                <div class="auth-tab active" onclick="showAuthForm('login')">Login</div>
-                <div class="auth-tab" onclick="showAuthForm('signup')">Sign Up</div>
-            </div>
-
-            <form id="login-form" class="auth-form active" onsubmit="handleAuth(event, 'login')">
-                <div class="form-group">
-                    <label for="login-email">Email</label>
-                    <input type="email" id="login-email" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" required>
-                </div>
-                <button type="submit" class="auth-submit">Login</button>
-            </form>
-
-            <form id="signup-form" class="auth-form" onsubmit="handleAuth(event, 'signup')">
-                <div class="form-group">
-                    <label for="signup-name">Full Name</label>
-                    <input type="text" id="signup-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="signup-email">Email</label>
-                    <input type="email" id="signup-email" required>
-                </div>
-                <div class="form-group">
-                    <label for="signup-password">Password</label>
-                    <input type="password" id="signup-password" required>
-                </div>
-                <button type="submit" class="auth-submit">Sign Up</button>
-            </form>
-        </div>
-    </div>
-
+    <meta name="theme-color" content="#ff85a2" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
     <style>
         :root {
             --primary: #FF6B8B;
@@ -320,25 +107,17 @@
             fill: var(--primary);
         }
         
-        /* Hero Section */
+        /* Simplified Hero Section with Clean Carousel */
         .hero {
             position: relative;
-            padding: 6rem 2rem;
-            overflow: hidden;
+            height: 80vh;
+            max-height: 800px;
             min-height: 500px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-        }
-        
-        .hero-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
         }
         
         .hero-carousel {
@@ -350,6 +129,12 @@
             z-index: 0;
         }
 
+        .carousel-images {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
         .carousel-image {
             position: absolute;
             top: 0;
@@ -359,10 +144,12 @@
             object-fit: cover;
             opacity: 0;
             transition: opacity 1s ease-in-out;
+            z-index: 1;
         }
 
         .carousel-image.active {
             opacity: 1;
+            z-index: 2;
         }
         
         .hero-overlay {
@@ -371,7 +158,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.3);
             z-index: 1;
         }
         
@@ -380,21 +167,20 @@
             z-index: 2;
             max-width: 800px;
             margin: 0 auto;
-        }
-        
-        .hero-text {
-            color: white;
+            padding: 2rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
         .hero-text h1 {
             font-size: 3.5rem;
             margin-bottom: 1rem;
+            color: white;
         }
         
         .hero-text .subtitle {
             font-size: 1.8rem;
             margin-bottom: 2rem;
+            color: white;
             opacity: 0.9;
         }
         
@@ -419,7 +205,7 @@
 
         @media (max-width: 768px) {
             .hero {
-                padding: 4rem 1rem;
+                height: 60vh;
                 min-height: 400px;
             }
             
@@ -840,9 +626,14 @@
         
         /* Responsive Styles */
         @media (max-width: 768px) {
-            .hero-container {
-                grid-template-columns: 1fr;
-                text-align: center;
+            .header-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                gap: 1rem;
             }
             
             .hero-text h1 {
@@ -853,84 +644,275 @@
                 font-size: 1.2rem;
             }
             
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .custom-order-container {
                 grid-template-columns: 1fr;
             }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .footer-links {
-                align-items: center;
-            }
-            
-            .footer-social {
-                justify-content: center;
-            }
         }
     </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <h1>Sarah's Short Cakes</h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="menu.html"><i class="fas fa-utensils"></i> Menu</a></li>
+                    <li><a href="order.html"><i class="fas fa-shopping-cart"></i> Order</a></li>
+                    <li><a href="cart.html"><i class="fas fa-shopping-basket"></i> Cart (<span id="cart-count">0</span>)</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                    <li>
+                        <a href="login.html" class="login-signup-button">Login / Sign Up</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <script src="js/cart.js"></script>
+    <main>
+    <section class="hero">
+      <div class="hero-carousel" id="hero-carousel">
+        <div class="carousel-images" role="list" aria-label="Cupcake image carousel">
+          <img src="images/front/Soft and Fluffy Vanilla Cupcakes.jpg" alt="Vanilla Cupcakes" class="carousel-image active" loading="lazy" role="listitem" aria-hidden="false">
+          <img src="images/front/Moist Chocolate Cupcakes - Moist, Fudgy, and Delicious.jpg" alt="Chocolate Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
+          <img src="images/front/Black Forest Cupcakes.jpg" alt="Black Forest Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
+          <img src="images/front/White Chocolate Blueberry Cupcakes_ Sweet and Tangy Delight!.jpg" alt="Blueberry Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
+          <img src="images/front/Cookies and Cream Cupcakes.jpg" alt="Cookies and Cream Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
+        </div>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Sarah's Short Cakes</h1>
+          <p class="subtitle">Handcrafted cupcakes for every occasion</p>
+          <a href="menu.html" class="cta-button">Order Now</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="section-title">
+        <h2>Why Choose Us</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          <h3>Made with Love</h3>
+          <p>Each cupcake is handcrafted with care using family recipes passed down for generations.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-leaf"></i>
+          </div>
+          <h3>Fresh Ingredients</h3>
+          <p>We use only the finest, locally-sourced ingredients for the best flavor.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-palette"></i>
+          </div>
+          <h3>Custom Designs</h3>
+          <p>Create your perfect cupcake with our wide variety of flavors and decorations.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials">
+      <div class="section-title">
+        <h2>What Our Customers Say</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="testimonial-carousel">
+        <div class="testimonial-item">
+          <div class="rating">★★★★★</div>
+          <p>"These cupcakes are absolutely divine! The perfect balance of sweetness and flavor."</p>
+          <div class="customer">- Emily R.</div>
+        </div>
+        <div class="testimonial-item">
+          <div class="rating">★★★★★</div>
+          <p>"I ordered for my daughter's birthday and everyone raved about how delicious they were!"</p>
+          <div class="customer">- Michael T.</div>
+        </div>
+        <div class="testimonial-item">
+          <div class="rating">★★★★★</div>
+          <p>"The custom designs were exactly what I wanted for my wedding. Sarah's attention to detail is amazing!"</p>
+          <div class="customer">- Jessica L.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery">
+      <div class="section-title">
+        <h2>Our Delicious Creations</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="images/front/Soft and Fluffy Vanilla Cupcakes.jpg" alt="Vanilla Cupcake">
+        </div>
+        <div class="gallery-item">
+          <img src="images/front/Moist Chocolate Cupcakes - Moist, Fudgy, and Delicious.jpg" alt="Chocolate Cupcake">
+        </div>
+        <div class="gallery-item">
+          <img src="images/front/19 Amazing Strawberry Cake Recipes.jpg" alt="Strawberry Cupcake">
+        </div>
+        <div class="gallery-item">
+          <img src="images/front/Black Forest Cupcakes.jpg" alt="Black Forest Cupcake">
+        </div>
+      </div>
+    </section>
+
+    <section class="custom-order">
+      <div class="section-title">
+        <h2>Create Your Perfect Cupcake</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="custom-order-container">
+        <div class="custom-order-image">
+          <img src="images/front/10 Irresistible Cupcake Recipes to Satisfy Your Sweet Tooth - Our Garden Of Life.jpg" alt="Custom Cupcake">
+        </div>
+        <div class="custom-order-content">
+          <h3>Design Your Dream Cupcake</h3>
+          <p>Choose from our wide variety of flavors, icings, and toppings to create a cupcake that's uniquely yours.</p>
+          <div class="custom-order-options">
+            <div class="option">
+              <span class="option-icon"><i class="fas fa-cookie"></i></span>
+              <span class="option-text">Flavors</span>
+            </div>
+            <div class="option">
+              <span class="option-icon"><i class="fas fa-ice-cream"></i></span>
+              <span class="option-text">Icings</span>
+            </div>
+            <div class="option">
+              <span class="option-icon"><i class="fas fa-candy-cane"></i></span>
+              <span class="option-text">Toppings</span>
+            </div>
+          </div>
+          <a href="menu.html" class="custom-order-button">Start Designing</a>
+        </div>
+      </div>
+    </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <h3>Sarah's Short Cakes</h3>
+            </div>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="menu.html">Menu</a>
+                <a href="cart.html">Cart</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Sarah's Short Cakes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal" style="display:none">
+        <div class="modal-content">
+            <span class="close" onclick="hideAuthModal()">&times;</span>
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="showAuthForm('login')">Login</div>
+                <div class="auth-tab" onclick="showAuthForm('signup')">Sign Up</div>
+            </div>
+
+            <form id="login-form" class="auth-form active" onsubmit="handleAuth(event, 'login')">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="auth-submit">Login</button>
+            </form>
+
+            <form id="signup-form" class="auth-form" onsubmit="handleAuth(event, 'signup')">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required>
+                </div>
+                <button type="submit" class="auth-submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize cart using CartManager
-            CartManager.init();
+            // Initialize cart count
+            updateCartCount();
             
-            // Hero carousel functionality
+            // Simplified Carousel Functionality
             const carouselImages = document.querySelectorAll('.carousel-image');
             let currentImageIndex = 0;
+            const intervalTime = 5000; // 5 seconds per slide
             
-            function rotateCarouselImages() {
-                carouselImages[currentImageIndex].classList.remove('active');
-                currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
-                carouselImages[currentImageIndex].classList.add('active');
+            // Initialize the carousel
+            function initCarousel() {
+                setActiveSlide(0);
+                startCarousel();
             }
             
-            // Rotate carousel images every 3 seconds
-            setInterval(rotateCarouselImages, 3000);
-            
-            // Testimonial carousel auto-scroll
-            const testimonialCarousel = document.querySelector('.testimonial-carousel');
-            let scrollPosition = 0;
-            const scrollStep = 370; // Width of testimonial item + gap
-            
-            function scrollTestimonials() {
-                scrollPosition += scrollStep;
-                if (scrollPosition >= testimonialCarousel.scrollWidth - testimonialCarousel.clientWidth) {
-                    scrollPosition = 0;
-                }
-                testimonialCarousel.scrollTo({
-                    left: scrollPosition,
-                    behavior: 'smooth'
+            // Set active slide
+            function setActiveSlide(index) {
+                currentImageIndex = index;
+                
+                carouselImages.forEach((img, i) => {
+                    img.classList.remove('active');
+                    img.setAttribute('aria-hidden', 'true');
                 });
+                
+                carouselImages[currentImageIndex].classList.add('active');
+                carouselImages[currentImageIndex].setAttribute('aria-hidden', 'false');
             }
             
-            // Auto-scroll testimonials every 5 seconds
-            setInterval(scrollTestimonials, 5000);
+            // Go to next slide
+            function nextSlide() {
+                let nextIndex = (currentImageIndex + 1) % carouselImages.length;
+                setActiveSlide(nextIndex);
+            }
             
-            // Custom order animation
-            const options = document.querySelectorAll('.option');
-            options.forEach((option, index) => {
-                option.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.2}s`;
-                option.style.opacity = '0';
-            });
+            // Start auto-rotation
+            function startCarousel() {
+                setInterval(nextSlide, intervalTime);
+            }
+            
+            // Initialize carousel on page load
+            initCarousel();
         });
         
+        // Update cart count
         function updateCartCount() {
-            const cartCountElement = document.getElementById('cart-count');
-            if (cartCountElement) {
-                const totalItems = CartManager.cart.reduce((total, item) => total + (item.quantity || 1), 0);
-                cartCountElement.textContent = totalItems;
-            }
+            // In a real implementation, this would get the count from your cart system
+            document.getElementById('cart-count').textContent = '0';
         }
         
-        // Auth modal functionality
+        // Auth modal functions
         function showAuthModal() {
             document.getElementById('auth-modal').style.display = 'block';
         }
@@ -939,74 +921,23 @@
             document.getElementById('auth-modal').style.display = 'none';
         }
         
-        function showAuthForm(formType) {
-            document.querySelectorAll('.auth-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.auth-form').forEach(form => {
-                form.classList.remove('active');
-            });
+        function showAuthForm(form) {
+            document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
             
-            document.querySelector(`.auth-tab[onclick="showAuthForm('${formType}')"]`).classList.add('active');
-            document.getElementById(`${formType}-form`).classList.add('active');
-        }
-
-        async function handleAuth(event, action) {
-            event.preventDefault();
-            
-            if (action === 'login') {
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                
-                try {
-                    const response = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email,
-                            password
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    if (data.success) {
-                        localStorage.setItem('token', data.token);
-                        hideAuthModal();
-                        if (data.userType === 'admin') {
-                            window.location.href = '/Admin/dashboard.html';
-                        } else {
-                            window.location.reload();
-                        }
-                    } else {
-                        alert(data.message || 'Login failed');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('An error occurred during login');
-                }
+            if (form === 'login') {
+                document.querySelector('.auth-tab[onclick="showAuthForm(\'login\')"]').classList.add('active');
+                document.getElementById('login-form').classList.add('active');
             } else {
-                // Signup logic would go here
-                alert('Signup functionality will be implemented next');
+                document.querySelector('.auth-tab[onclick="showAuthForm(\'signup\')"]').classList.add('active');
+                document.getElementById('signup-form').classList.add('active');
             }
         }
         
-        // Add keyframe animation for custom order options
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
+        function handleAuth(event, type) {
+            event.preventDefault();
+            alert(type.charAt(0).toUpperCase() + type.slice(1) + ' functionality is not implemented yet.');
+        }
     </script>
 </body>
 </html>

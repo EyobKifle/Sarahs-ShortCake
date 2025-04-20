@@ -26,8 +26,14 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create customer
+        // Split name into firstName and lastName
+        const nameParts = name.trim().split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
         const customer = await Customer.create({
-            name,
+            firstName,
+            lastName,
             email,
             password: hashedPassword,
             phone,
@@ -46,7 +52,8 @@ exports.register = async (req, res) => {
 
         res.status(201).json({
             _id: customer._id,
-            name: customer.name,
+            firstName: customer.firstName,
+            lastName: customer.lastName,
             email: customer.email,
             phone: customer.phone,
             address: customer.address,
@@ -86,11 +93,13 @@ exports.login = async (req, res) => {
 
         res.json({
             _id: customer._id,
-            name: customer.name,
+            firstName: customer.firstName,
+            lastName: customer.lastName,
             email: customer.email,
             phone: customer.phone,
             address: customer.address,
-            token
+            token,
+            role: 'customer'  // Added role for frontend redirection
         });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
@@ -128,7 +137,8 @@ exports.adminLogin = async (req, res) => {
             _id: admin._id,
             name: admin.name,
             email: admin.email,
-            token
+            token,
+            role: 'admin'  // Added role for frontend redirection
         });
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
@@ -174,38 +184,6 @@ exports.getProfile = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error fetching admin profile'
-        });
-    }
-};
-
-// Middleware to protect routes
-exports.protect = async (req, res, next) => {
-    let token;
-    
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        token = req.headers.authorization.split(' ')[1];
-    }
-    
-    if (!token) {
-        return res.status(401).json({
-            success: false,
-            message: 'Not authorized to access this route'
-        });
-    }
-    
-    try {
-        // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        // Get admin from the token
-        req.admin = await Admin.findById(decoded.id).select('-password');
-        
-        next();
-    } catch (error) {
-        console.error('Error verifying token:', error);
-        res.status(401).json({
-            success: false,
-            message: 'Not authorized to access this route'
         });
     }
 };
@@ -286,9 +264,17 @@ exports.getAdminById = async (req, res) => {
 
 exports.updateAdmin = async (req, res) => {
     try {
+        const updateData = { ...req.body };
+
+        // If password is being updated, hash it
+        if (updateData.password) {
+            const salt = await bcrypt.genSalt(10);
+            updateData.password = await bcrypt.hash(updateData.password, salt);
+        }
+
         const admin = await Admin.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            updateData,
             { new: true, runValidators: true }
         ).select('-password');
         

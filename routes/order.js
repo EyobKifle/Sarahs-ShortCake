@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/ordercontroller');
-const authController = require('../controllers/authcontroller');
+const { protect } = require('../middleware/auth');
 const paymentController = require('../controllers/paymentcontroller');
 
 // Add these routes after the existing ones
@@ -12,7 +12,7 @@ router.post('/:id/pay', paymentController.processPayment);
 router.post('/', orderController.createOrder);
 
 // Protected routes (require admin authentication)
-router.use(authController.protect);
+router.use(protect);
 
 router.get('/', orderController.getAllOrders);
 router.get('/:id', orderController.getOrderById);

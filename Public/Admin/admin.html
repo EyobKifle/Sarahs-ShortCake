@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Sarah's Short Cakes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B8B;
+            --primary-light: #FF8FA3;
+            --primary-dark: #E83E8C;
+            --secondary: #FFD166;
+            --accent: #06D6A0;
+            --dark: #073B4C;
+            --light: #F8F9FA;
+            --white: #FFFFFF;
+            --medium-gray: #e9ecef;
+            --border-color: #dee2e6;
+            --success: #06D6A0;
+            --warning: #FFD166;
+            --error: #dc3545;
+            --info: #17a2b8;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .admin-header {
+            background: var(--gradient);
+            color: white;
+            padding: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar {
+            background-color: var(--white);
+            min-height: calc(100vh - 56px);
+            box-shadow: var(--shadow);
+            padding: 1rem 0;
+            position: sticky;
+            top: 56px;
+        }
+
+        .sidebar .nav-link {
+            color: var(--dark);
+            border-radius: 0.25rem;
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(255, 107, 139, 0.1);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .card {
+            border: none;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 107, 139, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            font-weight: 500;
+            padding: 0.5em 0.75em;
+            border-radius: 0.25rem;
+        }
+
+        .badge-pending {
+            background-color: rgba(255, 209, 102, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-processing {
+            background-color: rgba(255, 107, 139, 0.1);
+            color: var(--primary);
+        }
+
+        .badge-completed {
+            background-color: rgba(6, 214, 160, 0.1);
+            color: var(--success);
+        }
+
+        .badge-cancelled {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--error);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding-left: 40px;
+            border-radius: 0.25rem;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .table-responsive {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background-color: var(--medium-gray);
+            border-bottom: none;
+            padding: 1rem;
+            font-weight: 600;
+        }
+
+        .table td {
+            padding: 0.75rem 1rem;
+            vertical-align: middle;
+        }
+
+        .table tr:hover {
+            background-color: rgba(255, 107, 139, 0.05);
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .customer-name {
+            font-weight: 500;
+        }
+
+        .order-date {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            border-radius: 0.25rem;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .modal-content {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+        }
+
+        .item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-total {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-icon {
+            position: absolute;
+            left: -1.5rem;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--border-color);
+            z-index: 1;
+        }
+
+        .timeline-item.completed .timeline-icon {
+            background-color: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .timeline-item.active .timeline-icon {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-content {
+            padding-left: 1rem;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 139, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 107, 139, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 139, 0);
+            }
+        }
+
+        /* Notification Toast */
+        .notification-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification-toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification-toast.success {
+            background-color: var(--success);
+        }
+        
+        .notification-toast.error {
+            background-color: var(--error);
+        }
+
+        /* Focus styles for accessibility */
+        a:focus, button:focus, input:focus, select:focus, textarea:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Skip to content link for screen readers */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+                position: static;
+            }
+            
+            .card-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .table-responsive {
+                margin-bottom: 1rem;
+            }
+
+            .table th, .table td {
+                padding: 0.5rem;
+            }
+
+            .admin-header .navbar-brand {
+                font-size: 1rem;
+            }
+
+            .btn-toolbar {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 1rem;
+            }
+
+            .sidebar .nav-link {
+                padding: 0.5rem 1rem;
+                margin: 0.25rem 0.5rem;
+            }
+
+            .modal-dialog {
+                margin: 0.5rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .modal-content, .modal-content * {
+                visibility: visible;
+            }
+            .modal {
+                position: absolute;
+                left: 0;
+                top: 0;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
+            .modal-footer {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to content link -->
+    <a href="#mainContent" class="skip-link">Skip to main content</a>
+
+    <!-- Admin Header -->
+    <header class="admin-header navbar navbar-dark sticky-top flex-md-nowrap p-0">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 d-flex align-items-center" href="#">
+            <img src="/Public/images/logo.png" alt="Sarah's Short Cakes Logo" height="30" class="me-2">
+            Admin Dashboard
+        </a>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap d-flex align-items-center">
+                <span class="px-3 text-white">Welcome, Admin</span>
+                <a class="nav-link px-3" href="#" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt me-1" aria-hidden="true"></i> Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar" aria-label="Admin navigation">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column" role="menu" aria-label="Admin Navigation">
+                        <li class="nav-item" role="none">
+                            <a class="nav-link active" href="admin.html" role="menuitem" aria-current="page" data-section="dashboard" tabindex="0">
+                                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link" href="admin-orders.html" role="menuitem" tabindex="-1" data-section="orders">
+                                <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                                Orders
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link" href="customers.html" role="menuitem" tabindex="-1" data-section="customers">
+                                <i class="fas fa-users" aria-hidden="true"></i>
+                                Customers
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link" href="admin-inventory.html" role="menuitem" tabindex="-1" data-section="inventory">
+                                <i class="fas fa-boxes" aria-hidden="true"></i>
+                                Inventory
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link" href="admin-reports.html" role="menuitem" tabindex="-1" data-section="reports">
+                                <i class="fas fa-chart-line" aria-hidden="true"></i>
+                                Reports
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link" href="admin-settings.html" role="menuitem" tabindex="-1" data-section="settings">
+                                <i class="fas fa-cog" aria-hidden="true"></i>
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" id="mainContent">
+                <!-- Dashboard Section -->
+                <section id="dashboardSection">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Dashboard Overview</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <select class="form-select form-select-sm" id="timePeriod" aria-label="Select time period">
+                                    <option value="today">Today</option>
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
+                                    <option value="year">This Year</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="card-icon" aria-hidden="true">
+                                        <i class="fas fa-shopping-bag"></i>
+                                    </div>
+                                    <h3 class="card-title h5">Total Orders</h3>
+                                    <p class="card-text display-6" id="totalOrders">0</p>
+                                    <p class="text-success small" id="ordersChange">
+                                        <i class="fas fa-arrow-up"></i> 0% from yesterday
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="card-icon" aria-hidden="true">
+                                        <i class="fas fa-dollar-sign"></i>
+                                    </div>
+                                    <h3 class="card-title h5">Total Revenue</h3>
+                                    <p class="card-text display-6" id="totalRevenue">$0.00</p>
+                                    <p class="text-success small" id="revenueChange">
+                                        <i class="fas fa-arrow-up"></i> 0% from yesterday
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="card-icon" aria-hidden="true">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <h3 class="card-title h5">New Customers</h3>
+                                    <p class="card-text display-6" id="newCustomers">0</p>
+                                    <p class="text-success small" id="customersChange">
+                                        <i class="fas fa-arrow-up"></i> 0 from yesterday
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="card-icon" aria-hidden="true">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <h3 class="card-title h5">Average Rating</h3>
+                                    <p class="card-text display-6" id="avgRating">0.0</p>
+                                    <p class="text-success small" id="ratingChange">
+                                        <i class="fas fa-arrow-up"></i> 0.0 from last week
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="card-title h5">Sales Overview</h3>
+                                    <div class="chart-container" style="position: relative; height:250px;">
+                                        <canvas id="salesChart" height="250" aria-label="Sales chart" role="img"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="card-title h5">Popular Products</h3>
+                                    <div class="chart-container" style="position: relative; height:250px;">
+                                        <canvas id="productsChart" height="250" aria-label="Popular products chart" role="img"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h2 class="card-title h5 mb-0">Recent Orders</h2>
+                                <a href="#" class="btn btn-sm btn-primary" data-section="orders">
+                                    <i class="fas fa-plus me-1" aria-hidden="true"></i> View All
+                                </a>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="recentOrdersTable" aria-describedby="recentOrdersHeading">
+                                    <caption class="visually-hidden">List of recent orders with order ID, customer name, date, amount, status and actions</caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Order ID</th>
+                                            <th scope="col">Customer</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Amount</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Orders will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Orders Section (hidden by default) -->
+                <section id="ordersSection" class="d-none">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Order Management</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <button class="btn btn-sm btn-outline-secondary">Export</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3 g-3">
+                        <div class="col-md-6">
+                            <div class="search-box">
+                                <label for="orderSearch" class="visually-hidden">Search orders</label>
+                                <input type="text" class="form-control" id="orderSearch" placeholder="Search orders...">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="orderStatusFilter" class="visually-hidden">Filter by status</label>
+                            <select class="form-select" id="orderStatusFilter" aria-label="Filter by order status">
+                                <option value="all">All Statuses</option>
+                                <option value="pending">Pending</option>
+                                <option value="processing">Processing</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="orderDateFilter" class="visually-hidden">Filter by date</label>
+                            <select class="form-select" id="orderDateFilter" aria-label="Filter by order date">
+                                <option value="all">All Dates</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="ordersTable" aria-describedby="ordersHeading">
+                            <caption class="visually-hidden">List of all orders with order ID, customer name, date, items, amount, status and actions</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Order ID</th>
+                                    <th scope="col">Customer</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Items</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Orders will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <nav aria-label="Order pagination" class="mt-3">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="orderModalTitle">Order Details</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="orderModalBody">
+                    <!-- Order details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="AdminManager.printOrder()">
+                        <i class="fas fa-print me-1" aria-hidden="true"></i> Print Receipt
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveOrderBtn">
+                        <i class="fas fa-save me-1" aria-hidden="true"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toastTitle">Notification</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+                <!-- Notification message will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        // Admin Manager - Main controller for the admin dashboard
+        const AdminManager = {
+            // Initialize the admin dashboard
+            init() {
+                this.setupEventListeners();
+                this.loadDashboardData();
+                this.loadRecentOrders();
+                
+                // Show dashboard by default
+                this.showSection('dashboard');
+            },
+            
+            // Set up event listeners
+            setupEventListeners() {
+                // Sidebar navigation
+                document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const section = link.getAttribute('data-section');
+                        this.showSection(section);
+                    });
+                });
+                
+                // Logout button
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.logout();
+                });
+                
+                // Time period filter
+                document.getElementById('timePeriod').addEventListener('change', () => {
+                    this.loadDashboardData();
+                });
+                
+                // Order search
+                document.getElementById('orderSearch').addEventListener('input', (e) => {
+                    this.filterOrders();
+                });
+                
+                // Order status filter
+                document.getElementById('orderStatusFilter').addEventListener('change', () => {
+                    this.filterOrders();
+                });
+                
+                // Order date filter
+                document.getElementById('orderDateFilter').addEventListener('change', () => {
+                    this.filterOrders();
+                });
+                
+                // Save order button
+                document.getElementById('saveOrderBtn').addEventListener('click', () => {
+                    this.saveOrderChanges();
+                });
+            },
+            
+            // Show a specific section
+            showSection(section) {
+                // Hide all sections
+                document.querySelectorAll('#mainContent > section').forEach(sec => {
+                    sec.classList.add('d-none');
+                });
+                
+                // Show the selected section
+                document.getElementById(`${section}Section`).classList.remove('d-none');
+                
+                // Update active nav link
+                document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                document.querySelector(`.sidebar .nav-link[data-section="${section}"]`).classList.add('active');
+                
+                // Load section data if needed
+                switch(section) {
+                    case 'orders':
+                        this.loadAllOrders();
+                        break;
+                }
+            },
+            
+            // Load dashboard data
+            loadDashboardData() {
+                const period = document.getElementById('timePeriod').value;
+                
+                // In a real application, this would be an API call
+                // For now, we'll use the data from localStorage
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const completedOrders = orders.filter(order => order.order.status === 'completed');
+                
+                // Calculate stats
+                const today = new Date().toISOString().split('T')[0];
+                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+                
+                const todayOrders = orders.filter(order => 
+                    new Date(order.order.orderDate).toISOString().split('T')[0] === today
+                ).length;
+                
+                const yesterdayOrders = orders.filter(order => 
+                    new Date(order.order.orderDate).toISOString().split('T')[0] === yesterday
+                ).length;
+                
+                const ordersChange = yesterdayOrders > 0 ? 
+                    ((todayOrders - yesterdayOrders) / yesterdayOrders * 100).toFixed(1) : 100;
+                
+                const todayRevenue = orders.filter(order => 
+                    new Date(order.order.orderDate).toISOString().split('T')[0] === today && 
+                    order.order.status === 'completed'
+                ).reduce((total, order) => total + this.calculateOrderTotal(order.order.items), 0);
+                
+                const yesterdayRevenue = orders.filter(order => 
+                    new Date(order.order.orderDate).toISOString().split('T')[0] === yesterday && 
+                    order.order.status === 'completed'
+                ).reduce((total, order) => total + this.calculateOrderTotal(order.order.items), 0);
+                
+                const revenueChange = yesterdayRevenue > 0 ? 
+                    ((todayRevenue - yesterdayRevenue) / yesterdayRevenue * 100).toFixed(1) : 100;
+                
+                // Update UI
+                document.getElementById('totalOrders').textContent = orders.length;
+                document.getElementById('ordersChange').innerHTML = `
+                    <i class="fas ${todayOrders >= yesterdayOrders ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger'}"></i> 
+                    ${Math.abs(ordersChange)}% from yesterday
+                `;
+                
+                document.getElementById('totalRevenue').textContent = `$${completedOrders
+                    .reduce((total, order) => total + this.calculateOrderTotal(order.order.items), 0)
+                    .toFixed(2)}`;
+                
+                document.getElementById('revenueChange').innerHTML = `
+                    <i class="fas ${todayRevenue >= yesterdayRevenue ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger'}"></i> 
+                    ${Math.abs(revenueChange)}% from yesterday
+                `;
+                
+                document.getElementById('newCustomers').textContent = orders
+                    .filter((order, index, self) => 
+                        index === self.findIndex(o => o.customer.email === order.customer.email)
+                    ).length;
+                
+                document.getElementById('customersChange').innerHTML = `
+                    <i class="fas fa-arrow-up text-success"></i> 
+                    ${orders.length > 0 ? '5' : '0'} from yesterday
+                `;
+                
+                document.getElementById('avgRating').textContent = '4.8';
+                document.getElementById('ratingChange').innerHTML = `
+                    <i class="fas fa-arrow-up text-success"></i> 
+                    0.2 from last week
+                `;
+                
+                // Update charts
+                this.updateCharts(orders);
+            },
+            
+            // Update charts with order data
+            updateCharts(orders) {
+                // Sales Chart
+                const salesCtx = document.getElementById('salesChart').getContext('2d');
+                
+                // Group orders by day for the last 7 days
+                const dates = [];
+                const salesData = [];
+                
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    const dateStr = date.toISOString().split('T')[0];
+                    
+                    dates.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                    
+                    const daySales = orders
+                        .filter(order => order.order.status === 'completed' && 
+                               new Date(order.order.orderDate).toISOString().split('T')[0] === dateStr)
+                        .reduce((total, order) => total + this.calculateOrderTotal(order.order.items), 0);
+                    
+                    salesData.push(daySales);
+                }
+                
+                if (window.salesChart) {
+                    window.salesChart.destroy();
+                }
+                
+                window.salesChart = new Chart(salesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'Daily Sales',
+                            data: salesData,
+                            backgroundColor: 'rgba(255, 107, 139, 0.2)',
+                            borderColor: 'rgba(255, 107, 139, 1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return '$' + context.raw.toFixed(2);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Products Chart
+                const productsCtx = document.getElementById('productsChart').getContext('2d');
+                
+                // Count product occurrences
+                const productCounts = {};
+                orders.forEach(order => {
+                    order.order.items.forEach(item => {
+                        productCounts[item.name] = (productCounts[item.name] || 0) + item.quantity;
+                    });
+                });
+                
+                const sortedProducts = Object.entries(productCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                if (window.productsChart) {
+                    window.productsChart.destroy();
+                }
+                
+                window.productsChart = new Chart(productsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: sortedProducts.map(p => p[0]),
+                        datasets: [{
+                            data: sortedProducts.map(p => p[1]),
+                            backgroundColor: [
+                                'rgba(255, 107, 139, 0.8)',
+                                'rgba(255, 209, 102, 0.8)',
+                                'rgba(6, 214, 160, 0.8)',
+                                'rgba(23, 162, 184, 0.8)',
+                                'rgba(153, 102, 255, 0.8)'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            },
+            
+            // Load recent orders for dashboard
+            loadRecentOrders() {
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]')
+                    .sort((a, b) => new Date(b.order.orderDate) - new Date(a.order.orderDate))
+                    .slice(0, 5);
+                
+                const tbody = document.querySelector('#recentOrdersTable tbody');
+                tbody.innerHTML = '';
+                
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">No recent orders</td></tr>';
+                    return;
+                }
+                
+                orders.forEach(order => {
+                    const orderDate = new Date(order.order.orderDate);
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td class="order-id">#${order.orderId}</td>
+                        <td>${order.customer.firstName} ${order.customer.lastName}</td>
+                        <td>${orderDate.toLocaleDateString()}</td>
+                        <td>$${this.calculateOrderTotal(order.order.items).toFixed(2)}</td>
+                        <td><span class="badge badge-${order.order.status}">${order.order.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary view-order" data-id="${order.orderId}" aria-label="View order ${order.orderId}">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                // Add event listeners to view buttons
+                document.querySelectorAll('.view-order').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.viewOrderDetails(btn.getAttribute('data-id'));
+                    });
+                });
+            },
+            
+            // Load all orders for orders section
+            loadAllOrders() {
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]')
+                    .sort((a, b) => new Date(b.order.orderDate) - new Date(a.order.orderDate));
+                
+                const tbody = document.querySelector('#ordersTable tbody');
+                tbody.innerHTML = '';
+                
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No orders found</td></tr>';
+                    return;
+                }
+                
+                orders.forEach(order => {
+                    const orderDate = new Date(order.order.orderDate);
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td class="order-id">#${order.orderId}</td>
+                        <td>${order.customer.firstName} ${order.customer.lastName}</td>
+                        <td>${orderDate.toLocaleDateString()}</td>
+                        <td>${order.order.items.reduce((total, item) => total + item.quantity, 0)}</td>
+                        <td>$${this.calculateOrderTotal(order.order.items).toFixed(2)}</td>
+                        <td><span class="badge badge-${order.order.status}">${order.order.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary view-order" data-id="${order.orderId}" aria-label="View order ${order.orderId}">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary edit-order" data-id="${order.orderId}" aria-label="Edit order ${order.orderId}">
+                                <i class="fas fa-edit" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.view-order').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.viewOrderDetails(btn.getAttribute('data-id'));
+                    });
+                });
+                
+                document.querySelectorAll('.edit-order').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.editOrder(btn.getAttribute('data-id'));
+                    });
+                });
+            },
+            
+            // Filter orders based on search and filters
+            filterOrders() {
+                const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
+                const statusFilter = document.getElementById('orderStatusFilter').value;
+                const dateFilter = document.getElementById('orderDateFilter').value;
+                
+                const today = new Date().toISOString().split('T')[0];
+                const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+                const monthAgo = new Date();
+                monthAgo.setMonth(monthAgo.getMonth() - 1);
+                const monthAgoStr = monthAgo.toISOString().split('T')[0];
+                
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]')
+                    .filter(order => {
+                        // Apply status filter
+                        if (statusFilter !== 'all' && order.order.status !== statusFilter) {
+                            return false;
+                        }
+                        
+                        // Apply date filter
+                        const orderDate = new Date(order.order.orderDate).toISOString().split('T')[0];
+                        if (dateFilter === 'today' && orderDate !== today) {
+                            return false;
+                        }
+                        if (dateFilter === 'week' && orderDate < weekAgo) {
+                            return false;
+                        }
+                        if (dateFilter === 'month' && orderDate < monthAgoStr) {
+                            return false;
+                        }
+                        
+                        // Apply search
+                        if (searchTerm && 
+                            !order.orderId.toLowerCase().includes(searchTerm) &&
+                            !order.customer.firstName.toLowerCase().includes(searchTerm) &&
+                            !order.customer.lastName.toLowerCase().includes(searchTerm) &&
+                            !order.customer.email.toLowerCase().includes(searchTerm)) {
+                            return false;
+                        }
+                        
+                        return true;
+                    })
+                    .sort((a, b) => new Date(b.order.orderDate) - new Date(a.order.orderDate));
+                
+                const tbody = document.querySelector('#ordersTable tbody');
+                tbody.innerHTML = '';
+                
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No orders match your criteria</td></tr>';
+                    return;
+                }
+                
+                orders.forEach(order => {
+                    const orderDate = new Date(order.order.orderDate);
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td class="order-id">#${order.orderId}</td>
+                        <td>${order.customer.firstName} ${order.customer.lastName}</td>
+                        <td>${orderDate.toLocaleDateString()}</td>
+                        <td>${order.order.items.reduce((total, item) => total + item.quantity, 0)}</td>
+                        <td>$${this.calculateOrderTotal(order.order.items).toFixed(2)}</td>
+                        <td><span class="badge badge-${order.order.status}">${order.order.status}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary view-order" data-id="${order.orderId}" aria-label="View order ${order.orderId}">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary edit-order" data-id="${order.orderId}" aria-label="Edit order ${order.orderId}">
+                                <i class="fas fa-edit" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.view-order').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.viewOrderDetails(btn.getAttribute('data-id'));
+                    });
+                });
+                
+                document.querySelectorAll('.edit-order').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.editOrder(btn.getAttribute('data-id'));
+                    });
+                });
+            },
+            
+            // View order details
+            viewOrderDetails(orderId) {
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const order = orders.find(o => o.orderId === orderId);
+                
+                if (!order) {
+                    this.showNotification('Order not found', 'error');
+                    return;
+                }
+                
+                const modal = new bootstrap.Modal(document.getElementById('orderModal'));
+                document.getElementById('orderModalTitle').textContent = `Order #${order.orderId}`;
+                
+                const orderDate = new Date(order.order.orderDate);
+                const deliveryDate = new Date(order.order.dateNeeded);
+                
+                // Create order items HTML
+                let itemsHtml = '';
+                order.order.items.forEach(item => {
+                    itemsHtml += `
+                        <div class="row mb-3">
+                            <div class="col-2">
+                                <img src="${item.image || 'images/default-preview.jpg'}" 
+                                     alt="${item.name}" class="img-fluid rounded item-image"
+                                     onerror="this.src='images/default-preview.jpg'">
+                            </div>
+                            <div class="col-6">
+                                <h6>${item.name}</h6>
+                                <p class="text-muted mb-1">Quantity: ${item.quantity}</p>
+                                ${item.type === 'custom' ? `
+                                    <div class="custom-details">
+                                        <p class="mb-1"><small>Cupcake: ${item.details.cupcakeFlavor} (${item.details.cupcakeColor})</small></p>
+                                        <p class="mb-1"><small>Icing: ${item.details.icingFlavor} (${item.details.icingColor})</small></p>
+                                        ${item.details.specialDecorations ? `
+                                            <p class="mb-1"><small>Decorations: ${item.details.specialDecorations}</small></p>
+                                        ` : ''}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="col-2 text-end">
+                                <span>$${item.price.toFixed(2)}</span>
+                            </div>
+                            <div class="col-2 text-end">
+                                <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                // Create timeline HTML based on status
+                let timelineHtml = '';
+                const statusTimeline = [
+                    { status: 'Order Placed', date: orderDate, completed: true },
+                    { status: 'Order Confirmed', date: new Date(orderDate.getTime() + 3600000), completed: true },
+                    { status: 'Processing', date: null, completed: false, active: order.order.status === 'processing' },
+                    { status: 'Completed', date: null, completed: order.order.status === 'completed', active: false },
+                    { status: 'Cancelled', date: null, completed: order.order.status === 'cancelled', active: false }
+                ];
+                
+                statusTimeline.forEach(step => {
+                    if (step.completed || step.active) {
+                        timelineHtml += `
+                            <div class="timeline-item ${step.completed ? 'completed' : ''} ${step.active ? 'active' : ''}">
+                                <div class="timeline-icon">
+                                    <i class="fas ${step.completed ? 'fa-check' : (step.active ? 'fa-spinner fa-spin' : 'fa-circle')}" aria-hidden="true"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h5>${step.status}</h5>
+                                    <p>${step.date ? step.date.toLocaleString() : ''}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                // Set modal content
+                document.getElementById('orderModalBody').innerHTML = `
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h3 class="h6">Customer Information</h3>
+                            <p><strong>Name:</strong> ${order.customer.firstName} ${order.customer.lastName}</p>
+                            <p><strong>Email:</strong> ${order.customer.email}</p>
+                            <p><strong>Phone:</strong> ${order.customer.phone || 'N/A'}</p>
+                            <p><strong>Type:</strong> ${order.customer.isGuest ? 'Guest' : 'Registered'}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h3 class="h6">Delivery Information</h3>
+                            <p><strong>Type:</strong> ${order.delivery.type}</p>
+                            ${order.delivery.type === 'delivery' ? `
+                                <p><strong>Address:</strong> ${order.delivery.address}</p>
+                                <p><strong>City:</strong> ${order.delivery.city}</p>
+                            ` : ''}
+                            <p><strong>Date Needed:</strong> ${deliveryDate.toLocaleDateString()}</p>
+                            <p><strong>Time Needed:</strong> ${order.order.timeNeeded || 'Anytime'}</p>
+                            ${order.order.notes ? `<p><strong>Notes:</strong> ${order.order.notes}</p>` : ''}
+                        </div>
+                    </div>
+                    
+                    <h3 class="h6">Order Items</h3>
+                    ${itemsHtml}
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6 offset-md-6">
+                            <div class="row mb-1">
+                                <div class="col-6">Subtotal:</div>
+                                <div class="col-6 text-end">$${this.calculateOrderTotal(order.order.items).toFixed(2)}</div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-6">Delivery Fee:</div>
+                                <div class="col-6 text-end">$${order.delivery.type === 'delivery' ? '5.00' : '0.00'}</div>
+                            </div>
+                            <div class="row mt-2 pt-2 border-top">
+                                <div class="col-6"><strong>Total:</strong></div>
+                                <div class="col-6 text-end"><strong>$${(this.calculateOrderTotal(order.order.items) + (order.delivery.type === 'delivery' ? 5 : 0)).toFixed(2)}</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <label for="orderStatus" class="form-label">Order Status</label>
+                            <select class="form-select" id="orderStatus">
+                                <option value="pending" ${order.order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="processing" ${order.order.status === 'processing' ? 'selected' : ''}>Processing</option>
+                                <option value="completed" ${order.order.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                <option value="cancelled" ${order.order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="orderNotes" class="form-label">Admin Notes</label>
+                            <textarea class="form-control" id="orderNotes" rows="2">${order.order.adminNotes || ''}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline mt-4">
+                        <h3 class="h6">Order Timeline</h3>
+                        ${timelineHtml}
+                    </div>
+                `;
+                
+                // Store current order ID for saving
+                document.getElementById('orderModal').setAttribute('data-order-id', orderId);
+                
+                modal.show();
+            },
+            
+            // Edit order (same as view but with more editing capabilities)
+            editOrder(orderId) {
+                this.viewOrderDetails(orderId);
+                // Additional edit-specific functionality would go here
+            },
+            
+            // Save order changes
+            saveOrderChanges() {
+                const orderId = document.getElementById('orderModal').getAttribute('data-order-id');
+                const newStatus = document.getElementById('orderStatus').value;
+                const adminNotes = document.getElementById('orderNotes').value;
+                
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const orderIndex = orders.findIndex(o => o.orderId === orderId);
+                
+                if (orderIndex === -1) {
+                    this.showNotification('Order not found', 'error');
+                    return;
+                }
+                
+                // Update order
+                orders[orderIndex].order.status = newStatus;
+                orders[orderIndex].order.adminNotes = adminNotes;
+                
+                // Update timeline if status changed
+                if (newStatus === 'completed' || newStatus === 'cancelled') {
+                    // In a real app, we'd add a timestamp for this status change
+                }
+                
+                // Save back to localStorage
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                // Close modal and refresh views
+                bootstrap.Modal.getInstance(document.getElementById('orderModal')).hide();
+                this.showNotification('Order updated successfully', 'success');
+                this.loadRecentOrders();
+                this.loadAllOrders();
+            },
+            
+            // Print order receipt
+            printOrder() {
+                const orderId = document.getElementById('orderModal').getAttribute('data-order-id');
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                const order = orders.find(o => o.orderId === orderId);
+                
+                if (!order) {
+                    this.showNotification('Order not found', 'error');
+                    return;
+                }
+                
+                const printWindow = window.open('', '_blank');
+                const orderDate = new Date(order.order.orderDate);
+                const deliveryDate = new Date(order.order.dateNeeded);
+                const total = this.calculateOrderTotal(order.order.items) + (order.delivery.type === 'delivery' ? 5 : 0);
+                
+                printWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Order Receipt #${orderId}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            .header { text-align: center; margin-bottom: 20px; }
+                            .section { margin-bottom: 20px; }
+                            .section h3 { border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+                            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                            th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+                            .total { text-align: right; font-weight: bold; font-size: 1.1em; }
+                            .text-right { text-align: right; }
+                            .custom-details { font-size: 0.9em; color: #666; margin-left: 10px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>Sarah's Short Cakes</h1>
+                            <h2>Order Receipt #${orderId}</h2>
+                            <p>Date: ${orderDate.toLocaleString()}</p>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>Customer Information</h3>
+                            <p>Name: ${order.customer.firstName} ${order.customer.lastName}</p>
+                            <p>Email: ${order.customer.email}</p>
+                            <p>Phone: ${order.customer.phone || 'N/A'}</p>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>Delivery Information</h3>
+                            <p>Type: ${order.delivery.type}</p>
+                            ${order.delivery.type === 'delivery' ? `
+                                <p>Address: ${order.delivery.address}</p>
+                                <p>City: ${order.delivery.city}</p>
+                            ` : ''}
+                            <p>Date Needed: ${deliveryDate.toLocaleDateString()}</p>
+                            <p>Time Needed: ${order.order.timeNeeded || 'Anytime'}</p>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>Order Items</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Price</th>
+                                        <th>Qty</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${order.order.items.map(item => `
+                                        <tr>
+                                            <td>
+                                                ${item.name}
+                                                ${item.type === 'custom' ? `
+                                                    <div class="custom-details">
+                                                        <p>Cupcake: ${item.details.cupcakeFlavor} (${item.details.cupcakeColor})</p>
+                                                        <p>Icing: ${item.details.icingFlavor} (${item.details.icingColor})</p>
+                                                        ${item.details.specialDecorations ? `
+                                                            <p>Decorations: ${item.details.specialDecorations}</p>
+                                                        ` : ''}
+                                                    </div>
+                                                ` : ''}
+                                            </td>
+                                            <td>$${item.price.toFixed(2)}</td>
+                                            <td>${item.quantity}</td>
+                                            <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                            
+                            <table>
+                                <tr>
+                                    <td class="text-right">Subtotal:</td>
+                                    <td class="text-right">$${this.calculateOrderTotal(order.order.items).toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-right">Delivery Fee:</td>
+                                    <td class="text-right">$${order.delivery.type === 'delivery' ? '5.00' : '0.00'}</td>
+                                </tr>
+                                <tr>
+                                    <td class="total">Total:</td>
+                                    <td class="total">$${total.toFixed(2)}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>Order Status</h3>
+                            <p>Current Status: ${order.order.status}</p>
+                        </div>
+                        
+                        ${order.order.notes ? `
+                            <div class="section">
+                                <h3>Customer Notes</h3>
+                                <p>${order.order.notes}</p>
+                            </div>
+                        ` : ''}
+                        
+                        ${order.order.adminNotes ? `
+                            <div class="section">
+                                <h3>Admin Notes</h3>
+                                <p>${order.order.adminNotes}</p>
+                            </div>
+                        ` : ''}
+                    </body>
+                    </html>
+                `);
+                
+                printWindow.document.close();
+                printWindow.print();
+            },
+            
+            // Calculate order total
+            calculateOrderTotal(items) {
+                return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+            },
+            
+            // Logout user
+            logout() {
+                localStorage.removeItem('adminToken');
+                window.location.href = 'login.html';
+            },
+            
+            // Show notification
+            showNotification(message, type = 'success') {
+                const toast = document.getElementById('notificationToast');
+                const toastTitle = document.getElementById('toastTitle');
+                const toastMessage = document.getElementById('toastMessage');
+                
+                // Set toast style based on type
+                toast.className = `toast ${type}`;
+                
+                // Set title based on type
+                switch(type) {
+                    case 'success':
+                        toastTitle.textContent = 'Success';
+                        toast.classList.add('bg-success');
+                        break;
+                    case 'error':
+                        toastTitle.textContent = 'Error';
+                        toast.classList.add('bg-danger');
+                        break;
+                    case 'warning':
+                        toastTitle.textContent = 'Warning';
+                        toast.classList.add('bg-warning');
+                        break;
+                    default:
+                        toastTitle.textContent = 'Notification';
+                        toast.classList.add('bg-primary');
+                }
+                
+                // Set message
+                toastMessage.textContent = message;
+                
+                // Show toast
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+            }
+        };
+
+        // Initialize the admin dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            AdminManager.init();
+        });
+    </script>
+</body>
+</html>

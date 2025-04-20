@@ -47,7 +47,15 @@ const orderSchema = new mongoose.Schema({
     customer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Customer',
-        required: [true, 'Customer reference is required']
+        required: false
+    },
+    guestInfo: {
+        firstName: { type: String, trim: true },
+        lastName: { type: String, trim: true },
+        email: { type: String, trim: true, lowercase: true },
+        phone: { type: String, trim: true },
+        streetAddress: { type: String, trim: true },
+        city: { type: String, trim: true }
     },
     items: [orderItemSchema],
     deliveryOption: {
@@ -77,6 +85,29 @@ const orderSchema = new mongoose.Schema({
         required: [true, 'Status is required'],
         enum: ['pending', 'processing', 'ready', 'delivered', 'cancelled'],
         default: 'pending'
+    },
+    deliveryLocation: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            default: 'Point'
+        },
+        coordinates: {
+            type: [Number], // [lng, lat]
+            default: undefined
+        },
+        address: {
+            type: String,
+            trim: true
+        }
+    },
+    estimatedDistance: {
+        type: Number,
+        default: 0
+    },
+    estimatedTime: {
+        type: Number,
+        default: 0
     },
     createdAt: {
         type: Date,

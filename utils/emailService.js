@@ -63,56 +63,71 @@ exports.sendOrderConfirmation = async (order, customer) => {
 };
 
 /**
- * Sends a daily order summary to the bakery staff
- * @param {Object} report - The daily order report
+ * Sends an OTP email for password reset
+ * @param {string} to - Recipient email address
+ * @param {string} otp - One-time password code
  * @returns {Promise} Promise that resolves when email is sent
  */
-exports.sendDailySummary = async (report) => {
+exports.sendOTP = async (to, otp) => {
     const mailOptions = {
         from: `"Sarah's Short Cakes" <${process.env.EMAIL_FROM}>`,
-        to: process.env.EMAIL_STAFF,
-        subject: `Daily Order Summary - ${report.date.toDateString()}`,
-        html: `
-            <h1>Daily Order Summary</h1>
-            <p><strong>Date:</strong> ${report.date.toDateString()}</p>
-            
-            <h2>Overview</h2>
-            <ul>
-                <li><strong>Total Orders:</strong> ${report.totalOrders}</li>
-                <li><strong>Total Cupcakes:</strong> ${report.totalCupcakes}</li>
-                <li><strong>Total Revenue:</strong> $${report.totalRevenue.toFixed(2)}</li>
-                <li><strong>Pickup Orders:</strong> ${report.pickupOrders}</li>
-                <li><strong>Delivery Orders:</strong> ${report.deliveryOrders}</li>
-            </ul>
-            
-            <h2>Orders by Status</h2>
-            <ul>
-                <li><strong>Pending:</strong> ${report.ordersByStatus.pending}</li>
-                <li><strong>Processing:</strong> ${report.ordersByStatus.processing}</li>
-                <li><strong>Ready:</strong> ${report.ordersByStatus.ready}</li>
-                <li><strong>Delivered:</strong> ${report.ordersByStatus.delivered}</li>
-            </ul>
-            
-            <h2>Delivery Schedule</h2>
-            ${report.orders.filter(o => o.deliveryOption === 'delivery').length > 0 ? 
-                '<p>See attached delivery report for route details.</p>' : 
-                '<p>No deliveries today.</p>'}
-            
-            <p>Log in to the admin system for full order details.</p>
-        `,
-        attachments: [
-            {
-                filename: `deliveries-${report.date.toISOString().split('T')[0]}.pdf`,
-                content: generateDeliveryPDF(report) // This would call a PDF generator function
-            }
-        ]
+        to,
+        subject: 'Password Reset Code',
+        html: `<p>Your OTP code is: <strong>${otp}</strong>. It will expire in 10 minutes.</p>`
     };
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log('Daily summary sent to staff');
+        console.log(`OTP email sent to ${to}`);
     } catch (error) {
-        console.error('Error sending daily summary:', error);
+        console.error('Error sending OTP email:', error);
+        throw error;
+    }
+};
+
+/**
+ * Sends a low stock alert email to admin
+ * @param {string} adminEmail - Admin email address
+ * @param {Array} items - Array of low stock items {name, quantity}
+ * @returns {Promise} Promise that resolves when email is sent
+ */
+exports.sendLowStockAlert = async (adminEmail, items) => {
+    const list = items.map(i => `<li>${i.name} (Qty: ${i.quantity})</li>`).join('');
+    const mailOptions = {
+        from: `"Inventory Bot" <${process.env.EMAIL_FROM}>`,
+        to: adminEmail,
+        subject: 'Inventory Alert: Low Stock',
+        html: `<p>The following items are low in stock:</p><ul>${list}</ul>`
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log(`Low stock alert sent to ${adminEmail}`);
+    } catch (error) {
+        console.error('Error sending low stock alert:', error);
+        throw error;
+    }
+};
+
+/**
+ * Sends a pickup ready notification email to customer
+ * @param {string} to - Customer email address
+ * @param {string} orderId - Order ID
+ * @returns {Promise} Promise that resolves when email is sent
+ */
+exports.sendPickupReady = async (to, orderId) => {
+    const mailOptions = {
+        from: `"Sarah's Short Cakes" <${process.env.EMAIL_FROM}>`,
+        to,
+        subject: 'Your Order is Ready!',
+        html: `<p>Your order <strong>${orderId}</strong> is ready for pickup!</p>`
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log(`Pickup ready email sent to ${to}`);
+    } catch (error) {
+        console.error('Error sending pickup ready email:', error);
         throw error;
     }
 };
