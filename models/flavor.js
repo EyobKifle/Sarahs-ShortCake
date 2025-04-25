@@ -4,18 +4,14 @@ const flavorSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Flavor name is required'],
+        unique: true,
         trim: true
     },
-    type: {
+    description: {
         type: String,
-        required: [true, 'Flavor type is required'],
-        enum: ['cupcake', 'icing']
+        trim: true
     },
-    canHaveColor: {
-        type: Boolean,
-        default: false
-    },
-    isActive: {
+    isAvailable: {
         type: Boolean,
         default: true
     },
@@ -34,9 +30,6 @@ flavorSchema.pre('save', function(next) {
     this.updatedAt = Date.now();
     next();
 });
-
-// Compound unique index on name and type
-flavorSchema.index({ name: 1, type: 1 }, { unique: true });
 
 const Flavor = mongoose.model('Flavor', flavorSchema);
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Profile | Sarah's Short Cakes</title>
+  <title>Sarah's Short Cakes</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -449,47 +449,71 @@
       </button>
     </form>
 
-    <form id="signup-form" novalidate>
-      <div class="form-group">
-        <label for="signup-name">Full Name</label>
-        <input type="text" id="signup-name" placeholder="Enter your full name" required />
-      </div>
-      <div class="form-group">
-        <label for="signup-email">Email</label>
-        <input type="email" id="signup-email" placeholder="Enter your email" required />
-      </div>
-      <div class="form-group">
-        <label for="signup-password">Password</label>
-        <div class="password-container">
-          <input type="password" id="signup-password" placeholder="Create a password (min 8 characters)" required minlength="8" />
-          <i class="fas fa-eye toggle-password" data-target="signup-password"></i>
+      <form id="signup-form" novalidate>
+        <div class="form-group">
+          <label for="signup-firstName">First Name</label>
+          <input type="text" id="signup-firstName" placeholder="Enter your first name" required />
         </div>
-        <div class="password-strength" id="password-strength"></div>
-        <div class="password-hints">
-          <p>Password must contain:</p>
-          <ul>
-            <li id="length-hint">At least 8 characters</li>
-            <li id="uppercase-hint">One uppercase letter</li>
-            <li id="number-hint">One number</li>
-            <li id="special-hint">One special character</li>
-          </ul>
+        <div class="form-group">
+          <label for="signup-lastName">Last Name</label>
+          <input type="text" id="signup-lastName" placeholder="Enter your last name" required />
         </div>
-      </div>
-      <div class="form-group">
-        <label for="confirm-password">Confirm Password</label>
-        <div class="password-container">
-          <input type="password" id="confirm-password" placeholder="Confirm your password" required />
-          <i class="fas fa-eye toggle-password" data-target="confirm-password"></i>
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" placeholder="Enter your email" required />
         </div>
-        <div class="password-match" id="password-match">Passwords do not match</div>
-      </div>
-      <button type="submit" class="auth-submit" id="signup-button" disabled>
-        <span class="button-text">Create Account</span>
-      </button>
-      <div class="form-footer">
-        <p>Already have an account? <a href="#" data-tab="login">Login</a></p>
-      </div>
-    </form>
+        <div class="form-group">
+          <label for="signup-phone">Phone Number</label>
+          <input type="text" id="signup-phone" placeholder="Enter your phone number" required />
+        </div>
+        <div class="form-group">
+          <label for="signup-street">Street Address</label>
+          <input type="text" id="signup-street" placeholder="Enter your street address" />
+        </div>
+        <div class="form-group">
+          <label for="signup-city">City</label>
+          <input type="text" id="signup-city" placeholder="Enter your city" />
+        </div>
+        <div class="form-group">
+          <label for="signup-state">State</label>
+          <input type="text" id="signup-state" placeholder="Enter your state" />
+        </div>
+        <div class="form-group">
+          <label for="signup-zip">Zip Code</label>
+          <input type="text" id="signup-zip" placeholder="Enter your zip code" />
+        </div>
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <div class="password-container">
+            <input type="password" id="signup-password" placeholder="Create a password (min 8 characters)" required minlength="8" />
+            <i class="fas fa-eye toggle-password" data-target="signup-password"></i>
+          </div>
+          <div class="password-strength" id="password-strength"></div>
+          <div class="password-hints">
+            <p>Password must contain:</p>
+            <ul>
+              <li id="length-hint">At least 8 characters</li>
+              <li id="uppercase-hint">One uppercase letter</li>
+              <li id="number-hint">One number</li>
+              <li id="special-hint">One special character</li>
+            </ul>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <div class="password-container">
+            <input type="password" id="confirm-password" placeholder="Confirm your password" required />
+            <i class="fas fa-eye toggle-password" data-target="confirm-password"></i>
+          </div>
+          <div class="password-match" id="password-match">Passwords do not match</div>
+        </div>
+        <button type="submit" class="auth-submit" id="signup-button" disabled>
+          <span class="button-text">Create Account</span>
+        </button>
+        <div class="form-footer">
+          <p>Already have an account? <a href="#" data-tab="login">Login</a></p>
+        </div>
+      </form>
 
     <div class="profile-container" id="profile-container">
       <h2>Your Profile</h2>
@@ -515,426 +539,6 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // DOM Elements
-      const authTabs = document.querySelectorAll('.auth-tab');
-      const forms = document.querySelectorAll('form');
-      const profileContainer = document.getElementById('profile-container');
-      const alertContainer = document.getElementById('alert-container');
-      const loginForm = document.getElementById('login-form');
-      const signupForm = document.getElementById('signup-form');
-      const logoutBtn = document.getElementById('logout-btn');
-      const passwordInput = document.getElementById('signup-password');
-      const confirmPasswordInput = document.getElementById('confirm-password');
-      const passwordStrength = document.getElementById('password-strength');
-      const passwordMatch = document.getElementById('password-match');
-      const signupButton = document.getElementById('signup-button');
-      const passwordHints = {
-        length: document.getElementById('length-hint'),
-        uppercase: document.getElementById('uppercase-hint'),
-        number: document.getElementById('number-hint'),
-        special: document.getElementById('special-hint')
-      };
-      
-      // Auth State Management
-      const authState = {
-        isAuthenticated: false,
-        currentTab: 'login',
-        user: null
-      };
-
-      // Initialize the application
-      init();
-
-      // Initialize application state
-      function init() {
-        loadSession();
-        setupEventListeners();
-        renderView();
-      }
-
-      // Load session from storage
-      function loadSession() {
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('user'));
-        
-        if (token && user) {
-          authState.isAuthenticated = true;
-          authState.user = user;
-        }
-      }
-
-      // Setup event listeners
-      function setupEventListeners() {
-        // Toggle password visibility
-        document.querySelectorAll('.toggle-password').forEach(toggle => {
-          toggle.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
-            const passwordInput = document.getElementById(targetId);
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-          });
-        });
-        
-      // Password strength checker
-      passwordInput.addEventListener('input', () => {
-        checkPasswordStrength.call(passwordInput);
-        validateSignupForm();
-      });
-      
-      confirmPasswordInput.addEventListener('input', () => {
-        checkPasswordMatch();
-        validateSignupForm();
-      });
-      
-      // Tab switching
-      authTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          if (!authState.isAuthenticated) {
-            authState.currentTab = this.dataset.tab;
-            renderView();
-          }
-        });
-      });
-
-      // Check password match
-      function checkPasswordMatch() {
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-        if (password !== confirmPassword) {
-          passwordMatch.style.display = 'block';
-          return false;
-        } else {
-          passwordMatch.style.display = 'none';
-          return true;
-        }
-      }
-
-      // Validate signup form to enable/disable submit button
-      function validateSignupForm() {
-        const name = document.getElementById('signup-name').value.trim();
-        const email = document.getElementById('signup-email').value.trim();
-        const password = passwordInput.value;
-        const isStrong = passwordStrength.classList.contains('medium') || passwordStrength.classList.contains('strong');
-        const passwordsMatch = checkPasswordMatch();
-
-        if (name && email && isStrong && passwordsMatch) {
-          signupButton.disabled = false;
-        } else {
-          signupButton.disabled = true;
-        }
-      }
-        
-        // Form footer links
-        document.querySelectorAll('[data-tab]').forEach(link => {
-          if (link.tagName === 'A') {
-            link.addEventListener('click', function(e) {
-              e.preventDefault();
-              authState.currentTab = this.dataset.tab;
-              renderView();
-            });
-          }
-        });
-        
-        // Form submissions
-        loginForm.addEventListener('submit', handleLoginSubmit);
-        signupForm.addEventListener('submit', handleSignupSubmit);
-        
-        // Logout button
-        logoutBtn.addEventListener('click', handleLogout);
-      }
-
-      // Render the appropriate view based on auth state
-      function renderView() {
-        if (authState.isAuthenticated) {
-          showProfileView();
-        } else {
-          showAuthView();
-        }
-      }
-
-      // Show authentication view (login/signup)
-      function showAuthView() {
-        // Show auth container
-        profileContainer.classList.remove('active');
-        
-        // Update tabs
-        authTabs.forEach(tab => {
-          tab.style.display = 'block';
-          tab.classList.toggle('active', tab.dataset.tab === authState.currentTab);
-        });
-        
-        // Show correct form
-        forms.forEach(form => {
-          form.classList.remove('active');
-          if (form.id === `${authState.currentTab}-form`) {
-            form.classList.add('active');
-          }
-        });
-        
-        // Clear forms when switching
-        if (authState.currentTab === 'login') {
-          signupForm.reset();
-        } else {
-          loginForm.reset();
-        }
-        
-        clearAlerts();
-      }
-
-      // Show profile view
-      function showProfileView() {
-        // Hide auth forms
-        forms.forEach(form => form.classList.remove('active'));
-        authTabs.forEach(tab => tab.style.display = 'none');
-        
-        // Show profile
-        profileContainer.classList.add('active');
-        
-        // Update profile info
-        if (authState.user) {
-          document.getElementById('profile-name').textContent = authState.user.name || 'Not provided';
-          document.getElementById('profile-email').textContent = authState.user.email || 'Not provided';
-          document.getElementById('profile-phone').textContent = authState.user.phone || 'Not provided';
-          document.getElementById('profile-address').textContent = authState.user.address || 'Not provided';
-        }
-        
-        clearAlerts();
-      }
-
-      // Check password strength
-      function checkPasswordStrength() {
-        const password = this.value;
-        let strength = 0;
-        
-        // Check password length
-        if (password.length >= 8) {
-          strength += 1;
-          passwordHints.length.classList.add('valid');
-        } else {
-          passwordHints.length.classList.remove('valid');
-        }
-        
-        // Check for uppercase letters
-        if (/[A-Z]/.test(password)) {
-          strength += 1;
-          passwordHints.uppercase.classList.add('valid');
-        } else {
-          passwordHints.uppercase.classList.remove('valid');
-        }
-        
-        // Check for numbers
-        if (/\d/.test(password)) {
-          strength += 1;
-          passwordHints.number.classList.add('valid');
-        } else {
-          passwordHints.number.classList.remove('valid');
-        }
-        
-        // Check for special characters
-        if (/[^A-Za-z0-9]/.test(password)) {
-          strength += 1;
-          passwordHints.special.classList.add('valid');
-        } else {
-          passwordHints.special.classList.remove('valid');
-        }
-        
-        // Update strength meter
-        passwordStrength.className = 'password-strength';
-        if (password.length > 0) {
-          if (strength <= 1) {
-            passwordStrength.classList.add('weak');
-          } else if (strength <= 3) {
-            passwordStrength.classList.add('medium');
-          } else {
-            passwordStrength.classList.add('strong');
-          }
-        }
-      }
-
-      // Handle login form submission
-      async function handleLoginSubmit(e) {
-        e.preventDefault();
-        const submitButton = e.target.querySelector('.auth-submit');
-        const buttonText = submitButton.querySelector('.button-text');
-        const originalText = buttonText.textContent;
-        
-        // Disable button during processing
-        submitButton.disabled = true;
-        buttonText.textContent = 'Logging in...';
-        
-        try {
-          const email = document.getElementById('login-email').value.trim();
-          const password = document.getElementById('login-password').value;
-          
-          // Validate inputs
-          if (!email || !password) {
-            throw new Error('Please enter both email and password');
-          }
-          
-          // Call backend login API
-          const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-          });
-          
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Login failed');
-          }
-          
-          const data = await response.json();
-          
-          // Save token and user info
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user', JSON.stringify(data.user));
-          
-          authState.user = data.user;
-          authState.isAuthenticated = true;
-          
-          // Redirect based on role
-          if (data.user.role === 'admin') {
-            window.location.href = '/Admin/admin.html';
-          } else {
-            window.location.href = '/profile.html';
-          }
-          
-        } catch (error) {
-          showAlert('error', error.message || 'Login failed. Please try again.');
-        } finally {
-          // Re-enable button
-          submitButton.disabled = false;
-          buttonText.textContent = originalText;
-        }
-      }
-
-      // Handle signup form submission
-      async function handleSignupSubmit(e) {
-        e.preventDefault();
-        const submitButton = e.target.querySelector('.auth-submit');
-        const buttonText = submitButton.querySelector('.button-text');
-        const originalText = buttonText.textContent;
-        
-        // Disable button during processing
-        submitButton.disabled = true;
-        buttonText.textContent = 'Creating account...';
-        
-        try {
-          const name = document.getElementById('signup-name').value.trim();
-          const email = document.getElementById('signup-email').value.trim();
-          const password = document.getElementById('signup-password').value;
-          
-          // Validate inputs
-          if (!name || !email || !password) {
-            throw new Error('Please fill all required fields');
-          }
-          
-          if (password.length < 8) {
-            throw new Error('Password must be at least 8 characters');
-          }
-          
-          // Call backend register API
-          const response = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, email, password })
-          });
-          
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Registration failed');
-          }
-          
-          const data = await response.json();
-          
-          // Save token and user info
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user', JSON.stringify(data));
-          
-          authState.user = data;
-          authState.isAuthenticated = true;
-          
-          // Show success and transition to profile
-          showAlert('success', 'Account created successfully!');
-          setTimeout(() => {
-            renderView();
-          }, 1500);
-        } catch (error) {
-          showAlert('error', error.message || 'Registration failed. Please try again.');
-        } finally {
-          // Re-enable button
-          submitButton.disabled = false;
-          buttonText.textContent = originalText;
-        }
-      }
-
-      // Handle logout
-      function handleLogout() {
-        const buttonText = this.querySelector('.button-text');
-        const originalText = buttonText.textContent;
-        
-        // Disable button during processing
-        this.disabled = true;
-        buttonText.textContent = 'Logging out...';
-        
-        // Simulate API call (replace with real API call)
-        setTimeout(() => {
-          // Clear auth state
-          authState.isAuthenticated = false;
-          authState.user = null;
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          
-          // Reset to login view
-          authState.currentTab = 'login';
-          
-          // Re-enable button
-          this.disabled = false;
-          buttonText.textContent = originalText;
-          
-          // Show login form
-          renderView();
-          showAlert('success', 'You have been logged out successfully.');
-        }, 800);
-      }
-
-      // Show alert message
-      function showAlert(type, message) {
-        clearAlerts();
-        
-        const alertEl = document.createElement('div');
-        alertEl.className = `alert ${type}`;
-        
-        const icon = type === 'error' ? 'exclamation-circle' : 'check-circle';
-        alertEl.innerHTML = `
-          <i class="fas fa-${icon}"></i>
-          <span>${message}</span>
-        `;
-        
-        alertContainer.appendChild(alertEl);
-        
-        // Auto-dismiss after 5 seconds (except for errors)
-        if (type !== 'error') {
-          setTimeout(() => {
-            alertEl.style.opacity = '0';
-            setTimeout(() => alertEl.remove(), 300);
-          }, 5000);
-        }
-      }
-
-      // Clear all alerts
-      function clearAlerts() {
-        alertContainer.innerHTML = '';
-      }
-    });
-  </script>
+  <script src="js/login.js"></script>
 </body>
 </html>

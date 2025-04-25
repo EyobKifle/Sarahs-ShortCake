@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sarah's Short Cakes - Customer Dashboard">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Sarah's Short Cakes - My Account</title>
-    <meta name="theme-color" content="#ff85a2">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="theme-color" content="#ff85a2" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
         :root {
             --primary: #FF6B8B;
@@ -43,6 +42,9 @@
             position: sticky;
             top: 0;
             height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .sidebar-header {
@@ -64,6 +66,7 @@
 
         .sidebar-nav {
             padding: 0 1rem;
+            flex-grow: 1;
         }
 
         .nav-link {
@@ -75,6 +78,7 @@
             color: var(--dark);
             text-decoration: none;
             transition: all 0.3s;
+            font-weight: 500;
         }
 
         .nav-link i {
@@ -93,11 +97,45 @@
             color: white;
         }
 
+        /* Logout button at bottom */
+        .logout-container {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .logout-btn {
+            width: 100%;
+            background-color: transparent;
+            border: none;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255,107,139,0.1);
+            color: var(--primary);
+        }
+
         /* Main Content Styles */
         .dashboard-main {
             flex: 1;
             padding: 2rem;
             background-color: var(--light);
+            overflow-y: auto;
         }
 
         .dashboard-header {
@@ -130,6 +168,7 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 1.25rem;
         }
 
         .user-name {
@@ -262,66 +301,6 @@
         .order-id {
             font-weight: 600;
             color: var(--primary);
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.35rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge-processing {
-            background-color: rgba(255,209,102,0.2);
-            color: #FFA000;
-        }
-
-        .badge-completed {
-            background-color: rgba(6,214,160,0.2);
-            color: #06D6A0;
-        }
-
-        .badge-cancelled {
-            background-color: rgba(244,67,54,0.2);
-            color: #f44336;
-        }
-
-        .badge-pending {
-            background-color: rgba(23,162,184,0.2);
-            color: #17A2B8;
-        }
-
-        .action-btn {
-            padding: 0.35rem 0.75rem;
-            border-radius: 5px;
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-right: 0.5rem;
-        }
-
-        .action-btn i {
-            margin-right: 0.25rem;
-        }
-
-        .action-btn-primary {
-            background-color: rgba(255,107,139,0.1);
-            color: var(--primary);
-        }
-
-        .action-btn-primary:hover {
-            background-color: rgba(255,107,139,0.2);
-        }
-
-        .action-btn-secondary {
-            background-color: rgba(7,59,76,0.1);
-            color: var(--dark);
-        }
-
-        .action-btn-secondary:hover {
-            background-color: rgba(7,59,76,0.2);
         }
 
         /* Order Details Modal */
@@ -473,18 +452,6 @@
             font-size: 0.75rem;
         }
 
-        .timeline-content h4 {
-            font-size: 1rem;
-            margin-bottom: 0.25rem;
-            color: var(--dark);
-        }
-
-        .timeline-content p {
-            font-size: 0.85rem;
-            color: var(--dark);
-            opacity: 0.8;
-        }
-
         .timeline-item.completed .timeline-icon {
             background-color: var(--accent);
         }
@@ -549,198 +516,45 @@
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
         <aside class="dashboard-sidebar">
-            <div class="sidebar-header">
-                <h2>My Account</h2>
-                <p>Welcome back, Sarah!</p>
+            <div>
+                <div class="sidebar-header">
+                    <h2>My Account</h2>
+                    <p>Welcome back, <span class="sidebar-user-firstname">User</span>!</p>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="customer-orders.html" class="nav-link" id="nav-orders">
+                        <i class="fas fa-shopping-bag"></i>
+                        My Orders
+                    </a>
+                    <a href="customer-menu.html" class="nav-link" id="nav-menu">
+                        <i class="fas fa-utensils"></i>
+                        Menu
+                    </a>
+                    <a href="customer-wishlist.html" class="nav-link" id="nav-wishlist">
+                        <i class="fas fa-heart"></i>
+                        Wishlist
+                    </a>
+                    <a href="customer-reviews.html" class="nav-link" id="nav-reviews">
+                        <i class="fas fa-star"></i>
+                        My Reviews
+                    </a>
+                    <a href="customer-settings.html" class="nav-link" id="nav-settings">
+                        <i class="fas fa-cog"></i>
+                        Account Settings
+                    </a>
+                </nav>
             </div>
-            <nav class="sidebar-nav">
-                <a href="#dashboard" class="nav-link active">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </a>
-                <a href="#orders" class="nav-link">
-                    <i class="fas fa-shopping-bag"></i>
-                    My Orders
-                </a>
-                <a href="#addresses" class="nav-link">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Addresses
-                </a>
-                <a href="#wishlist" class="nav-link">
-                    <i class="fas fa-heart"></i>
-                    Wishlist
-                </a>
-                <a href="#reviews" class="nav-link">
-                    <i class="fas fa-star"></i>
-                    My Reviews
-                </a>
-                <a href="#settings" class="nav-link">
-                    <i class="fas fa-cog"></i>
-                    Account Settings
-                </a>
-                <a href="#logout" class="nav-link">
+            <div class="logout-container">
+                <button class="logout-btn" id="logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     Logout
-                </a>
-            </nav>
+                </button>
+            </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="dashboard-main">
-            <header class="dashboard-header">
-                <h1>Dashboard</h1>
-                <div class="user-profile">
-                    <div class="user-avatar">S</div>
-                    <span class="user-name">Sarah Johnson</span>
-                </div>
-            </header>
-
-            <!-- Dashboard Cards -->
-            <div class="dashboard-cards">
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <span class="card-title">Total Orders</span>
-                        <div class="card-icon">
-                            <i class="fas fa-shopping-bag"></i>
-                        </div>
-                    </div>
-                    <div class="card-value">24</div>
-                    <div class="card-change positive">
-                        <i class="fas fa-arrow-up"></i> 5 from last month
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <span class="card-title">Total Spent</span>
-                        <div class="card-icon">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                    </div>
-                    <div class="card-value">$342.75</div>
-                    <div class="card-change positive">
-                        <i class="fas fa-arrow-up"></i> $42.50 from last month
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <span class="card-title">Wishlist Items</span>
-                        <div class="card-icon">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                    </div>
-                    <div class="card-value">8</div>
-                    <div class="card-change">
-                        <i class="fas fa-minus"></i> No change
-                    </div>
-                </div>
-
-                <div class="dashboard-card">
-                    <div class="card-header">
-                        <span class="card-title">Reviews</span>
-                        <div class="card-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <div class="card-value">12</div>
-                    <div class="card-change positive">
-                        <i class="fas fa-arrow-up"></i> 3 new reviews
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Orders Section -->
-            <section class="dashboard-section">
-                <div class="section-header">
-                    <h3 class="section-title">Recent Orders</h3>
-                    <a href="#orders" class="section-link">View All Orders</a>
-                </div>
-                <div class="table-responsive">
-                    <table class="orders-table">
-                        <thead>
-                            <tr>
-                                <th>Order #</th>
-                                <th>Date</th>
-                                <th>Items</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="order-id">#SC-10024</td>
-                                <td>May 15, 2023</td>
-                                <td>3</td>
-                                <td>$32.97</td>
-                                <td><span class="badge badge-completed">Completed</span></td>
-                                <td>
-                                    <button class="action-btn action-btn-primary" onclick="viewOrderDetails('SC-10024')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn action-btn-secondary">
-                                        <i class="fas fa-redo"></i> Reorder
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="order-id">#SC-10021</td>
-                                <td>May 10, 2023</td>
-                                <td>1</td>
-                                <td>$12.99</td>
-                                <td><span class="badge badge-completed">Completed</span></td>
-                                <td>
-                                    <button class="action-btn action-btn-primary" onclick="viewOrderDetails('SC-10021')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn action-btn-secondary">
-                                        <i class="fas fa-redo"></i> Reorder
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="order-id">#SC-10018</td>
-                                <td>May 5, 2023</td>
-                                <td>6</td>
-                                <td>$45.94</td>
-                                <td><span class="badge badge-processing">Processing</span></td>
-                                <td>
-                                    <button class="action-btn action-btn-primary" onclick="viewOrderDetails('SC-10018')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="order-id">#SC-10015</td>
-                                <td>Apr 28, 2023</td>
-                                <td>2</td>
-                                <td>$24.98</td>
-                                <td><span class="badge badge-completed">Completed</span></td>
-                                <td>
-                                    <button class="action-btn action-btn-primary" onclick="viewOrderDetails('SC-10015')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn action-btn-secondary">
-                                        <i class="fas fa-redo"></i> Reorder
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Wishlist Section -->
-            <section class="dashboard-section">
-                <div class="section-header">
-                    <h3 class="section-title">Wishlist</h3>
-                    <a href="#wishlist" class="section-link">View All</a>
-                </div>
-                <div class="wishlist-items">
-                    <p>You have 8 items in your wishlist. <a href="#wishlist">View wishlist</a> to see them all.</p>
-                </div>
-            </section>
+        <main class="dashboard-main" id="dashboard-main-content">
+            <!-- Profile content will be loaded here dynamically -->
         </main>
     </div>
 
@@ -748,151 +562,37 @@
     <div id="orderModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Order #SC-10024</h3>
+                <h3 class="modal-title">Order Details</h3>
                 <button class="close-modal" onclick="closeModal()">&times;</button>
             </div>
-            
             <div class="order-details-grid">
-                <div class="order-details-section">
+                <div class="order-details-section" id="customer-info-section">
                     <h3>Customer Information</h3>
-                    <p><strong>Name:</strong> Sarah Johnson</p>
-                    <p><strong>Email:</strong> sarah.johnson@example.com</p>
-                    <p><strong>Phone:</strong> (555) 123-4567</p>
+                    <p><strong>Name:</strong> <span id="order-customer-name"></span></p>
+                    <p><strong>Email:</strong> <span id="order-customer-email"></span></p>
+                    <p><strong>Phone:</strong> <span id="order-customer-phone"></span></p>
                 </div>
-                
-                <div class="order-details-section">
+                <div class="order-details-section" id="delivery-info-section">
                     <h3>Delivery Information</h3>
-                    <p><strong>Type:</strong> Delivery</p>
-                    <p><strong>Address:</strong> 123 Sweet Street, Apt 4B</p>
-                    <p><strong>City:</strong> Sugartown, ST 12345</p>
-                    <p><strong>Date Needed:</strong> May 15, 2023</p>
-                    <p><strong>Time Needed:</strong> Afternoon</p>
+                    <p><strong>Type:</strong> <span id="order-delivery-type"></span></p>
+                    <p><strong>Address:</strong> <span id="order-delivery-address"></span></p>
+                    <p><strong>City:</strong> <span id="order-delivery-city"></span></p>
+                    <p><strong>Date Needed:</strong> <span id="order-date-needed"></span></p>
+                    <p><strong>Time Needed:</strong> <span id="order-time-needed"></span></p>
                 </div>
             </div>
-            
-            <div class="order-items">
+            <div class="order-items" id="order-items-container">
                 <h3>Order Items</h3>
-                
-                <div class="order-item">
-                    <img src="images/menu images/Red Velvet cak.jpg" alt="Red Velvet Cupcake" class="order-item-image">
-                    <div class="order-item-details">
-                        <h4 class="order-item-name">Red Velvet Cupcake</h4>
-                        <p>Quantity: 2</p>
-                        <p class="order-item-price">$8.98 ($4.49 each)</p>
-                    </div>
-                </div>
-                
-                <div class="order-item">
-                    <img src="images/menu images/White chocolate with cream cheese.jpg" alt="White Chocolate Cupcake" class="order-item-image">
-                    <div class="order-item-details">
-                        <h4 class="order-item-name">White Chocolate Cupcake</h4>
-                        <p>Quantity: 1</p>
-                        <p class="order-item-price">$4.99</p>
-                    </div>
-                </div>
             </div>
-            
-            <div class="order-total">
-                <div>
-                    <p><strong>Subtotal:</strong> $13.97</p>
-                    <p><strong>Delivery Fee:</strong> $5.00</p>
-                    <p><strong>Tax:</strong> $1.40</p>
-                    <p class="total-amount">Total: $20.37</p>
-                </div>
-            </div>
-            
-            <div class="timeline">
-                <h3>Order Status</h3>
-                
-                <div class="timeline-item completed">
-                    <div class="timeline-icon">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <h4>Order Placed</h4>
-                        <p>May 15, 2023 at 10:15 AM</p>
-                    </div>
-                </div>
-                
-                <div class="timeline-item completed">
-                    <div class="timeline-icon">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <h4>Order Confirmed</h4>
-                        <p>May 15, 2023 at 10:30 AM</p>
-                    </div>
-                </div>
-                
-                <div class="timeline-item completed">
-                    <div class="timeline-icon">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <h4>Processing</h4>
-                        <p>May 15, 2023 at 11:45 AM</p>
-                    </div>
-                </div>
-                
-                <div class="timeline-item completed">
-                    <div class="timeline-icon">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <div class="timeline-content">
-                        <h4>Completed</h4>
-                        <p>May 15, 2023 at 2:30 PM</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="special-instructions">
-                <h3>Special Instructions</h3>
-                <p>Please add extra sprinkles on the red velvet cupcakes.</p>
-            </div>
+            <div class="order-total" id="order-total-container"></div>
+            <div class="timeline" id="order-timeline"></div>
+            <div class="special-instructions" id="order-special-instructions"></div>
         </div>
     </div>
 
-    <script>
-        // View order details
-        function viewOrderDetails(orderId) {
-            const modal = document.getElementById('orderModal');
-            modal.style.display = 'block';
-            
-            // In a real application, we would fetch order details based on orderId
-            // For now, we're using static data
-        }
-
-        // Close modal
-        function closeModal() {
-            const modal = document.getElementById('orderModal');
-            modal.style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('orderModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // Simple navigation for sidebar
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Remove active class from all links
-                document.querySelectorAll('.nav-link').forEach(l => {
-                    l.classList.remove('active');
-                });
-                
-                // Add active class to clicked link
-                this.classList.add('active');
-                
-                // In a real application, this would load the appropriate section
-                // For now, we're just changing the active state
-            });
-        });
-    </script>
+    <script src="js/auth-guard.js"></script>
+    <script src="js/customer-dashboard.js"></script>
+    <script src="js/customer-dashboard-error-logging.js"></script>
+    <script src="js/customer-dashboard-sidebar-navigation.js"></script>
 </body>
 </html>

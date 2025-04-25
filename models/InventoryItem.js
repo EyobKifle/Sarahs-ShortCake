@@ -3,50 +3,47 @@ const mongoose = require('mongoose');
 const inventoryItemSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Item name is required'],
-        trim: true,
-        unique: true
+        required: [true, 'Inventory item name is required'],
+        trim: true
     },
-    sku: {
+    description: {
         type: String,
-        trim: true,
-        unique: true,
-        sparse: true
+        trim: true
     },
     category: {
         type: String,
-        required: [true, 'Category is required'],
-        enum: [
-            'Flour & Dry Ingredients',
-            'Dairy & Eggs',
-            'Flavorings & Extracts',
-            'Decorations',
-            'Packaging',
-            'Other'
-        ]
+        trim: true
     },
-    currentStock: {
+    quantity: {
         type: Number,
-        required: [true, 'Current stock is required'],
-        min: [0, 'Current stock cannot be negative']
+        required: [true, 'Quantity is required'],
+        min: [0, 'Quantity cannot be negative']
     },
     unit: {
         type: String,
         required: [true, 'Unit is required'],
-        enum: ['lbs', 'oz', 'g', 'kg', 'each', 'dozen', 'cup', 'tsp', 'tbsp', 'ml', 'l']
+        trim: true
     },
-    reorderLevel: {
+    threshold: {
         type: Number,
-        required: [true, 'Reorder level is required'],
-        min: [0, 'Reorder level cannot be negative']
+        default: 0,
+        min: [0, 'Threshold cannot be negative']
+    },
+    lastRestocked: {
+        type: Date
     },
     supplier: {
-        name: String,
-        contact: String,
-        phone: String,
-        email: String
+        type: String,
+        trim: true
     },
-    lastRestocked: Date,
+    costPerUnit: {
+        type: Number,
+        min: 0
+    },
+    usedInRecipes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'
+    }],
     createdAt: {
         type: Date,
         default: Date.now
@@ -60,27 +57,8 @@ const inventoryItemSchema = new mongoose.Schema({
 // Update the updatedAt field before saving
 inventoryItemSchema.pre('save', function(next) {
     this.updatedAt = Date.now();
-    
-    // Generate SKU if not provided
-    if (!this.sku) {
-        const categoryPrefix = {
-            'Flour & Dry Ingredients': 'FD',
-            'Dairy & Eggs': 'DE',
-            'Flavorings & Extracts': 'FE',
-            'Decorations': 'DC',
-            'Packaging': 'PK',
-            'Other': 'OT'
-        };
-        
-        const randomNum = Math.floor(100 + Math.random() * 900);
-        this.sku = `${categoryPrefix[this.category]}-${randomNum}`;
-    }
-    
     next();
 });
-
-// Text index for searching
-inventoryItemSchema.index({ name: 'text', sku: 'text' });
 
 const InventoryItem = mongoose.model('InventoryItem', inventoryItemSchema);
 

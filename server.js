@@ -2,8 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/errorHandler');
-const { default: open } = require('open');
+const open = require('open').default;
 const connectDB = require('./utils/db');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 // Import routes
@@ -24,8 +26,13 @@ const path = require('path');
 connectDB();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:3000', // Adjust to your frontend origin
+    credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 app.use(morgan('dev'));
 
 // Serve static files with explicit paths
@@ -34,23 +41,93 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/css', express.static(path.join(__dirname, 'Public', 'css')));
 app.use('/js', express.static(path.join(__dirname, 'Public', 'js')));
 
-// Route for main page
+const enforceAccessControl = (req, res, next) => {
+    const token = req.cookies.jwt || (req.headers.authorization && req.headers.authorization.split(' ')[1]);
+    const url = req.originalUrl.toLowerCase();
+
+    // Always allow static files and auth pages
+    const publicPaths = [
+        '/', '/index.html', '/login.html', '/signup.html',
+        '/contact.html', '/menu.html', '/track.html',
+        '/customer-dashboard.html',
+        '/css/', '/js/', '/images/', '/api/auth/'
+    ];
+
+    const isPublic = publicPaths.some(path => 
+        url === path || url.startsWith(path)
+    );
+
+    if (isPublic) return next();
+
+    // For protected routes, verify token
+    if (!token) {
+        return res.redirect('/index.html');
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // Attach user to request for downstream middleware
+        req.user = decoded;
+
+        // Admin route protection
+        if (url.includes('admin') && decoded.userType !== 'admin') {
+            return res.redirect('/index.html');
+        }
+
+        // Customer route protection
+        if (url.includes('customer') && decoded.userType !== 'customer') {
+            return res.redirect('/index.html');
+        }
+
+        next();
+    } catch (err) {
+        // Invalid token - clear cookie and redirect
+        res.clearCookie('jwt');
+        return res.redirect('/index.html');
+    }
+};
+
+// Apply access control middleware before static files and routes
+app.use(enforceAccessControl);
+
+// Update root route
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Public', 'index.html'));
+    const token = req.cookies.jwt;
+    if (!token) {
+        return res.sendFile(path.join(__dirname, 'Public', 'index.html'));
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        res.redirect(
+            decoded.userType === 'admin' 
+                ? '/Admin/admin.html' 
+                : '/customer-dashboard.html'
+        );
+    } catch (err) {
+        res.clearCookie('jwt');
+        res.sendFile(path.join(__dirname, 'Public', 'index.html'));
+    }
 });
 
-// Routes
-app.use('/api/customers', customerRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/inventory', inventoryRoutes);
-app.use('/api/reports', reportRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/maps', mapsRoutes);
-app.use('/api/contact', contactRoutes);
+// Middleware to authenticate API requests
+const { protect } = require('./middleware/auth');
 
-// Optional routes
-app.use('/api/admin', adminRoutes);
-app.use('/api/flavors', flavorRoutes);
+// Apply protect middleware to all API routes except auth
+app.use('/api/auth', authRoutes);
+app.use('/api/customers', protect, customerRoutes);
+app.use('/api/orders', protect, orderRoutes);
+app.use('/api/inventory', protect, inventoryRoutes);
+app.use('/api/reports', protect, reportRoutes);
+app.use('/api/contact', protect, contactRoutes);
+app.use('/api/admin', protect, adminRoutes);
+app.use('/api/flavors', protect, flavorRoutes);
+
+// Catch-all route for SPA support
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Public', 'index.html'));
+});
 
 // Error handling middleware
 app.use(errorHandler);

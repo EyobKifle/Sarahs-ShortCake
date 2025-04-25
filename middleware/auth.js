@@ -53,4 +53,14 @@ const admin = (req, res, next) => {
     next();
 };
 
-module.exports = { protect, admin }; 
+// Middleware to authorize based on roles
+const authorize = (...roles) => {
+    return (req, res, next) => {
+        if (!req.userType || !roles.includes(req.userType)) {
+            return res.status(403).json({ message: 'Not authorized to access this route' });
+        }
+        next();
+    };
+};
+
+module.exports = { protect, admin, authorize }; 

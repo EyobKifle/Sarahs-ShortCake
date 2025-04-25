@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Reports | Sarah's Short Cakes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.css" rel="stylesheet" />
+    <link href="css/admin-style.css" rel="stylesheet" />
+    <style>
+        .report-card {
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .report-card .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 107, 139, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .date-range-picker {
+            background: white;
+            cursor: pointer;
+            padding: 0.375rem 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 2rem;
+        }
+        
+        .table-responsive {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .export-btn-group .btn {
+            margin-right: 0.5rem;
+        }
+        
+        /* Custom chart colors */
+        .chart-legend {
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+        .chart-legend span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-right: 5px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header navbar navbar-dark sticky-top flex-md-nowrap p-0">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 d-flex align-items-center" href="admin.html">
+            <img src="/Public//images/logo.png" alt="Logo" height="30" class="me-2" />
+            Admin Dashboard
+        </a>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap d-flex align-items-center">
+                <span class="px-3 text-white">Welcome, Admin</span>
+                <a class="nav-link px-3" href="#" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt me-1"></i> Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column" role="menu" aria-label="Admin Navigation">
+                        <li class="nav-item" role="none">
+                            <a class="nav-link" href="admin.html" role="menuitem" tabindex="-1" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link" href="admin-orders.html" role="menuitem" tabindex="-1" data-section="orders">
+                                <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+                                Orders
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link active" href="customers.html" role="menuitem" aria-current="page" tabindex="0" data-section="customers">
+                                <i class="fas fa-users" aria-hidden="true"></i>
+                                Customers
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link" href="admin-inventory.html" role="menuitem" tabindex="-1" data-section="inventory">
+                                <i class="fas fa-boxes" aria-hidden="true"></i>
+                                Inventory
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link active" href="admin-reports.html" role="menuitem" aria-current="page" tabindex="0" data-section="reports">
+                                <i class="fas fa-chart-line" aria-hidden="true"></i>
+                                Reports
+                            </a>
+                        </li>
+                        <li class="nav-item" role="none">
+                            <a class="nav-link" href="admin-settings.html" role="menuitem" tabindex="-1" data-section="settings">
+                                <i class="fas fa-cog" aria-hidden="true"></i>
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" id="mainContent">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Reports Dashboard</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="exportPdf">
+                                <i class="fas fa-file-pdf me-1"></i> PDF
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="exportExcel">
+                                <i class="fas fa-file-excel me-1"></i> Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date Range Picker -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="text" class="form-control date-range-picker" id="reportDateRange" value="01/01/2023 - 12/31/2023">
+                            <button class="btn btn-primary" type="button" id="applyDateRange">
+                                <i class="fas fa-filter me-1"></i> Apply
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="reportType">
+                            <option value="sales">Sales Reports</option>
+                            <option value="products">Product Performance</option>
+                            <option value="customers">Customer Analytics</option>
+                            <option value="inventory">Inventory Reports</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="timeGranularity">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card report-card h-100">
+                            <div class="card-body">
+                                <div class="card-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <h5 class="card-title">Total Revenue</h5>
+                                <h2 class="card-text" id="totalRevenue">$24,589.75</h2>
+                                <p class="text-muted small" id="revenueChange">
+                                    <i class="fas fa-arrow-up text-success"></i> 12.5% from previous period
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card h-100">
+                            <div class="card-body">
+                                <div class="card-icon">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                                <h5 class="card-title">Total Orders</h5>
+                                <h2 class="card-text" id="totalOrders">1,842</h2>
+                                <p class="text-muted small" id="ordersChange">
+                                    <i class="fas fa-arrow-up text-success"></i> 8.3% from previous period
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card h-100">
+                            <div class="card-body">
+                                <div class="card-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h5 class="card-title">New Customers</h5>
+                                <h2 class="card-text" id="newCustomers">527</h2>
+                                <p class="text-muted small" id="customersChange">
+                                    <i class="fas fa-arrow-up text-success"></i> 6.1% from previous period
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card report-card h-100">
+                            <div class="card-body">
+                                <div class="card-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h5 class="card-title">Avg. Rating</h5>
+                                <h2 class="card-text" id="avgRating">4.8</h2>
+                                <p class="text-muted small" id="ratingChange">
+                                    <i class="fas fa-arrow-up text-success"></i> 0.3 from previous period
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Sales Trend</h5>
+                                <div class="chart-container">
+                                    <canvas id="salesChart"></canvas>
+                                </div>
+                                <div class="chart-legend">
+                                    <span style="background-color: rgba(255, 107, 139, 1)"></span> Total Sales
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Sales by Category</h5>
+                                <div class="chart-container">
+                                    <canvas id="categoryChart"></canvas>
+                                </div>
+                                <div class="chart-legend">
+                                    <span style="background-color: rgba(255, 107, 139, 0.8)"></span> Cupcakes
+                                    <span style="background-color: rgba(255, 209, 102, 0.8)"></span> Cakes
+                                    <span style="background-color: rgba(6, 214, 160, 0.8)"></span> Cookies
+                                    <span style="background-color: rgba(23, 162, 184, 0.8)"></span> Pastries
+                                    <span style="background-color: rgba(153, 102, 255, 0.8)"></span> Other
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tables Row -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Top Selling Products</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="topProductsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                                <th>Revenue</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Vanilla Cupcake (6-pack)</td>
+                                                <td>342</td>
+                                                <td>$1,539.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Chocolate Cupcake (6-pack)</td>
+                                                <td>298</td>
+                                                <td>$1,341.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Red Velvet Cake (8")</td>
+                                                <td>187</td>
+                                                <td>$2,805.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Strawberry Shortcake</td>
+                                                <td>156</td>
+                                                <td>$2,028.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cookies and Cream Cupcake (6-pack)</td>
+                                                <td>143</td>
+                                                <td>$643.50</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Lemon Blueberry Cupcake (6-pack)</td>
+                                                <td>128</td>
+                                                <td>$576.00</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Chocolate Chip Cookies (12-pack)</td>
+                                                <td>115</td>
+                                                <td>$345.00</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Top Customers</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="topCustomersTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Customer</th>
+                                                <th>Orders</th>
+                                                <th>Total Spent</th>
+                                                <th>Last Order</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Jane Smith</td>
+                                                <td>24</td>
+                                                <td>$1,845.60</td>
+                                                <td>12/15/2023</td>
+                                            </tr>
+                                            <tr>
+                                                <td>John Doe</td>
+                                                <td>18</td>
+                                                <td>$1,298.75</td>
+                                                <td>12/18/2023</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sarah Johnson</td>
+                                                <td>15</td>
+                                                <td>$956.30</td>
+                                                <td>12/10/2023</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Michael Brown</td>
+                                                <td>12</td>
+                                                <td>$810.45</td>
+                                                <td>11/28/2023</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Emily Davis</td>
+                                                <td>11</td>
+                                                <td>$698.20</td>
+                                                <td>12/05/2023</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Robert Wilson</td>
+                                                <td>9</td>
+                                                <td>$587.50</td>
+                                                <td>11/20/2023</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jessica Lee</td>
+                                                <td>8</td>
+                                                <td>$512.80</td>
+                                                <td>12/12/2023</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Reports JavaScript -->
+    <script>
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize date range picker
+            $('#reportDateRange').daterangepicker({
+                opens: 'left',
+                startDate: moment().subtract(1, 'month'),
+                endDate: moment(),
+                locale: {
+                    format: 'MM/DD/YYYY'
+                }
+            });
+
+            // Generate mock data for charts
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const salesData = [4500, 5200, 4800, 6100, 5800, 7200, 7900, 8300, 7800, 8600, 9400, 12500];
+            
+            const categoryData = {
+                labels: ['Cupcakes', 'Cakes', 'Cookies', 'Pastries', 'Other'],
+                data: [12500, 8600, 3200, 2400, 1500]
+            };
+
+            // Initialize charts
+            const salesChartCtx = document.getElementById('salesChart').getContext('2d');
+            const categoryChartCtx = document.getElementById('categoryChart').getContext('2d');
+            
+            // Sales Trend Chart
+            let salesChart = new Chart(salesChartCtx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Sales ($)',
+                        data: salesData,
+                        backgroundColor: 'rgba(255, 107, 139, 0.2)',
+                        borderColor: 'rgba(255, 107, 139, 1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: 'rgba(255, 107, 139, 1)',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Sales by Category Chart
+            let categoryChart = new Chart(categoryChartCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: categoryData.labels,
+                    datasets: [{
+                        data: categoryData.data,
+                        backgroundColor: [
+                            'rgba(255, 107, 139, 0.8)',
+                            'rgba(255, 209, 102, 0.8)',
+                            'rgba(6, 214, 160, 0.8)',
+                            'rgba(23, 162, 184, 0.8)',
+                            'rgba(153, 102, 255, 0.8)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: $${value.toLocaleString()} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            // Initialize DataTables
+            $('#topProductsTable').DataTable({
+                searching: false,
+                paging: false,
+                info: false,
+                order: [[1, 'desc']],
+                columnDefs: [
+                    { targets: [1, 2], className: 'text-end' }
+                ]
+            });
+
+            $('#topCustomersTable').DataTable({
+                searching: false,
+                paging: false,
+                info: false,
+                order: [[2, 'desc']],
+                columnDefs: [
+                    { targets: [1, 2], className: 'text-end' }
+                ]
+            });
+
+            // Event listeners
+            document.getElementById('applyDateRange').addEventListener('click', loadReportData);
+            document.getElementById('reportType').addEventListener('change', loadReportData);
+            document.getElementById('timeGranularity').addEventListener('change', loadReportData);
+            document.getElementById('exportPdf').addEventListener('click', exportToPdf);
+            document.getElementById('exportExcel').addEventListener('click', exportToExcel);
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+        });
+
+        // Load report data
+        async function loadReportData() {
+            // Show loading state
+            const applyBtn = document.getElementById('applyDateRange');
+            applyBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Loading...';
+            applyBtn.disabled = true;
+            
+            // Simulate API call delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Reset button state
+            applyBtn.innerHTML = '<i class="fas fa-filter me-1"></i> Apply';
+            applyBtn.disabled = false;
+            
+            // In a real application, you would fetch new data here
+            // For this mock version, we'll just show a toast notification
+            const toastHTML = `
+                <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header bg-primary text-white">
+                            <strong class="me-auto">Report Updated</strong>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            Report data has been updated for the selected date range.
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', toastHTML);
+            
+            // Remove toast after 3 seconds
+            setTimeout(() => {
+                const toast = document.querySelector('.toast');
+                if (toast) {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 500);
+                }
+            }, 3000);
+        }
+
+        // Export to PDF
+        function exportToPdf() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(18);
+            doc.setTextColor(40);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Sarah\'s Short Cakes - Sales Report', 14, 15);
+            
+            // Add date range
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Date Range: ${document.getElementById('reportDateRange').value}`, 14, 25);
+            
+            // Add summary section
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Summary', 14, 35);
+            
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Total Revenue: ${document.getElementById('totalRevenue').textContent}`, 14, 45);
+            doc.text(`Total Orders: ${document.getElementById('totalOrders').textContent}`, 14, 55);
+            doc.text(`New Customers: ${document.getElementById('newCustomers').textContent}`, 14, 65);
+            doc.text(`Average Rating: ${document.getElementById('avgRating').textContent}`, 14, 75);
+            
+            // Add charts section
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Sales Charts', 14, 90);
+            
+            // Add sales trend description
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Sales showed consistent growth throughout the year with peak sales in December.', 14, 100);
+            doc.text('The holiday season accounted for 22% of annual revenue.', 14, 106);
+            
+            // Add top products section
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Top Selling Products', 14, 120);
+            
+            // Add top products table
+            doc.autoTable({
+                startY: 125,
+                head: [['Product', 'Quantity', 'Revenue']],
+                body: [
+                    ['Vanilla Cupcake (6-pack)', '342', '$1,539.00'],
+                    ['Chocolate Cupcake (6-pack)', '298', '$1,341.00'],
+                    ['Red Velvet Cake (8")', '187', '$2,805.00'],
+                    ['Strawberry Shortcake', '156', '$2,028.00'],
+                    ['Cookies and Cream Cupcake (6-pack)', '143', '$643.50']
+                ],
+                headStyles: {
+                    fillColor: [255, 107, 139],
+                    textColor: 255
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245]
+                },
+                margin: { left: 14 }
+            });
+            
+            // Save the PDF
+            doc.save('SarahsShortCakes_Annual_Report.pdf');
+        }
+
+        // Export to Excel
+        function exportToExcel() {
+            // Create a temporary table with all the data we want to export
+            const html = `
+                <table>
+                    <tr><th colspan="3">Sarah's Short Cakes - Sales Report</th></tr>
+                    <tr><td colspan="3">Date Range: ${document.getElementById('reportDateRange').value}</td></tr>
+                    <tr><th>Metric</th><th>Value</th><th>Change</th></tr>
+                    <tr><td>Total Revenue</td><td>${document.getElementById('totalRevenue').textContent}</td><td>+12.5%</td></tr>
+                    <tr><td>Total Orders</td><td>${document.getElementById('totalOrders').textContent}</td><td>+8.3%</td></tr>
+                    <tr><td>New Customers</td><td>${document.getElementById('newCustomers').textContent}</td><td>+6.1%</td></tr>
+                    <tr><td>Average Rating</td><td>${document.getElementById('avgRating').textContent}</td><td>+0.3</td></tr>
+                    <tr><td colspan="3"></td></tr>
+                    <tr><th colspan="3">Top Selling Products</th></tr>
+                    ${Array.from(document.querySelectorAll('#topProductsTable tbody tr')).map(row => 
+                        `<tr><td>${row.cells[0].textContent}</td><td>${row.cells[1].textContent}</td><td>${row.cells[2].textContent}</td></tr>`
+                    ).join('')}
+                    <tr><td colspan="3"></td></tr>
+                    <tr><th colspan="3">Top Customers</th></tr>
+                    ${Array.from(document.querySelectorAll('#topCustomersTable tbody tr')).map(row => 
+                        `<tr><td>${row.cells[0].textContent}</td><td>${row.cells[1].textContent}</td><td>${row.cells[2].textContent}</td></tr>`
+                    ).join('')}
+                </table>
+            `;
+            
+            // Create download link
+            const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'SarahsShortCakes_Report.xls';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Logout function
+        async function logout(e) {
+            e.preventDefault();
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'login.html';
+                } else {
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Logout error. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

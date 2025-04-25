@@ -1,146 +1,404 @@
-// customer-dashboard.js - Handles customer dashboard functionality
-
 document.addEventListener('DOMContentLoaded', () => {
-    loadCustomerData();
-    loadRecentOrders();
-    setupLogout();
-    updateCartCount();
+  // Fetch and display user profile and dashboard data
+  fetch('/api/customers/me', {
+    method: 'GET',
+    credentials: 'include', // to send cookies
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Failed to fetch profile: ' + res.status + ' ' + res.statusText);
+    return res.json();
+  })
+  .then(data => {
+    if (data.success && data.user) {
+      const user = data.user;
+      const sidebarWelcome = document.querySelector('.sidebar-user-firstname');
+      if (sidebarWelcome) sidebarWelcome.textContent = user.firstName;
+
+      // Load profile content into main dashboard area
+      loadProfileContent(user);
+
+      // Fetch dashboard stats after user profile is loaded
+      fetchDashboardStats();
+
+      // Fetch other customer data
+      fetchOrders();
+      fetchAddresses();
+      fetchWishlist();
+      fetchReviews();
+    } else {
+      console.warn('User not authorized or not logged in');
+      window.location.href = 'login.html';
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching user profile:', error);
+    window.location.href = 'login.html';
+  });
+
+  // Logout button handler
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      fetch('/api/auth/logout', {
+        method: 'GET',
+        credentials: 'include'
+      })
+      .then(res => {
+        if (res.ok) {
+          localStorage.clear();
+          window.location.href = 'login.html';
+        } else {
+          alert('Logout failed: ' + res.status + ' ' + res.statusText);
+        }
+      })
+      .catch(error => {
+        alert('Logout failed: ' + error.message);
+      });
+    });
+  }
+
+  // Load profile content into dashboard main content area
+  function loadProfileContent(user) {
+    const mainContent = document.getElementById('dashboard-main-content');
+    if (!mainContent) return;
+
+    mainContent.innerHTML = `
+      <header class="dashboard-header">
+        <h1>Welcome, ${user.firstName} ${user.lastName}</h1>
+        <div class="user-profile">
+          <div class="user-avatar">${user.firstName.charAt(0).toUpperCase()}</div>
+          <span class="user-name">${user.firstName} ${user.lastName}</span>
+        </div>
+      </header>
+
+      <div class="dashboard-cards">
+        <div class="dashboard-card" id="card-total-orders" style="cursor:pointer;">
+          <div class="card-header">
+            <span class="card-title">Total Orders</span>
+            <div class="card-icon">
+              <i class="fas fa-shopping-bag"></i>
+            </div>
+          </div>
+          <div class="card-value" id="total-orders">0</div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <span class="card-title">Total Spent</span>
+            <div class="card-icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+          </div>
+          <div class="card-value" id="total-spent">$0.00</div>
+        </div>
+
+        <div class="dashboard-card" id="card-wishlist-items" style="cursor:pointer;">
+          <div class="card-header">
+            <span class="card-title">Wishlist Items</span>
+            <div class="card-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+          </div>
+          <div class="card-value" id="wishlist-items">0</div>
+        </div>
+
+        <div class="dashboard-card" id="card-reviews-count" style="cursor:pointer;">
+          <div class="card-header">
+            <span class="card-title">Reviews</span>
+            <div class="card-icon">
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+          <div class="card-value" id="reviews-count">0</div>
+        </div>
+      </div>
+
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h3 class="section-title">Recent Orders</h3>
+          <a href="customer-orders.html" class="section-link">View All Orders</a>
+        </div>
+        <div class="table-responsive">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body">
+              <tr><td colspan="6">Loading orders...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    `;
+  }
+
+  // Fetch dashboard stats
+  function fetchDashboardStats() {
+    fetch('/api/customers/dashboard-stats', {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch dashboard stats: ' + res.status + ' ' + res.statusText);
+      return res.json();
+    })
+    .then(data => {
+      if (data.success && data.stats) {
+        document.getElementById('total-orders').textContent = data.stats.totalOrders || 0;
+        document.getElementById('total-spent').textContent = `$${(data.stats.totalSpent || 0).toFixed(2)}`;
+        document.getElementById('wishlist-items').textContent = data.stats.wishlistItems || 0;
+        document.getElementById('reviews-count').textContent = data.stats.reviews || 0;
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching dashboard stats:', error);
+    });
+  }
+
+  // Fetch recent orders
+  function fetchOrders() {
+    fetch('/api/orders/my-orders', {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch orders: ' + res.status + ' ' + res.statusText);
+      return res.json();
+    })
+    .then(data => {
+      if (data.success && Array.isArray(data.data)) {
+        const tbody = document.getElementById('orders-table-body');
+        tbody.innerHTML = '';
+        data.data.forEach(order => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="order-id">#${order.orderNumber || order._id}</td>
+            <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+            <td>${order.items ? order.items.length : 0}</td>
+            <td>$${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</td>
+            <td><span class="badge badge-${order.status || 'pending'}">${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'}</span></td>
+            <td>
+              <button class="action-btn action-btn-primary" onclick="viewOrderDetails('${order._id}')">
+                <i class="fas fa-eye"></i> View
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching orders:', error);
+    });
+  }
+
+  // Fetch addresses (for future use or extension)
+  function fetchAddresses() {
+    fetch('/api/customers/addresses', {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch addresses: ' + res.status + ' ' + res.statusText);
+      return res.json();
+    })
+    .then(data => {
+      if (data.success) {
+        // Handle addresses data if needed
+        console.log('Addresses:', data.data);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching addresses:', error);
+    });
+  }
+
+  // Fetch wishlist items (for future use or extension)
+  function fetchWishlist() {
+    fetch('/api/customers/wishlist', {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch wishlist: ' + res.status + ' ' + res.statusText);
+      return res.json();
+    })
+    .then(data => {
+      if (data.success) {
+        // Handle wishlist data if needed
+        console.log('Wishlist:', data.data);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching wishlist:', error);
+    });
+  }
+
+  // Fetch reviews (for future use or extension)
+  function fetchReviews() {
+    fetch('/api/customers/reviews', {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch reviews: ' + res.status + ' ' + res.statusText);
+      return res.json();
+    })
+    .then(data => {
+      if (data.success) {
+        // Handle reviews data if needed
+        console.log('Reviews:', data.data);
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching reviews:', error);
+    });
+  }
+
+  // View order details function (enhanced to fetch order details dynamically)
+  window.viewOrderDetails = function(orderId) {
+    const modal = document.getElementById('orderModal');
+    modal.style.display = 'block';
+
+    // Fetch order details dynamically
+    fetch(`/api/orders/${orderId}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch order details: ' + res.status + ' ' + res.statusText);
+      return res.json();
+    })
+    .then(data => {
+      if (data.success && data.data) {
+        populateOrderModal(data.data);
+      } else {
+        console.error('Failed to load order details');
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching order details:', error);
+    });
+  };
+
+  // Populate order modal with order details
+  function populateOrderModal(order) {
+    const modal = document.getElementById('orderModal');
+
+    // Update modal title
+    const modalTitle = modal.querySelector('.modal-title');
+    modalTitle.textContent = `Order #${order.orderNumber || order._id}`;
+
+    // Customer Information
+    const customerInfoSection = modal.querySelector('#customer-info-section');
+    customerInfoSection.innerHTML = `
+      <h3>Customer Information</h3>
+      <p><strong>Name:</strong> ${order.customerName || ''}</p>
+      <p><strong>Email:</strong> ${order.customerEmail || ''}</p>
+      <p><strong>Phone:</strong> ${order.customerPhone || ''}</p>
+    `;
+
+    // Delivery Information
+    const deliveryInfoSection = modal.querySelector('#delivery-info-section');
+    deliveryInfoSection.innerHTML = `
+      <h3>Delivery Information</h3>
+      <p><strong>Type:</strong> ${order.deliveryType || ''}</p>
+      <p><strong>Address:</strong> ${order.deliveryAddress || ''}</p>
+      <p><strong>City:</strong> ${order.deliveryCity || ''}</p>
+      <p><strong>Date Needed:</strong> ${order.dateNeeded ? new Date(order.dateNeeded).toLocaleDateString() : ''}</p>
+      <p><strong>Time Needed:</strong> ${order.timeNeeded || ''}</p>
+    `;
+
+    // Order Items
+    const orderItemsContainer = modal.querySelector('#order-items-container');
+    let itemsHtml = '<h3>Order Items</h3>';
+    if (order.items && order.items.length > 0) {
+      order.items.forEach(item => {
+        itemsHtml += `
+          <div class="order-item">
+            <img src="${item.image || 'images/default-preview.jpg'}" alt="${item.name}" class="order-item-image">
+            <div class="order-item-details">
+              <h4 class="order-item-name">${item.name}</h4>
+              <p>Quantity: ${item.quantity}</p>
+              <p class="order-item-price">$${item.price.toFixed(2)} (${item.price.toFixed(2)} each)</p>
+            </div>
+          </div>
+        `;
+      });
+    } else {
+      itemsHtml += '<p>No items found in this order.</p>';
+    }
+    orderItemsContainer.innerHTML = itemsHtml;
+
+    // Order Total
+    const orderTotalContainer = modal.querySelector('#order-total-container');
+    orderTotalContainer.innerHTML = `
+      <p><strong>Subtotal:</strong> $${order.subtotal ? order.subtotal.toFixed(2) : '0.00'}</p>
+      <p><strong>Delivery Fee:</strong> $${order.deliveryFee ? order.deliveryFee.toFixed(2) : '0.00'}</p>
+      <p><strong>Tax:</strong> $${order.tax ? order.tax.toFixed(2) : '0.00'}</p>
+      <p class="total-amount">Total: $${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</p>
+    `;
+
+    // Timeline
+    const timelineContainer = modal.querySelector('#order-timeline');
+    let timelineHtml = '<h3>Order Status</h3>';
+    if (order.statusTimeline && order.statusTimeline.length > 0) {
+      order.statusTimeline.forEach(status => {
+        const statusClass = status.completed ? 'completed' : (status.active ? 'active' : '');
+        timelineHtml += `
+          <div class="timeline-item ${statusClass}">
+            <div class="timeline-icon">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="timeline-content">
+              <h4>${status.status}</h4>
+              <p>${new Date(status.date).toLocaleString()}</p>
+            </div>
+          </div>
+        `;
+      });
+    } else {
+      timelineHtml += '<p>No status updates available.</p>';
+    }
+    timelineContainer.innerHTML = timelineHtml;
+
+    // Special Instructions
+    const specialInstructionsContainer = modal.querySelector('#order-special-instructions');
+    specialInstructionsContainer.innerHTML = `
+      <h3>Special Instructions</h3>
+      <p>${order.specialInstructions || 'None'}</p>
+    `;
+  }
+
+  // Close modal function
+  window.closeModal = function() {
+    const modal = document.getElementById('orderModal');
+    modal.style.display = 'none';
+  };
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('orderModal');
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  };
 });
-
-// Load customer profile data and update UI
-async function loadCustomerData() {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = 'login.html';
-            return;
-        }
-
-        const response = await fetch('/api/auth/me', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch user data');
-        }
-
-        const user = await response.json();
-
-        document.getElementById('profile-name').textContent = user.firstName + (user.lastName ? ' ' + user.lastName : '');
-        document.getElementById('profile-email').textContent = user.email;
-        document.getElementById('welcome-message').textContent = `Welcome, ${user.firstName}!`;
-
-        // Optionally update avatar if user has one
-        // document.getElementById('profile-avatar').src = user.avatarUrl || 'images/default-avatar.jpg';
-
-        // Store user data in localStorage for other pages if needed
-        localStorage.setItem('user', JSON.stringify(user));
-    } catch (error) {
-        console.error('Error loading customer data:', error);
-        alert('Error loading customer data. Please login again.');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = 'login.html';
-    }
-}
-
-// Load recent orders for the logged-in customer
-async function loadRecentOrders() {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            return;
-        }
-
-        const response = await fetch('/api/orders/user', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch orders');
-        }
-
-        const orders = await response.json();
-
-        const ordersList = document.getElementById('orders-list');
-        ordersList.innerHTML = '';
-
-        if (!orders || orders.length === 0) {
-            ordersList.innerHTML = '<p>No recent orders found.</p>';
-            return;
-        }
-
-        orders.slice(0, 5).forEach(order => {
-            const orderCard = document.createElement('div');
-            orderCard.className = 'order-card';
-
-            const orderDate = new Date(order.neededDate).toLocaleDateString();
-
-            orderCard.innerHTML = `
-                <div class="order-header">
-                    <span class="order-id">Order #${order._id}</span>
-                    <span class="order-date">${orderDate}</span>
-                    <span class="order-status status-${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
-                </div>
-                <div class="order-items">
-                    ${order.items.map(item => `
-                        <div class="order-item">
-                            <span>${item.cakeFlavor} Cupcake (x${item.quantity})</span>
-                            <span>$${(item.quantity * (item.price || 3.99)).toFixed(2)}</span>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="order-total">Total: $${order.totalPrice.toFixed(2)}</div>
-                <a href="order.html?id=${order._id}" class="view-order">View Order Details</a>
-            `;
-
-            ordersList.appendChild(orderCard);
-        });
-    } catch (error) {
-        console.error('Error loading recent orders:', error);
-        const ordersList = document.getElementById('orders-list');
-        if (ordersList) {
-            ordersList.innerHTML = '<p>Error loading recent orders.</p>';
-        }
-    }
-}
-
-// Setup logout button functionality
-function setupLogout() {
-    const logoutLink = document.getElementById('logout-link');
-    if (logoutLink) {
-        logoutLink.addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-                const response = await fetch('/api/auth/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                });
-                if (!response.ok) {
-                    throw new Error('Logout failed');
-                }
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            } catch (error) {
-                console.error('Logout error:', error);
-                alert('Logout failed. Please try again.');
-            }
-        });
-    }
-}
-
-// Update cart count in header
-function updateCartCount() {
-    const cartCountElement = document.getElementById('cart-count');
-    if (cartCountElement) {
-        // This should be integrated with your cart manager or localStorage cart data
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const count = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
-        cartCountElement.textContent = count;
-    }
-}

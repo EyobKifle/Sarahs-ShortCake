@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Account Settings - Sarah's Short Cakes</title>
+    <meta name="theme-color" content="#ff85a2" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        :root {
+            --primary: #FF6B8B;
+            --primary-light: #FF8FA3;
+            --primary-dark: #E83E8C;
+            --secondary: #FFD166;
+            --accent: #06D6A0;
+            --dark: #073B4C;
+            --light: #F8F9FA;
+            --white: #FFFFFF;
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--dark);
+            background-color: var(--light);
+            line-height: 1.6;
+        }
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar Styles */
+        .dashboard-sidebar {
+            width: 250px;
+            background-color: var(--white);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+        .sidebar-header h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-header p {
+            color: var(--dark);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        .sidebar-nav {
+            padding: 0 1rem;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .nav-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+            text-align: center;
+        }
+        .nav-link:hover {
+            background-color: rgba(255,107,139,0.1);
+            color: var(--primary);
+        }
+        .nav-link.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        /* Main Content Styles */
+        .dashboard-main {
+            flex: 1;
+            padding: 2rem;
+            background-color: var(--light);
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"] {
+            padding: 0.5rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-top: 0.25rem;
+        }
+        button {
+            margin-top: 1.5rem;
+            padding: 0.75rem;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h2>My Account</h2>
+                <p>Welcome back, User!</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="customer-dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="customer-orders.html" class="nav-link">
+                    <i class="fas fa-shopping-bag"></i>
+                    My Orders
+                </a>
+                <a href="customer-menu.html" class="nav-link">
+                    <i class="fas fa-utensils"></i>
+                    Menu
+                </a>
+                <a href="customer-wishlist.html" class="nav-link">
+                    <i class="fas fa-heart"></i>
+                    Wishlist
+                </a>
+                <a href="customer-reviews.html" class="nav-link">
+                    <i class="fas fa-star"></i>
+                    My Reviews
+                </a>
+                <a href="customer-settings.html" class="nav-link active">
+                    <i class="fas fa-cog"></i>
+                    Account Settings
+                </a>
+                <a href="#logout" class="nav-link logout-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </nav>
+        </aside>
+        <main class="dashboard-main">
+            <div class="container">
+                <h1>Account Settings</h1>
+                <form id="settingsForm">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required />
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required />
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required />
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" />
+                    <button type="submit">Save Changes</button>
+                </form>
+
+                <h2>My Addresses</h2>
+                <form id="addAddressForm">
+                    <label for="street">Street</label>
+                    <input type="text" id="street" name="street" required />
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" required />
+                    <label for="state">State</label>
+                    <input type="text" id="state" name="state" required />
+                    <label for="zip">Zip Code</label>
+                    <input type="text" id="zip" name="zip" required />
+                    <button type="submit">Add Address</button>
+                </form>
+                <ul class="address-list" id="addressList">
+                    <!-- Addresses will be populated here -->
+                </ul>
+            </div>
+        </main>
+    </div>
+    <script src="js/customer-common.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/customers/me', {
+                method: 'GET',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to fetch profile');
+                return res.json();
+            })
+            .then(data => {
+                if (data.success && data.user) {
+                    document.getElementById('firstName').value = data.user.firstName || '';
+                    document.getElementById('lastName').value = data.user.lastName || '';
+                    document.getElementById('email').value = data.user.email || '';
+                    document.getElementById('phone').value = data.user.phone || '';
+                }
+            })
+            .catch(console.error);
+            document.getElementById('settingsForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value
+                };
+                fetch('/api/customers', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Profile updated successfully');
+                    } else {
+                        alert('Failed to update profile');
+                    }
+                })
+                .catch(() => alert('Error updating profile'));
+            });
+
+            // Address management functionality
+            async function loadAddresses() {
+                try {
+                    const res = await fetch('/api/customers/addresses', {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    if (!res.ok) throw new Error('Failed to fetch addresses');
+                    const data = await res.json();
+                    if (data.success) {
+                        const addressList = document.getElementById('addressList');
+                        addressList.innerHTML = '';
+                        data.data.forEach(address => {
+                            const li = document.createElement('li');
+                            li.className = 'address-item';
+                            li.dataset.id = address._id;
+                            li.innerHTML = `
+                                <p>${address.street}, ${address.city}, ${address.state} ${address.zip}</p>
+                                <button class="edit-address-btn">Edit</button>
+                                <button class="delete-address-btn">Delete</button>
+                            `;
+                            addressList.appendChild(li);
+                        });
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            async function addAddress(address) {
+                try {
+                    const res = await fetch('/api/customers/addresses', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(address)
+                    });
+                    if (!res.ok) throw new Error('Failed to add address');
+                    await loadAddresses();
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            async function editAddress(id, address) {
+                try {
+                    const res = await fetch(`/api/customers/addresses/${id}`, {
+                        method: 'PUT',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(address)
+                    });
+                    if (!res.ok) throw new Error('Failed to edit address');
+                    await loadAddresses();
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            async function deleteAddress(id) {
+                try {
+                    const res = await fetch(`/api/customers/addresses/${id}`, {
+                        method: 'DELETE',
+                        credentials: 'include',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    if (!res.ok) throw new Error('Failed to delete address');
+                    await loadAddresses();
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            document.getElementById('addressList').addEventListener('click', (e) => {
+                if (e.target.classList.contains('edit-address-btn')) {
+                    const li = e.target.closest('li.address-item');
+                    const id = li.dataset.id;
+                    const street = prompt('Enter street:', li.querySelector('p').textContent.split(',')[0].trim());
+                    const city = prompt('Enter city:', li.querySelector('p').textContent.split(',')[1].trim());
+                    const stateZip = li.querySelector('p').textContent.split(',')[2].trim().split(' ');
+                    const state = prompt('Enter state:', stateZip[0]);
+                    const zip = prompt('Enter zip:', stateZip[1]);
+                    if (street && city && state && zip) {
+                        editAddress(id, { street, city, state, zip });
+                    }
+                } else if (e.target.classList.contains('delete-address-btn')) {
+                    const li = e.target.closest('li.address-item');
+                    const id = li.dataset.id;
+                    if (confirm('Are you sure you want to delete this address?')) {
+                        deleteAddress(id);
+                    }
+                }
+            });
+
+            document.getElementById('addAddressForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const street = document.getElementById('street').value.trim();
+                const city = document.getElementById('city').value.trim();
+                const state = document.getElementById('state').value.trim();
+                const zip = document.getElementById('zip').value.trim();
+                if (street && city && state && zip) {
+                    addAddress({ street, city, state, zip });
+                    e.target.reset();
+                } else {
+                    alert('Please fill in all address fields.');
+                }
+            });
+
+            loadAddresses();
+        });
+    </script>
+    <script src="js/customer-dashboard-sidebar-navigation.js"></script>
+</body>
+</html>

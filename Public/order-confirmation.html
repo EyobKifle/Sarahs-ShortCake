@@ -464,25 +464,26 @@
     </style>
 </head>
 <body>
-    <header>
+    <header class="main-header">
         <div class="header-container">
             <div class="logo-container">
                 <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
                 <h1>Sarah's Short Cakes</h1>
             </div>
-            <nav>
+            <nav class="main-nav">
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li><a href="menu.html">Menu</a></li>
                     <li><a href="order.html">Order</a></li>
-                    <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
+<li class="cart-icon">
+  <a href="cart.html">
+    <i class="fas fa-shopping-basket"></i>
+    <span id="cart-count" class="cart-count">0</span>
+  </a>
+</li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li class="profile-icon">
-                        <a href="#" onclick="showAuthModal()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-                            </svg>
-                        </a>
+                    <li>
+                        <a href="login.html" class="login-signup-button">Login / Sign Up</a>
                     </li>
                 </ul>
             </nav>
@@ -625,127 +626,7 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get order details from URL parameters or localStorage
-            const urlParams = new URLSearchParams(window.location.search);
-            const orderId = urlParams.get('orderId') || localStorage.getItem('lastOrderId');
-            
-            if (orderId) {
-                // In a real application, you would fetch order details from the server
-                // For now, we'll use sample data
-                const orderDetails = getOrderDetails(orderId);
-                
-                // Update order information
-                document.getElementById('orderNumber').textContent = orderDetails.orderNumber;
-                document.getElementById('orderDate').textContent = formatDate(orderDetails.orderDate);
-                document.getElementById('orderStatus').textContent = orderDetails.status;
-                document.getElementById('estimatedDelivery').textContent = formatDate(orderDetails.estimatedDelivery);
-                
-                // Update order items
-                const orderItemsContainer = document.getElementById('orderItems');
-                orderItemsContainer.innerHTML = '';
-                
-                orderDetails.items.forEach(item => {
-                    const row = document.createElement('tr');
-                    const imageHtml = `
-                        <img src="${item.image}" 
-                             alt="${item.name}" 
-                             class="item-image" 
-                             onerror="this.onerror=null; this.src='images/default-preview.jpg'; this.classList.add('error'); this.innerHTML='<i class=\'fas fa-cookie\'></i>'">
-                    `;
-                    row.innerHTML = `
-                        <td>
-                            <div class="item-details">
-                                ${imageHtml}
-                                <div>
-                                    <div class="item-name">${item.name}</div>
-                                    <div class="item-options">${item.options}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>${item.quantity}</td>
-                        <td>${formatCurrency(item.price)}</td>
-                        <td>${formatCurrency(item.price * item.quantity)}</td>
-                    `;
-                    orderItemsContainer.appendChild(row);
-                });
-                
-                // Update order summary
-                document.getElementById('subtotal').textContent = formatCurrency(orderDetails.subtotal);
-                document.getElementById('deliveryFee').textContent = formatCurrency(orderDetails.deliveryFee);
-                document.getElementById('tax').textContent = formatCurrency(orderDetails.tax);
-                document.getElementById('total').textContent = formatCurrency(orderDetails.total);
-            }
-        });
-        
-        // Sample function to get order details
-        function getOrderDetails(orderId) {
-            // In a real application, this would be an API call
-            return {
-                orderNumber: orderId,
-                orderDate: new Date(),
-                status: 'Processing',
-                estimatedDelivery: new Date(Date.now() + 86400000), // Tomorrow
-                items: [
-                    {
-                        name: 'Chocolate Cupcake',
-                        options: 'Chocolate Icing, Sprinkles',
-                        quantity: 2,
-                        price: 4.00,
-                        image: 'images/menu/chocolate-cupcake.jpg'
-                    },
-                    {
-                        name: 'Vanilla Cupcake',
-                        options: 'Vanilla Icing, Fresh Fruit',
-                        quantity: 3,
-                        price: 4.00,
-                        image: 'images/menu/vanilla-cupcake.jpg'
-                    },
-                    {
-                        name: 'Red Velvet Cupcake',
-                        options: 'Cream Cheese Icing',
-                        quantity: 1,
-                        price: 4.50,
-                        image: 'images/menu/red-velvet-cupcake.jpg'
-                    },
-                    {
-                        name: 'Custom Cupcake',
-                        options: 'Special Design, Custom Flavors',
-                        quantity: 1,
-                        price: 6.00,
-                        image: 'images/default-preview.jpg'
-                    }
-                ],
-                subtotal: 25.50,
-                deliveryFee: 5.00,
-                tax: 2.04,
-                total: 32.54
-            };
-        }
-        
-        // Format date
-        function formatDate(date) {
-            return new Date(date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        }
-        
-        // Format currency
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format(amount);
-        }
-        
-        // Auth modal functionality
-        function showAuthModal() {
-            // Implementation for showing auth modal
-            console.log('Show auth modal');
-        }
-    </script>
+    <script src="js/order-confirmation.js"></script>
+    <script src="js/header-footer.js"></script>
 </body>
-</html> 
+</html>

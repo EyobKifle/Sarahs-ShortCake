@@ -6,10 +6,8 @@
     <meta name="description" content="Sarah's Short Cakes - Custom cupcakes made with love" />
     <title>Sarah's Short Cakes - Home</title>
     <meta name="theme-color" content="#ff85a2" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #FF6B8B;
@@ -97,27 +95,29 @@
             color: var(--primary);
             font-weight: 600;
         }
-        
-        .profile-icon svg {
-            fill: var(--dark);
-            transition: fill 0.3s;
-        }
-        
-        .profile-icon:hover svg {
-            fill: var(--primary);
-        }
-        
-        /* Simplified Hero Section with Clean Carousel */
+
+        /* ================= IMPROVED HERO SECTION ================= */
         .hero {
             position: relative;
             height: 80vh;
             max-height: 800px;
             min-height: 500px;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
+            margin: 20px auto 0;
+            width: 90%;
+            max-width: 1400px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .hero-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
         }
         
         .hero-carousel {
@@ -142,9 +142,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
             opacity: 0;
-            transition: opacity 1s ease-in-out;
+            transition: opacity 1.5s ease-in-out;
             z-index: 1;
+            filter: brightness(0.85);
         }
 
         .carousel-image.active {
@@ -158,55 +160,87 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
             z-index: 1;
         }
         
         .hero-content {
             position: relative;
-            z-index: 2;
+            z-index: 3;
             max-width: 800px;
             margin: 0 auto;
             padding: 2rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: fadeInUp 1s ease-out;
         }
         
         .hero-text h1 {
             font-size: 3.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             color: white;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
         }
         
         .hero-text .subtitle {
             font-size: 1.8rem;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             color: white;
-            opacity: 0.9;
+            font-weight: 300;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .cta-button {
             display: inline-block;
-            background-color: white;
-            color: var(--primary-dark);
-            padding: 1rem 2.5rem;
+            background-color: var(--primary);
+            color: white;
+            padding: 1.2rem 2.5rem;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
             font-size: 1.2rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.2);
         }
         
         .cta-button:hover {
-            background-color: var(--light);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            background-color: var(--primary-dark);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ================= RESPONSIVE ADJUSTMENTS ================= */
+        @media (max-width: 992px) {
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-text .subtitle {
+                font-size: 1.5rem;
+            }
         }
 
         @media (max-width: 768px) {
             .hero {
-                height: 60vh;
+                height: 70vh;
                 min-height: 400px;
+                width: 95%;
+                border-radius: 15px;
             }
             
             .hero-text h1 {
@@ -216,9 +250,48 @@
             .hero-text .subtitle {
                 font-size: 1.4rem;
             }
+            
+            .cta-button {
+                padding: 1rem 2rem;
+                font-size: 1.1rem;
+            }
+
+            .header-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                gap: 1rem;
+            }
         }
-        
-        /* Features Section */
+
+        @media (max-width: 480px) {
+            .hero {
+                height: 60vh;
+                min-height: 350px;
+                width: 98%;
+                border-radius: 10px;
+                margin-top: 10px;
+            }
+            
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-text .subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .cta-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* ================= REST OF THE PAGE STYLES ================= */
         .features {
             padding: 4rem 2rem;
             background-color: white;
@@ -282,7 +355,6 @@
             opacity: 0.8;
         }
         
-        /* Testimonials Section */
         .testimonials {
             padding: 4rem 2rem;
             background-color: var(--light);
@@ -328,7 +400,6 @@
             color: var(--primary);
         }
         
-        /* Gallery Section */
         .gallery {
             padding: 4rem 2rem;
             background-color: white;
@@ -364,7 +435,6 @@
             transform: scale(1.1);
         }
         
-        /* Custom Order Section */
         .custom-order {
             padding: 4rem 2rem;
             background-color: var(--light);
@@ -470,7 +540,6 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
         
-        /* Footer */
         footer {
             background-color: var(--dark);
             color: white;
@@ -544,110 +613,6 @@
             font-size: 0.9rem;
             opacity: 0.8;
         }
-        
-        /* Auth Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        
-        .modal-content {
-            background-color: white;
-            margin: 10% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            max-width: 90%;
-        }
-        
-        .close {
-            float: right;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 20px;
-        }
-        
-        .auth-tab {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 2px solid #ddd;
-        }
-        
-        .auth-tab.active {
-            border-bottom: 2px solid var(--primary);
-            font-weight: bold;
-        }
-        
-        .auth-form {
-            display: none;
-        }
-        
-        .auth-form.active {
-            display: block;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        .auth-submit {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-        
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                padding: 1rem;
-            }
-            
-            .nav-links {
-                margin-top: 1rem;
-                gap: 1rem;
-            }
-            
-            .hero-text h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero-text .subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .custom-order-container {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
@@ -673,131 +638,133 @@
     </header>
 
     <main>
-    <section class="hero">
-      <div class="hero-carousel" id="hero-carousel">
-        <div class="carousel-images" role="list" aria-label="Cupcake image carousel">
-          <img src="images/front/Soft and Fluffy Vanilla Cupcakes.jpg" alt="Vanilla Cupcakes" class="carousel-image active" loading="lazy" role="listitem" aria-hidden="false">
-          <img src="images/front/Moist Chocolate Cupcakes - Moist, Fudgy, and Delicious.jpg" alt="Chocolate Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
-          <img src="images/front/Black Forest Cupcakes.jpg" alt="Black Forest Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
-          <img src="images/front/White Chocolate Blueberry Cupcakes_ Sweet and Tangy Delight!.jpg" alt="Blueberry Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
-          <img src="images/front/Cookies and Cream Cupcakes.jpg" alt="Cookies and Cream Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
-        </div>
-      </div>
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <div class="hero-text">
-          <h1>Sarah's Short Cakes</h1>
-          <p class="subtitle">Handcrafted cupcakes for every occasion</p>
-          <a href="menu.html" class="cta-button">Order Now</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="features">
-      <div class="section-title">
-        <h2>Why Choose Us</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-heart"></i>
-          </div>
-          <h3>Made with Love</h3>
-          <p>Each cupcake is handcrafted with care using family recipes passed down for generations.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-leaf"></i>
-          </div>
-          <h3>Fresh Ingredients</h3>
-          <p>We use only the finest, locally-sourced ingredients for the best flavor.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-palette"></i>
-          </div>
-          <h3>Custom Designs</h3>
-          <p>Create your perfect cupcake with our wide variety of flavors and decorations.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="testimonials">
-      <div class="section-title">
-        <h2>What Our Customers Say</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="testimonial-carousel">
-        <div class="testimonial-item">
-          <div class="rating">★★★★★</div>
-          <p>"These cupcakes are absolutely divine! The perfect balance of sweetness and flavor."</p>
-          <div class="customer">- Emily R.</div>
-        </div>
-        <div class="testimonial-item">
-          <div class="rating">★★★★★</div>
-          <p>"I ordered for my daughter's birthday and everyone raved about how delicious they were!"</p>
-          <div class="customer">- Michael T.</div>
-        </div>
-        <div class="testimonial-item">
-          <div class="rating">★★★★★</div>
-          <p>"The custom designs were exactly what I wanted for my wedding. Sarah's attention to detail is amazing!"</p>
-          <div class="customer">- Jessica L.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="gallery">
-      <div class="section-title">
-        <h2>Our Delicious Creations</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="gallery-grid">
-        <div class="gallery-item">
-          <img src="images/front/Soft and Fluffy Vanilla Cupcakes.jpg" alt="Vanilla Cupcake">
-        </div>
-        <div class="gallery-item">
-          <img src="images/front/Moist Chocolate Cupcakes - Moist, Fudgy, and Delicious.jpg" alt="Chocolate Cupcake">
-        </div>
-        <div class="gallery-item">
-          <img src="images/front/19 Amazing Strawberry Cake Recipes.jpg" alt="Strawberry Cupcake">
-        </div>
-        <div class="gallery-item">
-          <img src="images/front/Black Forest Cupcakes.jpg" alt="Black Forest Cupcake">
-        </div>
-      </div>
-    </section>
-
-    <section class="custom-order">
-      <div class="section-title">
-        <h2>Create Your Perfect Cupcake</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="custom-order-container">
-        <div class="custom-order-image">
-          <img src="images/front/10 Irresistible Cupcake Recipes to Satisfy Your Sweet Tooth - Our Garden Of Life.jpg" alt="Custom Cupcake">
-        </div>
-        <div class="custom-order-content">
-          <h3>Design Your Dream Cupcake</h3>
-          <p>Choose from our wide variety of flavors, icings, and toppings to create a cupcake that's uniquely yours.</p>
-          <div class="custom-order-options">
-            <div class="option">
-              <span class="option-icon"><i class="fas fa-cookie"></i></span>
-              <span class="option-text">Flavors</span>
+        <section class="hero">
+            <div class="hero-container">
+                <div class="hero-carousel" id="hero-carousel">
+                    <div class="carousel-images" role="list" aria-label="Cupcake image carousel">
+                        <img src="images/front/Soft and Fluffy Vanilla Cupcakes.jpg" alt="Vanilla Cupcakes" class="carousel-image active" loading="lazy" role="listitem" aria-hidden="false">
+                        <img src="images/front/Moist Chocolate Cupcakes - Moist, Fudgy, and Delicious.jpg" alt="Chocolate Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
+                        <img src="images/front/Black Forest Cupcakes.jpg" alt="Black Forest Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
+                        <img src="images/front/White Chocolate Blueberry Cupcakes_ Sweet and Tangy Delight!.jpg" alt="Blueberry Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
+                        <img src="images/front/Cookies and Cream Cupcakes.jpg" alt="Cookies and Cream Cupcakes" class="carousel-image" loading="lazy" role="listitem" aria-hidden="true">
+                    </div>
+                </div>
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1>Sweet Moments Start Here</h1>
+                        <p class="subtitle">Handcrafted cupcakes made with love for your special occasions</p>
+                        <a href="menu.html" class="cta-button">Explore Our Flavors</a>
+                    </div>
+                </div>
             </div>
-            <div class="option">
-              <span class="option-icon"><i class="fas fa-ice-cream"></i></span>
-              <span class="option-text">Icings</span>
+        </section>
+
+        <section class="features">
+            <div class="section-title">
+                <h2>Why Choose Us</h2>
+                <div class="divider"></div>
             </div>
-            <div class="option">
-              <span class="option-icon"><i class="fas fa-candy-cane"></i></span>
-              <span class="option-text">Toppings</span>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Made with Love</h3>
+                    <p>Each cupcake is handcrafted with care using family recipes passed down for generations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Fresh Ingredients</h3>
+                    <p>We use only the finest, locally-sourced ingredients for the best flavor.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Custom Designs</h3>
+                    <p>Create your perfect cupcake with our wide variety of flavors and decorations.</p>
+                </div>
             </div>
-          </div>
-          <a href="menu.html" class="custom-order-button">Start Designing</a>
-        </div>
-      </div>
-    </section>
+        </section>
+
+        <section class="testimonials">
+            <div class="section-title">
+                <h2>What Our Customers Say</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="testimonial-carousel">
+                <div class="testimonial-item">
+                    <div class="rating">★★★★★</div>
+                    <p>"These cupcakes are absolutely divine! The perfect balance of sweetness and flavor."</p>
+                    <div class="customer">- Emily R.</div>
+                </div>
+                <div class="testimonial-item">
+                    <div class="rating">★★★★★</div>
+                    <p>"I ordered for my daughter's birthday and everyone raved about how delicious they were!"</p>
+                    <div class="customer">- Michael T.</div>
+                </div>
+                <div class="testimonial-item">
+                    <div class="rating">★★★★★</div>
+                    <p>"The custom designs were exactly what I wanted for my wedding. Sarah's attention to detail is amazing!"</p>
+                    <div class="customer">- Jessica L.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="gallery">
+            <div class="section-title">
+                <h2>Our Delicious Creations</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="images/front/Soft and Fluffy Vanilla Cupcakes.jpg" alt="Vanilla Cupcake">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/front/Moist Chocolate Cupcakes - Moist, Fudgy, and Delicious.jpg" alt="Chocolate Cupcake">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/front/19 Amazing Strawberry Cake Recipes.jpg" alt="Strawberry Cupcake">
+                </div>
+                <div class="gallery-item">
+                    <img src="images/front/Black Forest Cupcakes.jpg" alt="Black Forest Cupcake">
+                </div>
+            </div>
+        </section>
+
+        <section class="custom-order">
+            <div class="section-title">
+                <h2>Create Your Perfect Cupcake</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="custom-order-container">
+                <div class="custom-order-image">
+                    <img src="images/front/10 Irresistible Cupcake Recipes to Satisfy Your Sweet Tooth - Our Garden Of Life.jpg" alt="Custom Cupcake">
+                </div>
+                <div class="custom-order-content">
+                    <h3>Design Your Dream Cupcake</h3>
+                    <p>Choose from our wide variety of flavors, icings, and toppings to create a cupcake that's uniquely yours.</p>
+                    <div class="custom-order-options">
+                        <div class="option">
+                            <span class="option-icon"><i class="fas fa-cookie"></i></span>
+                            <span class="option-text">Flavors</span>
+                        </div>
+                        <div class="option">
+                            <span class="option-icon"><i class="fas fa-ice-cream"></i></span>
+                            <span class="option-text">Icings</span>
+                        </div>
+                        <div class="option">
+                            <span class="option-icon"><i class="fas fa-candy-cane"></i></span>
+                            <span class="option-text">Toppings</span>
+                        </div>
+                    </div>
+                    <a href="menu.html" class="custom-order-button">Start Designing</a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -823,62 +790,21 @@
         </div>
     </footer>
 
-    <!-- Auth Modal -->
-    <div id="auth-modal" class="modal" style="display:none">
-        <div class="modal-content">
-            <span class="close" onclick="hideAuthModal()">&times;</span>
-            <div class="auth-tabs">
-                <div class="auth-tab active" onclick="showAuthForm('login')">Login</div>
-                <div class="auth-tab" onclick="showAuthForm('signup')">Sign Up</div>
-            </div>
-
-            <form id="login-form" class="auth-form active" onsubmit="handleAuth(event, 'login')">
-                <div class="form-group">
-                    <label for="login-email">Email</label>
-                    <input type="email" id="login-email" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" required>
-                </div>
-                <button type="submit" class="auth-submit">Login</button>
-            </form>
-
-            <form id="signup-form" class="auth-form" onsubmit="handleAuth(event, 'signup')">
-                <div class="form-group">
-                    <label for="signup-name">Full Name</label>
-                    <input type="text" id="signup-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="signup-email">Email</label>
-                    <input type="email" id="signup-email" required>
-                </div>
-                <div class="form-group">
-                    <label for="signup-password">Password</label>
-                    <input type="password" id="signup-password" required>
-                </div>
-                <button type="submit" class="auth-submit">Sign Up</button>
-            </form>
-        </div>
-    </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize cart count
             updateCartCount();
             
-            // Simplified Carousel Functionality
+            // Carousel Functionality
             const carouselImages = document.querySelectorAll('.carousel-image');
             let currentImageIndex = 0;
             const intervalTime = 5000; // 5 seconds per slide
             
-            // Initialize the carousel
             function initCarousel() {
                 setActiveSlide(0);
                 startCarousel();
             }
             
-            // Set active slide
             function setActiveSlide(index) {
                 currentImageIndex = index;
                 
@@ -891,52 +817,21 @@
                 carouselImages[currentImageIndex].setAttribute('aria-hidden', 'false');
             }
             
-            // Go to next slide
             function nextSlide() {
                 let nextIndex = (currentImageIndex + 1) % carouselImages.length;
                 setActiveSlide(nextIndex);
             }
             
-            // Start auto-rotation
             function startCarousel() {
                 setInterval(nextSlide, intervalTime);
             }
             
-            // Initialize carousel on page load
             initCarousel();
         });
         
-        // Update cart count
         function updateCartCount() {
             // In a real implementation, this would get the count from your cart system
             document.getElementById('cart-count').textContent = '0';
-        }
-        
-        // Auth modal functions
-        function showAuthModal() {
-            document.getElementById('auth-modal').style.display = 'block';
-        }
-        
-        function hideAuthModal() {
-            document.getElementById('auth-modal').style.display = 'none';
-        }
-        
-        function showAuthForm(form) {
-            document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            
-            if (form === 'login') {
-                document.querySelector('.auth-tab[onclick="showAuthForm(\'login\')"]').classList.add('active');
-                document.getElementById('login-form').classList.add('active');
-            } else {
-                document.querySelector('.auth-tab[onclick="showAuthForm(\'signup\')"]').classList.add('active');
-                document.getElementById('signup-form').classList.add('active');
-            }
-        }
-        
-        function handleAuth(event, type) {
-            event.preventDefault();
-            alert(type.charAt(0).toUpperCase() + type.slice(1) + ' functionality is not implemented yet.');
         }
     </script>
 </body>

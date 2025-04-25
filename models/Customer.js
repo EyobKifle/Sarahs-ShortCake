@@ -30,17 +30,27 @@ const customerSchema = new mongoose.Schema({
         required: [true, 'Phone number is required'],
         trim: true
     },
-    streetAddress: {
-        type: String,
-        trim: true
+    address: {
+        street: { type: String, trim: true },
+        city: { type: String, trim: true },
+        state: { type: String, trim: true },
+        zip: { type: String, trim: true }
     },
-    city: {
+    role: {
         type: String,
-        trim: true
+        enum: ['customer', 'admin'],
+        default: 'customer'
     },
-    orders: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Order'
+    isGuest: {
+        type: Boolean,
+        default: false
+    },
+    lastLogin: {
+        type: Date
+    },
+    favorites: [{
+        productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+        addedAt: { type: Date, default: Date.now }
     }],
     createdAt: {
         type: Date,
@@ -57,6 +67,17 @@ customerSchema.pre('save', async function(next) {
     if (!this.isModified('password')) {
         this.updatedAt = Date.now();
         return next();
+    }
+
+    // Password complexity validation
+    if (!/[A-Z]/.test(this.password)) {
+        return next(new Error('Password must contain at least one uppercase letter'));
+    }
+    if (!/[0-9]/.test(this.password)) {
+        return next(new Error('Password must contain at least one number'));
+    }
+    if (/[^A-Za-z0-9]/.test(this.password) === false) {
+        return next(new Error('Password must contain at least one special character'));
     }
     
     try {
