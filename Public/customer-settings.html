@@ -10,7 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="css/customer-sidebar.css" />
     <style>
+        /* Original CSS styles for customer-settings.html restored here */
         :root {
             --primary: #FF6B8B;
             --primary-light: #FF8FA3;
@@ -48,7 +50,6 @@
             display: flex;
             min-height: 100vh;
         }
-        
         
         /* Sidebar Styles */
         .dashboard-sidebar {
@@ -469,7 +470,7 @@
                     });
 
                 // Fetch user data from backend API and populate form
-                fetch('/api/user/profile')
+                fetch('/api/user/profile', { credentials: 'include' })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -499,6 +500,7 @@
 
                     fetch('/api/user/profile', {
                         method: 'PUT',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json'
                         },

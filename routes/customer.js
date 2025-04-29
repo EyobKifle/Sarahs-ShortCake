@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const customerController = require('../controllers/customerController');
+const customerProfileController = require('../controllers/customerProfileController');
 const authController = require('../controllers/authController');
 const { protect, authorize } = require('../middleware/auth');
 
@@ -15,6 +16,9 @@ router.get('/', customerController.getAllCustomers);
 
 // New route to get logged-in customer's profile
 router.get('/me', authController.getProfile);
+
+// New route to update logged-in customer's profile
+router.put('/me', customerProfileController.updateProfile);
 
 router.get('/:id', customerController.getCustomerById);
 
