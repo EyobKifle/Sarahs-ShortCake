@@ -62,14 +62,12 @@ function updateCartCount() {
     }
 }
 
-// Update profile icon and menu based on login state
 function updateProfileIcon() {
     const profileIcon = document.querySelector('.profile-icon');
     if (!profileIcon) return;
 
     const token = localStorage.getItem('token');
     if (token) {
-        // User is logged in, fetch user info and update UI
         fetch('/api/auth/me', {
             headers: {
                 'Authorization': 'Bearer ' + token
@@ -78,10 +76,21 @@ function updateProfileIcon() {
         .then(res => res.json())
         .then(user => {
             if (user && user.name) {
-                profileIcon.innerHTML = `
+                // Build menu links based on role
+                let menuLinks = `
                     <span class="profile-name">Hello, ${user.name}</span>
                     <button id="logout-btn" class="logout-button">Logout</button>
                 `;
+
+                // Add dashboard link based on role
+                if (user.role === 'admin') {
+                    menuLinks += `<a href="Admin/admin.html" class="dashboard-link">Admin Dashboard</a>`;
+                } else {
+                    menuLinks += `<a href="customer-dashboard.html" class="dashboard-link">Customer Dashboard</a>`;
+                }
+
+                profileIcon.innerHTML = menuLinks;
+
                 document.getElementById('logout-btn').addEventListener('click', logout);
             } else {
                 showLoginLink();

@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <header class="dashboard-header">
         <h1>Welcome, ${user.firstName} ${user.lastName}</h1>
         <div class="user-profile">
-          <div class="user-avatar">${user.firstName.charAt(0).toUpperCase()}</div>
+          <div class="user-avatar" id="user-avatar">${user.firstName.charAt(0).toUpperCase()}</div>
           <span class="user-name">${user.firstName} ${user.lastName}</span>
         </div>
       </header>
@@ -140,6 +140,24 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </section>
     `;
+
+    // Make avatar clickable (NEW ADDITION)
+    const userAvatar = document.getElementById('user-avatar');
+    if (userAvatar) {
+      userAvatar.style.cursor = 'pointer'; // Visual feedback
+      userAvatar.title = 'View Profile'; // Tooltip
+      userAvatar.addEventListener('click', () => {
+        window.location.href = 'profile.html';
+      });
+      
+      // Optional hover effect via JavaScript (better done in CSS)
+      userAvatar.addEventListener('mouseenter', () => {
+        userAvatar.style.transform = 'scale(1.05)';
+      });
+      userAvatar.addEventListener('mouseleave', () => {
+        userAvatar.style.transform = 'scale(1)';
+      });
+    }
   }
 
   // Fetch dashboard stats
@@ -204,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Fetch addresses (for future use or extension)
+  // Fetch addresses
   function fetchAddresses() {
     fetch('/api/customers/addresses', {
       method: 'GET',
@@ -217,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
       if (data.success) {
-        // Handle addresses data if needed
         console.log('Addresses:', data.data);
       }
     })
@@ -226,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Fetch wishlist items (for future use or extension)
+  // Fetch wishlist items
   function fetchWishlist() {
     fetch('/api/customers/wishlist', {
       method: 'GET',
@@ -239,7 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
       if (data.success) {
-        // Handle wishlist data if needed
         console.log('Wishlist:', data.data);
       }
     })
@@ -248,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Fetch reviews (for future use or extension)
+  // Fetch reviews
   function fetchReviews() {
     fetch('/api/customers/reviews', {
       method: 'GET',
@@ -261,7 +277,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(data => {
       if (data.success) {
-        // Handle reviews data if needed
         console.log('Reviews:', data.data);
       }
     })
@@ -270,18 +285,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // View order details function (enhanced to fetch order details dynamically)
+  // View order details function
   window.viewOrderDetails = function(orderId) {
     const modal = document.getElementById('orderModal');
     modal.style.display = 'block';
 
-    // Fetch order details dynamically
     fetch(`/api/orders/${orderId}`, {
       method: 'GET',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     })
     .then(res => {
       if (!res.ok) throw new Error('Failed to fetch order details: ' + res.status + ' ' + res.statusText);
@@ -302,8 +314,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Populate order modal with order details
   function populateOrderModal(order) {
     const modal = document.getElementById('orderModal');
-
-    // Update modal title
     const modalTitle = modal.querySelector('.modal-title');
     modalTitle.textContent = `Order #${order.orderNumber || order._id}`;
 

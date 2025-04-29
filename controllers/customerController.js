@@ -69,10 +69,21 @@ exports.getAllCustomers = async (req, res) => {
     }
 };
 
-// Get a single customer by ID
 exports.getCustomerById = async (req, res) => {
     try {
-        const customer = await Customer.findById(req.params.id);
+        let customerId = req.params.id;
+        // If the id is "me", replace it with the authenticated user's id
+        if (customerId === 'me') {
+            if (!req.user || !req.user._id) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Unauthorized: User not authenticated'
+                });
+            }
+            customerId = req.user._id;
+        }
+
+        const customer = await Customer.findById(customerId);
         
         if (!customer) {
             return res.status(404).json({

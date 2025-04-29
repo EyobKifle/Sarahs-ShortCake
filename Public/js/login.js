@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // DOM Elements
+  const authTabs = document.querySelectorAll('.auth-tab');
+  const forms = document.querySelectorAll('form');
   const alertContainer = document.getElementById('alert-container');
   const loginForm = document.getElementById('login-form');
   const signupForm = document.getElementById('signup-form');
@@ -14,128 +17,80 @@ document.addEventListener('DOMContentLoaded', function() {
     special: document.getElementById('special-hint')
   };
 
-  // Cache form inputs for signup and login to reduce DOM queries
-  const signupInputs = {
-    firstName: document.getElementById('signup-firstName'),
-    lastName: document.getElementById('signup-lastName'),
-    email: document.getElementById('signup-email'),
-    phone: document.getElementById('signup-phone'),
-    password: passwordInput,
-    confirmPassword: confirmPasswordInput,
-    street: document.getElementById('signup-street'),
-    city: document.getElementById('signup-city'),
-    state: document.getElementById('signup-state'),
-    zip: document.getElementById('signup-zip')
-  };
+  // Auth State
+  let currentTab = 'login';
 
-  const loginInputs = {
-    email: document.getElementById('login-email'),
-    password: document.getElementById('login-password')
-  };
+  // Initialize
+  setupEventListeners();
+  renderView();
 
-  // Auth State Management
-  const authState = {
-    isAuthenticated: false,
-    user: null
-  };
-
-  // Initialize the application
-  init();
-
-  // Initialize application state
-  function init() {
-    setupEventListeners();
-  }
-
-  // Setup event listeners with event delegation where feasible
   function setupEventListeners() {
-    // Event delegation for toggle-password icons
-    document.body.addEventListener('click', function(e) {
-      if (e.target.classList.contains('toggle-password')) {
-        const targetId = e.target.getAttribute('data-target');
+    // Toggle password visibility
+    document.querySelectorAll('.toggle-password').forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
         const passwordInput = document.getElementById(targetId);
-        if (!passwordInput) return;
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
-        e.target.classList.toggle('fa-eye');
-        e.target.classList.toggle('fa-eye-slash');
-      }
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
     });
 
     // Password strength checker
-    if (passwordInput) {
-      passwordInput.addEventListener('input', () => {
-        checkPasswordStrength(passwordInput.value);
-        validateSignupForm();
-      });
-    }
+    passwordInput.addEventListener('input', checkPasswordStrength);
     
-    if (confirmPasswordInput) {
-      confirmPasswordInput.addEventListener('input', () => {
-        checkPasswordMatch();
-        validateSignupForm();
+    // Password match checker
+    confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+    
+    // Tab switching
+    authTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        currentTab = this.dataset.tab;
+        renderView();
       });
-    }
+    });
+
+    // Form footer links
+    document.querySelectorAll('[data-tab]').forEach(link => {
+      if (link.tagName === 'A') {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          currentTab = this.dataset.tab;
+          renderView();
+        });
+      }
+    });
 
     // Form submissions
-    if (loginForm) {
-      loginForm.addEventListener('submit', handleLoginSubmit);
-    }
-    
-    if (signupForm) {
-      signupForm.addEventListener('submit', handleSignupSubmit);
-    }
+    loginForm.addEventListener('submit', handleLoginSubmit);
+    signupForm.addEventListener('submit', handleSignupSubmit);
   }
 
-  // Validate email format
-  function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
+  function renderView() {
+    // Update active tab
+    authTabs.forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.tab === currentTab);
+    });
+
+    // Show correct form
+    forms.forEach(form => {
+      form.classList.toggle('active', form.id === `${currentTab}-form`);
+    });
+
+    // Reset forms when switching
+    if (currentTab === 'login') {
+      signupForm.reset();
+      passwordMatch.style.display = 'none';
+    } else {
+      loginForm.reset();
+    }
+
+    clearAlerts();
   }
 
-  // Validate signup form using cached inputs
-  function validateSignupForm() {
-    if (!signupForm) return false;
-    
-    const firstName = signupInputs.firstName?.value.trim() || '';
-    const lastName = signupInputs.lastName?.value.trim() || '';
-    const email = signupInputs.email?.value.trim() || '';
-    const phone = signupInputs.phone?.value.trim() || '';
-    const password = signupInputs.password?.value || '';
-    const confirmPassword = signupInputs.confirmPassword?.value || '';
-    
-    // Check required fields including phone
-    if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
-      signupButton.disabled = true;
-      return false;
-    }
-    
-    // Check email format
-    if (!validateEmail(email)) {
-      signupButton.disabled = true;
-      return false;
-    }
-    
-    // Check password strength
-    const strength = checkPasswordStrength(password);
-    if (strength < 3) { // At least 3/4 requirements met
-      signupButton.disabled = true;
-      return false;
-    }
-    
-    // Check password match
-    if (password !== confirmPassword) {
-      signupButton.disabled = true;
-      return false;
-    }
-    
-    // Enable the signup button if all validations pass
-    signupButton.disabled = false;
-    return true;
-  }
-
-  // Refactored checkPasswordStrength to accept password parameter
-  function checkPasswordStrength(password) {
+  function checkPasswordStrength() {
+    const password = passwordInput.value;
     let strength = 0;
     
     // Check password length
@@ -180,18 +135,12 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         passwordStrength.classList.add('strong');
       }
-    } else {
-      // Clear strength classes if empty
-      passwordStrength.classList.remove('weak', 'medium', 'strong');
     }
     
-    return strength;
+    validateSignupForm();
   }
 
-  // Password match validation
   function checkPasswordMatch() {
-    if (!passwordInput || !confirmPasswordInput || !passwordMatch) return true;
-    
     const password = passwordInput.value;
     const confirmPassword = confirmPasswordInput.value;
     
@@ -204,162 +153,130 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Handle login form submission using cached inputs
+  function validateSignupForm() {
+    const name = document.getElementById('signup-name').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const password = passwordInput.value;
+    const isStrong = passwordStrength.classList.contains('medium') || 
+                    passwordStrength.classList.contains('strong');
+    const passwordsMatch = checkPasswordMatch();
+
+    signupButton.disabled = !(name && email && isStrong && passwordsMatch);
+  }
+
   async function handleLoginSubmit(e) {
     e.preventDefault();
     const submitButton = e.target.querySelector('.auth-submit');
     const buttonText = submitButton.querySelector('.button-text');
     const originalText = buttonText.textContent;
-
-    // Disable button during processing
+    
     submitButton.disabled = true;
     buttonText.textContent = 'Logging in...';
-
+    
     try {
-      const email = loginInputs.email?.value.trim() || '';
-      const password = loginInputs.password?.value || '';
-
-      // Validate inputs
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      
       if (!email || !password) {
         throw new Error('Please enter both email and password');
       }
-
-      if (!validateEmail(email)) {
-        throw new Error('Please enter a valid email address');
-      }
-
-      // Call backend login API
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-
-      // Handle network errors
+      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `Login failed with status ${response.status}`);
       }
-
+      
       const data = await response.json();
-
-      // Save token and user info
+      
       localStorage.setItem('token', data.token);
       const userWithName = {
         ...data.user,
         name: `${data.user.firstName || ''} ${data.user.lastName || ''}`.trim()
       };
       localStorage.setItem('user', JSON.stringify(userWithName));
-
-      authState.user = userWithName;
-      authState.isAuthenticated = true;
-
-      // Redirect based on role
+      
       if (data.user.role === 'admin') {
         window.location.href = '/Admin/admin.html';
       } else {
         window.location.href = '/customer-dashboard.html';
       }
+      
     } catch (error) {
-      console.error('Login error:', error);
       showAlert('error', error.message || 'Login failed. Please try again.');
     } finally {
-      // Re-enable button
       submitButton.disabled = false;
       buttonText.textContent = originalText;
     }
   }
 
-  // Handle signup form submission using cached inputs
   async function handleSignupSubmit(e) {
     e.preventDefault();
     const submitButton = e.target.querySelector('.auth-submit');
     const buttonText = submitButton.querySelector('.button-text');
     const originalText = buttonText.textContent;
-
-    // Prevent multiple submissions
+    
     if (submitButton.disabled) return;
-
-    // Disable button during processing
+    
     submitButton.disabled = true;
     buttonText.textContent = 'Creating account...';
-
+    
     try {
-      // Validate form before submission
-      if (!validateSignupForm()) {
-        throw new Error('Please fill all fields correctly');
+      const name = document.getElementById('signup-name').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value;
+      
+      if (!name || !email || !password) {
+        throw new Error('Please fill all required fields');
       }
-
-      const formData = {
-        firstName: signupInputs.firstName?.value.trim() || '',
-        lastName: signupInputs.lastName?.value.trim() || '',
-        email: signupInputs.email?.value.trim() || '',
-        password: signupInputs.password?.value || '',
-        phone: signupInputs.phone?.value.trim() || '',
-        street: signupInputs.street?.value.trim() || '',
-        city: signupInputs.city?.value.trim() || '',
-        state: signupInputs.state?.value.trim() || '',
-        zip: signupInputs.zip?.value.trim() || ''
-      };
-
-      // Call backend register API
-      const response = await fetch('http://localhost:3000/api/auth/register', {
+      
+      if (password.length < 8) {
+        throw new Error('Password must be at least 8 characters');
+      }
+      
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.phone,
-          address: {
-            street: formData.street,
-            city: formData.city,
-            state: formData.state,
-            zip: formData.zip
-          }
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          firstName: name, 
+          lastName: '', 
+          email, 
+          password 
         })
       });
-
-      // Handle network errors
+      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `Registration failed with status ${response.status}`);
       }
-
+      
       const data = await response.json();
-
-      // Save token and user info
+      
       localStorage.setItem('token', data.token);
       const userWithName = {
         ...data.user,
         name: `${data.user.firstName || ''} ${data.user.lastName || ''}`.trim()
       };
       localStorage.setItem('user', JSON.stringify(userWithName));
-
-      authState.user = userWithName;
-      authState.isAuthenticated = true;
-
-      // Show success and redirect
-      showAlert('success', 'Account created successfully!');
+      
+      showAlert('success', 'Account created successfully! Redirecting...');
       setTimeout(() => {
         window.location.href = '/customer-dashboard.html';
       }, 1500);
+      
     } catch (error) {
-      console.error('Registration error:', error);
       showAlert('error', error.message || 'Registration failed. Please try again.');
     } finally {
-      // Re-enable button
       submitButton.disabled = false;
       buttonText.textContent = originalText;
     }
   }
 
-  // Show alert message
   function showAlert(type, message) {
     clearAlerts();
     
@@ -374,7 +291,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     alertContainer.appendChild(alertEl);
     
-    // Auto-dismiss after 5 seconds (except for errors)
     if (type !== 'error') {
       setTimeout(() => {
         alertEl.style.opacity = '0';
@@ -383,7 +299,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Clear all alerts
   function clearAlerts() {
     alertContainer.innerHTML = '';
   }

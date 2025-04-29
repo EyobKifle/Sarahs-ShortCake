@@ -290,42 +290,22 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
-        <aside class="dashboard-sidebar">
-            <div class="sidebar-header">
-                <h2>My Account</h2>
-                <p>Welcome back, Sarah!</p>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="customer-dashboard.html" class="nav-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </a>
-                <a href="customer-orders.html" class="nav-link active">
-                    <i class="fas fa-shopping-bag"></i>
-                    My Orders
-                </a>
-                <a href="customer-addresses.html" class="nav-link">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Addresses
-                </a>
-                <a href="customer-wishlist.html" class="nav-link">
-                    <i class="fas fa-heart"></i>
-                    Wishlist
-                </a>
-                <a href="customer-reviews.html" class="nav-link">
-                    <i class="fas fa-star"></i>
-                    My Reviews
-                </a>
-                <a href="customer-settings.html" class="nav-link">
-                    <i class="fas fa-cog"></i>
-                    Account Settings
-                </a>
-                <a href="#logout" class="nav-link">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </a>
-            </nav>
-        </aside>
+        <div id="sidebar-container"></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                fetch('customer-sidebar.html')
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('sidebar-container').innerHTML = html;
+                        // Mark the active link
+                        const activeLink = document.querySelector('.nav-link[href="customer-orders.html"]');
+                        if (activeLink) activeLink.classList.add('active');
+                    })
+                    .catch(err => {
+                        console.error('Failed to load sidebar:', err);
+                    });
+            });
+        </script>
 
         <!-- Main Content -->
         <main class="dashboard-main">
@@ -354,79 +334,8 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td class="order-id">#SC-10024</td>
-                                <td>May 15, 2023</td>
-                                <td>3</td>
-                                <td>$32.97</td>
-                                <td><span class="badge badge-completed">Completed</span></td>
-                                <td>
-                                    <button class="action-btn action-btn-primary" onclick="viewOrderDetails('SC-10024')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn action-btn-secondary">
-                                        <i class="fas fa-redo"></i> Reorder
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="order-id">#SC-10021</td>
-                                <td>May 10, 2023</td>
-                                <td>1</td>
-                                <td>$12.99</td>
-                                <td><span class="badge badge-completed">Completed</span></td>
-                                <td>
-                                    <button class="action-btn action-btn-primary" onclick="viewOrderDetails('SC-10021')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn action-btn-secondary">
-                                        <i class="fas fa-redo"></i> Reorder
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="order-id">#SC-10018</td>
-                                <td>May 5, 2023</td>
-                                <td>6</td>
-                                <td>$45.94</td>
-                                <td><span class="badge badge-processing">Processing</span></td>
-                                <td>
-                                    <button class="action-btn action-btn-primary" onclick="viewOrderDetails('SC-10018')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="order-id">#SC-10015</td>
-                                <td>Apr 28, 2023</td>
-                                <td>2</td>
-                                <td>$24.98</td>
-                                <td><span class="badge badge-completed">Completed</span></td>
-                                <td>
-                                    <button class="action-btn action-btn-primary" onclick="viewOrderDetails('SC-10015')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn action-btn-secondary">
-                                        <i class="fas fa-redo"></i> Reorder
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="order-id">#SC-10012</td>
-                                <td>Apr 20, 2023</td>
-                                <td>4</td>
-                                <td>$38.96</td>
-                                <td><span class="badge badge-completed">Completed</span></td>
-                                <td>
-                                    <button class="action-btn action-btn-primary" onclick="viewOrderDetails('SC-10012')">
-                                        <i class="fas fa-eye"></i> View
-                                    </button>
-                                    <button class="action-btn action-btn-secondary">
-                                        <i class="fas fa-redo"></i> Reorder
-                                    </button>
-                                </td>
-                            </tr>
+                        <tbody id="ordersTableBody">
+                            <!-- Orders will be dynamically loaded here -->
                         </tbody>
                     </table>
                 </div>
@@ -457,6 +366,52 @@
             // In a real implementation, this would open a modal or redirect to order details page
             alert('Viewing details for order: ' + orderId);
         }
+
+        // Load orders from localStorage and render in table
+        document.addEventListener('DOMContentLoaded', () => {
+            const ordersTableBody = document.getElementById('ordersTableBody');
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+            if (orders.length === 0) {
+                ordersTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <p>No orders found.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            ordersTableBody.innerHTML = '';
+
+            orders.forEach(order => {
+                const orderDate = new Date(order.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
+
+                // Determine badge class based on status
+                let badgeClass = 'badge-pending';
+                if (order.status.toLowerCase() === 'processing') badgeClass = 'badge-processing';
+                else if (order.status.toLowerCase() === 'completed') badgeClass = 'badge-completed';
+                else if (order.status.toLowerCase() === 'cancelled') badgeClass = 'badge-cancelled';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="order-id">${order.orderId}</td>
+                    <td>${orderDate}</td>
+                    <td>${itemCount}</td>
+                    <td>$${order.total.toFixed(2)}</td>
+                    <td><span class="badge ${badgeClass}">${order.status}</span></td>
+                    <td>
+                        <button class="action-btn action-btn-primary" onclick="viewOrderDetails('${order.orderId}')">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </td>
+                `;
+                ordersTableBody.appendChild(tr);
+            });
+        });
     </script>
 </body>
 </html>

@@ -12,10 +12,11 @@ router.use(protect);
 router.use(authorize('customer'));
 
 router.get('/', customerController.getAllCustomers);
-router.get('/:id', customerController.getCustomerById);
 
 // New route to get logged-in customer's profile
 router.get('/me', authController.getProfile);
+
+router.get('/:id', customerController.getCustomerById);
 
 // New route to get dashboard stats for logged-in customer
 router.get('/dashboard-stats', customerController.getDashboardStats);

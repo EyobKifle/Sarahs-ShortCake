@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sarah's Short Cakes</title>
+  <title>Login | Sarah's Short Cakes</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -102,10 +102,6 @@
     .login-signup-button:hover {
       background: var(--primary-dark);
       color: white;
-    }
-    
-    .login-signup-button.active {
-      background: var(--primary-dark);
     }
     
     .container {
@@ -327,56 +323,18 @@
       color: var(--success);
     }
     
-    .profile-container {
+    form {
       display: none;
     }
-    
-    .profile-container.active {
+    form.active {
       display: block;
     }
     
-    .profile-container h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: var(--primary-dark);
-    }
-    
-    .profile-info {
-      margin-bottom: 1rem;
-      padding: 1rem;
-      background: var(--light);
-      border-radius: var(--border-radius);
-    }
-    
-    .profile-info label {
-      font-weight: 500;
-      color: var(--dark-gray);
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-    
-    .profile-info span {
-      color: var(--dark);
-    }
-    
-    .logout-button {
-      width: 100%;
-      padding: 0.75rem;
-      background: var(--light-gray);
-      color: var(--dark);
-      border: none;
-      border-radius: var(--border-radius);
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: var(--transition);
-      margin-top: 1.5rem;
-    }
-    
-    .logout-button:hover {
-      background: var(--medium-gray);
-      color: white;
+    .password-match {
+      color: var(--error);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: none;
     }
     
     @media (max-width: 768px) {
@@ -396,12 +354,6 @@
         margin-top: 150px;
         padding: 1.5rem;
       }
-    }
-    form {
-      display: none;
-    }
-    form.active {
-      display: block;
     }
   </style>
 </head>
@@ -444,99 +396,55 @@
           <i class="fas fa-eye toggle-password" data-target="login-password"></i>
         </div>
       </div>
+      <div class="forgot-password">
+        <a href="forgot-password.html">Forgot password?</a>
+      </div>
       <button type="submit" class="auth-submit">
         <span class="button-text">Login</span>
       </button>
     </form>
 
-      <form id="signup-form" novalidate>
-        <div class="form-group">
-          <label for="signup-firstName">First Name</label>
-          <input type="text" id="signup-firstName" placeholder="Enter your first name" required />
-        </div>
-        <div class="form-group">
-          <label for="signup-lastName">Last Name</label>
-          <input type="text" id="signup-lastName" placeholder="Enter your last name" required />
-        </div>
-        <div class="form-group">
-          <label for="signup-email">Email</label>
-          <input type="email" id="signup-email" placeholder="Enter your email" required />
-        </div>
-        <div class="form-group">
-          <label for="signup-phone">Phone Number</label>
-          <input type="text" id="signup-phone" placeholder="Enter your phone number" required />
-        </div>
-        <div class="form-group">
-          <label for="signup-street">Street Address</label>
-          <input type="text" id="signup-street" placeholder="Enter your street address" />
-        </div>
-        <div class="form-group">
-          <label for="signup-city">City</label>
-          <input type="text" id="signup-city" placeholder="Enter your city" />
-        </div>
-        <div class="form-group">
-          <label for="signup-state">State</label>
-          <input type="text" id="signup-state" placeholder="Enter your state" />
-        </div>
-        <div class="form-group">
-          <label for="signup-zip">Zip Code</label>
-          <input type="text" id="signup-zip" placeholder="Enter your zip code" />
-        </div>
-        <div class="form-group">
-          <label for="signup-password">Password</label>
-          <div class="password-container">
-            <input type="password" id="signup-password" placeholder="Create a password (min 8 characters)" required minlength="8" />
-            <i class="fas fa-eye toggle-password" data-target="signup-password"></i>
-          </div>
-          <div class="password-strength" id="password-strength"></div>
-          <div class="password-hints">
-            <p>Password must contain:</p>
-            <ul>
-              <li id="length-hint">At least 8 characters</li>
-              <li id="uppercase-hint">One uppercase letter</li>
-              <li id="number-hint">One number</li>
-              <li id="special-hint">One special character</li>
-            </ul>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <div class="password-container">
-            <input type="password" id="confirm-password" placeholder="Confirm your password" required />
-            <i class="fas fa-eye toggle-password" data-target="confirm-password"></i>
-          </div>
-          <div class="password-match" id="password-match">Passwords do not match</div>
-        </div>
-        <button type="submit" class="auth-submit" id="signup-button" disabled>
-          <span class="button-text">Create Account</span>
-        </button>
-        <div class="form-footer">
-          <p>Already have an account? <a href="#" data-tab="login">Login</a></p>
-        </div>
-      </form>
-
-    <div class="profile-container" id="profile-container">
-      <h2>Your Profile</h2>
-      <div class="profile-info">
-        <label>Name:</label>
-        <span id="profile-name">Loading...</span>
+    <form id="signup-form" novalidate>
+      <div class="form-group">
+        <label for="signup-name">Full Name</label>
+        <input type="text" id="signup-name" placeholder="Enter your full name" required />
       </div>
-      <div class="profile-info">
-        <label>Email:</label>
-        <span id="profile-email">Loading...</span>
+      <div class="form-group">
+        <label for="signup-email">Email</label>
+        <input type="email" id="signup-email" placeholder="Enter your email" required />
       </div>
-      <div class="profile-info">
-        <label>Phone:</label>
-        <span id="profile-phone">Not provided</span>
+      <div class="form-group">
+        <label for="signup-password">Password</label>
+        <div class="password-container">
+          <input type="password" id="signup-password" placeholder="Create a password (min 8 characters)" required minlength="8" />
+          <i class="fas fa-eye toggle-password" data-target="signup-password"></i>
+        </div>
+        <div class="password-strength" id="password-strength"></div>
+        <div class="password-hints">
+          <p>Password must contain:</p>
+          <ul>
+            <li id="length-hint">At least 8 characters</li>
+            <li id="uppercase-hint">One uppercase letter</li>
+            <li id="number-hint">One number</li>
+            <li id="special-hint">One special character</li>
+          </ul>
+        </div>
       </div>
-      <div class="profile-info">
-        <label>Address:</label>
-        <span id="profile-address">Not provided</span>
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <div class="password-container">
+          <input type="password" id="confirm-password" placeholder="Confirm your password" required />
+          <i class="fas fa-eye toggle-password" data-target="confirm-password"></i>
+        </div>
+        <div class="password-match" id="password-match">Passwords do not match</div>
       </div>
-      <button class="logout-button" id="logout-btn">
-        <span class="button-text">Logout</span>
+      <button type="submit" class="auth-submit" id="signup-button" disabled>
+        <span class="button-text">Create Account</span>
       </button>
-    </div>
+      <div class="form-footer">
+        <p>Already have an account? <a href="#" data-tab="login">Login</a></p>
+      </div>
+    </form>
   </div>
 
   <script src="js/login.js"></script>

@@ -515,42 +515,22 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
-        <aside class="dashboard-sidebar">
-            <div>
-                <div class="sidebar-header">
-                    <h2>My Account</h2>
-                    <p>Welcome back, <span class="sidebar-user-firstname">User</span>!</p>
-                </div>
-                <nav class="sidebar-nav">
-                    <a href="customer-orders.html" class="nav-link" id="nav-orders">
-                        <i class="fas fa-shopping-bag"></i>
-                        My Orders
-                    </a>
-                    <a href="customer-menu.html" class="nav-link" id="nav-menu">
-                        <i class="fas fa-utensils"></i>
-                        Menu
-                    </a>
-                    <a href="customer-wishlist.html" class="nav-link" id="nav-wishlist">
-                        <i class="fas fa-heart"></i>
-                        Wishlist
-                    </a>
-                    <a href="customer-reviews.html" class="nav-link" id="nav-reviews">
-                        <i class="fas fa-star"></i>
-                        My Reviews
-                    </a>
-                    <a href="customer-settings.html" class="nav-link" id="nav-settings">
-                        <i class="fas fa-cog"></i>
-                        Account Settings
-                    </a>
-                </nav>
-            </div>
-            <div class="logout-container">
-                <button class="logout-btn" id="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                </button>
-            </div>
-        </aside>
+        <div id="sidebar-container"></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                fetch('customer-sidebar.html')
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('sidebar-container').innerHTML = html;
+                        // Mark the active link
+                        const activeLink = document.querySelector('.nav-link[href="customer-dashboard.html"]');
+                        if (activeLink) activeLink.classList.add('active');
+                    })
+                    .catch(err => {
+                        console.error('Failed to load sidebar:', err);
+                    });
+            });
+        </script>
 
         <!-- Main Content -->
         <main class="dashboard-main" id="dashboard-main-content">
