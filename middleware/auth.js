@@ -17,12 +17,14 @@ const protect = async (req, res, next) => {
     }
     
     if (!token) {
+        console.log('Protect middleware: No token found');
         return res.status(401).json({ message: 'Not authorized to access this route' });
     }
     
     try {
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Protect middleware: Token decoded', decoded);
         
         // Check if user exists and is not deleted
         let user;
@@ -33,14 +35,17 @@ const protect = async (req, res, next) => {
         }
         
         if (!user) {
+            console.log('Protect middleware: User no longer exists');
             return res.status(401).json({ message: 'User no longer exists' });
         }
         
         // Add user to request object
         req.user = user;
         req.userType = decoded.userType;
+        console.log('Protect middleware: User set on req.user', req.user._id);
         next();
     } catch (error) {
+        console.log('Protect middleware: Error verifying token', error);
         return res.status(401).json({ message: 'Not authorized to access this route' });
     }
 };

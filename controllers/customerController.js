@@ -111,11 +111,11 @@ exports.getDashboardStats = async (req, res) => {
         const customerId = req.user._id;
 
         // Total orders count
-        const totalOrders = await Order.countDocuments({ customer: customerId });
+        const totalOrders = await Order.countDocuments({ customerId: customerId });
 
         // Total spent sum
-        const orders = await Order.find({ customer: customerId });
-        const totalSpent = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+        const orders = await Order.find({ customerId: customerId });
+        const totalSpent = orders.reduce((sum, order) => sum + (order.subtotal || 0), 0);
 
         // Wishlist items count
         const customer = await Customer.findById(customerId);

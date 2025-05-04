@@ -116,11 +116,33 @@ function generateOrderNumber() {
     return `ORD-${timestamp}-${randomPart}`;
 }
 
-// Create new order
 exports.createOrder = async (req, res) => {
     try {
         let orderData = req.body;
         console.log('Received Order Data:', orderData);
+
+        // Log req.user to verify authentication
+        console.log('Authenticated user in createOrder:', req.user);
+
+        // Set customerId from authenticated user if available
+        if (req.user && req.user._id) {
+            orderData.customerId = req.user._id;
+        }
+
+        // Set totalAmount from total or calculate from subtotal, tax, and deliveryFee
+        if (orderData.total !== undefined) {
+            orderData.totalAmount = orderData.total;
+        } else {
+            const subtotal = orderData.subtotal || 0;
+            const tax = orderData.tax || 0;
+            const deliveryFee = orderData.deliveryFee || 0;
+            orderData.totalAmount = subtotal + tax + deliveryFee;
+        }
+
+        // Set order status to 'processing' if paymentMethod is 'cash' to assume paid
+        if (orderData.paymentMethod && orderData.paymentMethod.toLowerCase() === 'cash') {
+            orderData.status = 'processing';
+        }
 
         // Normalize payload to expected schema
         // Map items[].id to items[].productId

@@ -112,11 +112,11 @@
               </tr>
             </thead>
             <tbody id="orders-table-body">
-              <tr><td colspan="6">Loading orders...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+          <tr><td colspan="6">Loading orders...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
     `;
 
     // Make avatar clickable (NEW ADDITION)
@@ -138,28 +138,66 @@
     }
   }
 
-  // Fetch dashboard stats
-  function fetchDashboardStats() {
-    fetch('/api/customers/dashboard-stats', {
-      method: 'GET',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to fetch dashboard stats: ' + res.status + ' ' + res.statusText);
-      return res.json();
-    })
-    .then(data => {
-      if (data.success && data.stats) {
-        document.getElementById('total-orders').textContent = data.stats.totalOrders || 0;
-        document.getElementById('total-spent').textContent = `$${(data.stats.totalSpent || 0).toFixed(2)}`;
-        document.getElementById('reviews-count').textContent = data.stats.reviews || 0;
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching dashboard stats:', error);
-    });
-  }
+    // Fetch dashboard stats
+    function fetchDashboardStats() {
+      fetch('/api/customers/dashboard-stats', {
+        method: 'GET',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch dashboard stats: ' + res.status + ' ' + res.statusText);
+        return res.json();
+      })
+      .then(data => {
+        if (data.success && data.stats) {
+          document.getElementById('total-orders').textContent = data.stats.totalOrders || 0;
+          document.getElementById('total-spent').textContent = `$${(data.stats.totalSpent || 0).toFixed(2)}`;
+          document.getElementById('reviews-count').textContent = data.stats.reviews || 0;
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching dashboard stats:', error);
+      });
+    }
+
+    // Fetch recent orders
+    function fetchOrders() {
+      fetch('/api/orders/my-orders', {
+        method: 'GET',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch orders: ' + res.status + ' ' + res.statusText);
+        return res.json();
+      })
+      .then(data => {
+        if (data.success && Array.isArray(data.data)) {
+          const tbody = document.getElementById('orders-table-body');
+          tbody.innerHTML = '';
+          data.data.forEach(order => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td class="order-id">#${order.orderNumber || order._id}</td>
+              <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+          <td>${order.items && order.items.length > 0 ? order.items.map(item => `${item.name} (x${item.quantity})`).join(', ') : 'No items'}</td>
+          <td>$${order.subtotal ? order.subtotal.toFixed(2) : '0.00'}</td>
+          <td><span class="badge badge-${order.status || 'pending'}">${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'}</span></td>
+              <td>
+                <button class="action-btn action-btn-primary" onclick="window.location.href='view-order.html?orderId=${order._id}'">
+                  <i class="fas fa-eye"></i> View
+                </button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching orders:', error);
+      });
+    }
 
   // Fetch recent orders
   function fetchOrders() {
@@ -182,7 +220,7 @@
             <td class="order-id">#${order.orderNumber || order._id}</td>
             <td>${new Date(order.createdAt).toLocaleDateString()}</td>
             <td>${order.items ? order.items.length : 0}</td>
-            <td>$${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}</td>
+            <td>$${order.subtotal ? order.subtotal.toFixed(2) : '0.00'}</td>
             <td><span class="badge badge-${order.status || 'pending'}">${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'}</span></td>
             <td>
               <button class="action-btn action-btn-primary" onclick="viewOrderDetails('${order._id}')">
@@ -244,28 +282,8 @@
 
   // View order details function
   window.viewOrderDetails = function(orderId) {
-    const modal = document.getElementById('orderModal');
-    modal.style.display = 'block';
-
-    fetch(`/api/orders/${orderId}`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to fetch order details: ' + res.status + ' ' + res.statusText);
-      return res.json();
-    })
-    .then(data => {
-      if (data.success && data.data) {
-        populateOrderModal(data.data);
-      } else {
-        console.error('Failed to load order details');
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching order details:', error);
-    });
+    // Navigate to order confirmation page with orderId as query parameter
+    window.location.href = `customer-order-confirmation.html?orderId=${orderId}`;
   };
 
   // Populate order modal with order details
@@ -275,24 +293,16 @@
     modalTitle.textContent = `Order #${order.orderNumber || order._id}`;
 
     // Customer Information
-    const customerInfoSection = modal.querySelector('#customer-info-section');
-    customerInfoSection.innerHTML = `
-      <h3>Customer Information</h3>
-      <p><strong>Name:</strong> ${order.customerName || ''}</p>
-      <p><strong>Email:</strong> ${order.customerEmail || ''}</p>
-      <p><strong>Phone:</strong> ${order.customerPhone || ''}</p>
-    `;
+    modal.querySelector('#order-customer-name').textContent = order.customerName || '';
+    modal.querySelector('#order-customer-email').textContent = order.customerEmail || '';
+    modal.querySelector('#order-customer-phone').textContent = order.customerPhone || '';
 
     // Delivery Information
-    const deliveryInfoSection = modal.querySelector('#delivery-info-section');
-    deliveryInfoSection.innerHTML = `
-      <h3>Delivery Information</h3>
-      <p><strong>Type:</strong> ${order.deliveryType || ''}</p>
-      <p><strong>Address:</strong> ${order.deliveryAddress || ''}</p>
-      <p><strong>City:</strong> ${order.deliveryCity || ''}</p>
-      <p><strong>Date Needed:</strong> ${order.dateNeeded ? new Date(order.dateNeeded).toLocaleDateString() : ''}</p>
-      <p><strong>Time Needed:</strong> ${order.timeNeeded || ''}</p>
-    `;
+    modal.querySelector('#order-delivery-type').textContent = order.deliveryType || '';
+    modal.querySelector('#order-delivery-address').textContent = order.deliveryAddress || '';
+    modal.querySelector('#order-delivery-city').textContent = order.deliveryCity || '';
+    modal.querySelector('#order-date-needed').textContent = order.dateNeeded ? new Date(order.dateNeeded).toLocaleDateString() : '';
+    modal.querySelector('#order-time-needed').textContent = order.timeNeeded || '';
 
     // Order Items
     const orderItemsContainer = modal.querySelector('#order-items-container');

@@ -373,7 +373,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const ordersTableBody = document.getElementById('ordersTableBody');
 
-            fetch('/me/orders', {
+            fetch('/api/orders/my-orders', {
                 method: 'GET',
                 credentials: 'include', // include cookies for authentication
                 headers: {
@@ -419,7 +419,7 @@
                         <td>$${order.total?.toFixed(2) || '0.00'}</td>
                         <td><span class="badge ${badgeClass}">${order.status || 'Pending'}</span></td>
                             <td>
-                                <a href="customer-order-confirmation.html?orderId=${order._id}" class="action-btn action-btn-primary">
+                                <a href="view-order.html?orderId=${order._id}" class="action-btn action-btn-primary">
                                     <i class="fas fa-eye"></i> View
                                 </a>
                             </td>

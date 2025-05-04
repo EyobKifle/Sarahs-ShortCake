@@ -5,8 +5,8 @@ const orderController = require('../controllers/orderController');
 const { protect } = require('../middleware/auth');
 const paymentController = require('../controllers/paymentController');
 
-// Public route for creating orders (no authentication required)
-router.post('/', orderController.createOrder);
+// Protected route for creating orders (authentication required)
+router.post('/', protect, orderController.createOrder);
 
 // Public route for getting public order by ID (no authentication required)
 router.get('/public/:id', orderController.getPublicOrderById);
