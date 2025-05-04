@@ -1,3 +1,4 @@
+r
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   const userStr = localStorage.getItem('user');
@@ -8,14 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   try {
     const user = JSON.parse(userStr);
-    const allowedCustomerPages = [
-      'customer-dashboard.html',
-      'customer-orders.html',
-      'customer-menu.html',
-      'customer-wishlist.html',
-      'customer-reviews.html',
-      'customer-settings.html'
-    ];
+  const allowedCustomerPages = [
+    'customer-dashboard.html',
+    'customer-orders.html',
+    'customer-menu.html',
+    'customer-reviews.html',
+    'customer-settings.html'
+  ];
     const allowedAdminPages = [
       'Admin/admin.html',
       'Admin/admin-orders.html',

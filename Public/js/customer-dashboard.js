@@ -1,62 +1,49 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Fetch and display user profile and dashboard data
-  fetch('/api/customers/me', {
-    method: 'GET',
-    credentials: 'include', // to send cookies
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(res => {
-    if (!res.ok) throw new Error('Failed to fetch profile: ' + res.status + ' ' + res.statusText);
-    return res.json();
-  })
-  .then(data => {
-    if (data.success && data.user) {
-      const user = data.user;
-      const sidebarWelcome = document.querySelector('.sidebar-user-firstname');
-      if (sidebarWelcome) sidebarWelcome.textContent = user.firstName;
+  document.addEventListener('DOMContentLoaded', () => {
+    // Fetch and display user profile and dashboard data
+    fetch('/api/customers/me', {
+      method: 'GET',
+      credentials: 'include', // to send cookies
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch profile: ' + res.status + ' ' + res.statusText);
+      return res.json();
+    })
+    .then(data => {
+      if (data.success && data.user) {
+        const user = data.user;
+        const sidebarWelcome = document.querySelector('.sidebar-user-firstname');
+        if (sidebarWelcome) sidebarWelcome.textContent = user.firstName;
 
-      // Load profile content into main dashboard area
-      loadProfileContent(user);
+        // Load profile content into main dashboard area
+        loadProfileContent(user);
 
-      // Fetch dashboard stats after user profile is loaded
-      fetchDashboardStats();
+        // Fetch dashboard stats after user profile is loaded
+        fetchDashboardStats();
 
-      // Fetch other customer data
-      fetchOrders();
-      fetchAddresses();
-      fetchWishlist();
-      fetchReviews();
-    } else {
-      console.warn('User not authorized or not logged in');
+        // Fetch other customer data
+        fetchOrders();
+        fetchAddresses();
+        fetchReviews();
+      } else {
+        console.warn('User not authorized or not logged in');
+        window.location.href = 'login.html';
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching user profile:', error);
       window.location.href = 'login.html';
-    }
-  })
-  .catch(error => {
-    console.error('Error fetching user profile:', error);
-    window.location.href = 'login.html';
-  });
+    });
 
   // Logout button handler
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      fetch('/api/auth/logout', {
-        method: 'GET',
-        credentials: 'include'
-      })
-      .then(res => {
-        if (res.ok) {
-          localStorage.clear();
-          window.location.href = 'login.html';
-        } else {
-          alert('Logout failed: ' + res.status + ' ' + res.statusText);
-        }
-      })
-      .catch(error => {
-        alert('Logout failed: ' + error.message);
-      });
+    logoutBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      localStorage.clear();
+      window.location.href = 'index.html';
     });
   }
 
@@ -95,16 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="card-value" id="total-spent">$0.00</div>
         </div>
 
-        <div class="dashboard-card" id="card-wishlist-items" style="cursor:pointer;">
-          <div class="card-header">
-            <span class="card-title">Wishlist Items</span>
-            <div class="card-icon">
-              <i class="fas fa-heart"></i>
-            </div>
-          </div>
-          <div class="card-value" id="wishlist-items">0</div>
-        </div>
-
+     
         <div class="dashboard-card" id="card-reviews-count" style="cursor:pointer;">
           <div class="card-header">
             <span class="card-title">Reviews</span>
@@ -175,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success && data.stats) {
         document.getElementById('total-orders').textContent = data.stats.totalOrders || 0;
         document.getElementById('total-spent').textContent = `$${(data.stats.totalSpent || 0).toFixed(2)}`;
-        document.getElementById('wishlist-items').textContent = data.stats.wishlistItems || 0;
         document.getElementById('reviews-count').textContent = data.stats.reviews || 0;
       }
     })
@@ -243,26 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Fetch wishlist items
-  function fetchWishlist() {
-    fetch('/api/customers/wishlist', {
-      method: 'GET',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to fetch wishlist: ' + res.status + ' ' + res.statusText);
-      return res.json();
-    })
-    .then(data => {
-      if (data.success) {
-        console.log('Wishlist:', data.data);
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching wishlist:', error);
-    });
-  }
 
   // Fetch reviews
   function fetchReviews() {

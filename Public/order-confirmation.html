@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Order Confirmation | Sarah's Short Cakes</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="description" content="Order confirmation page for Sarah's Short Cakes" />
+    <meta name="theme-color" content="#ff85a2" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
         :root {
             --primary: #FF6B8B;
@@ -467,7 +469,7 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo-container">
-                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo" />
                 <h1>Sarah's Short Cakes</h1>
             </div>
             <nav class="main-nav">
@@ -475,12 +477,12 @@
                     <li><a href="index.html">Home</a></li>
                     <li><a href="menu.html">Menu</a></li>
                     <li><a href="order.html">Order</a></li>
-<li class="cart-icon">
-  <a href="cart.html">
-    <i class="fas fa-shopping-basket"></i>
-    <span id="cart-count" class="cart-count">0</span>
-  </a>
-</li>
+                    <li class="cart-icon">
+                        <a href="cart.html">
+                            <i class="fas fa-shopping-basket"></i>
+                            <span id="cart-count" class="cart-count">0</span>
+                        </a>
+                    </li>
                     <li><a href="contact.html">Contact</a></li>
                     <li>
                         <a href="login.html" class="login-signup-button">Login / Sign Up</a>
@@ -497,29 +499,29 @@
                 <h1>Order Confirmed!</h1>
                 <p>Thank you for your order. We'll start preparing your cupcakes right away.</p>
             </div>
-            
+
             <div class="confirmation-body">
                 <div class="order-details">
                     <h2>Order Details</h2>
                     <div class="order-info">
                         <div class="info-item">
                             <h3>Order Number</h3>
-                            <p id="orderNumber">ORD-12345</p>
+                            <p id="order-id">Loading...</p>
                         </div>
                         <div class="info-item">
                             <h3>Order Date</h3>
-                            <p id="orderDate">October 15, 2023</p>
+                            <p id="order-date">Loading...</p>
                         </div>
                         <div class="info-item">
                             <h3>Order Status</h3>
-                            <p id="orderStatus">Processing</p>
+                            <p id="order-status">Processing</p>
                         </div>
                         <div class="info-item">
                             <h3>Estimated Delivery</h3>
-                            <p id="estimatedDelivery">October 16, 2023</p>
+                            <p id="estimated-delivery">Loading...</p>
                         </div>
                     </div>
-                    
+
                     <div class="order-items">
                         <h2>Your Order</h2>
                         <table class="items-table">
@@ -531,33 +533,33 @@
                                     <th>Total</th>
                                 </tr>
                             </thead>
-                            <tbody id="orderItems">
+                            <tbody id="order-items">
                                 <!-- Order items will be populated by JavaScript -->
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div class="order-summary">
                         <h2>Order Summary</h2>
                         <div class="summary-row">
                             <span>Subtotal</span>
-                            <span id="subtotal">$32.00</span>
+                            <span id="subtotal">$0.00</span>
                         </div>
                         <div class="summary-row">
                             <span>Delivery Fee</span>
-                            <span id="deliveryFee">$5.00</span>
+                            <span id="delivery-fee">$0.00</span>
                         </div>
                         <div class="summary-row">
                             <span>Tax</span>
-                            <span id="tax">$2.56</span>
+                            <span id="tax">$0.00</span>
                         </div>
                         <div class="summary-row total">
                             <span>Total</span>
-                            <span id="total">$39.56</span>
+                            <span id="total">$0.00</span>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="next-steps">
                     <h2>What's Next?</h2>
                     <ul class="steps-list">
@@ -567,7 +569,7 @@
                             </div>
                             <div class="step-content">
                                 <h3>Confirmation Email</h3>
-                                <p>We've sent a confirmation email with your order details to your registered email address.</p>
+                                <p id="confirmation-email-text">We'll send a confirmation email with your order details.</p>
                             </div>
                         </li>
                         <li class="step-item">
@@ -576,7 +578,7 @@
                             </div>
                             <div class="step-content">
                                 <h3>Order Processing</h3>
-                                <p>Our bakers will start preparing your cupcakes. You'll receive an update when your order is ready for delivery.</p>
+                                <p>Our bakers will start preparing your cupcakes. You'll receive an update when your order is ready.</p>
                             </div>
                         </li>
                         <li class="step-item">
@@ -585,14 +587,14 @@
                             </div>
                             <div class="step-content">
                                 <h3>Delivery</h3>
-                                <p>Your cupcakes will be delivered to your specified address on the estimated delivery date.</p>
+                                <p id="delivery-details">Your cupcakes will be delivered to your specified address.</p>
                             </div>
                         </li>
                     </ul>
                 </div>
-                
+
                 <div class="action-buttons">
-                    <a href="track.html" class="action-button primary-button">
+                    <a href="track.html" class="action-button primary-button" id="track-order-btn">
                         <i class="fas fa-map-marker-alt"></i> Track Your Order
                     </a>
                     <a href="index.html" class="action-button secondary-button">
@@ -603,10 +605,11 @@
         </div>
     </main>
 
+
     <footer>
         <div class="footer-content">
             <div class="footer-logo">
-                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo">
+                <img src="images/logo.png" alt="Sarah's Short Cakes Logo" class="logo" />
                 <h3>Sarah's Short Cakes</h3>
             </div>
             <div class="footer-links">
@@ -622,10 +625,11 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2023 Sarah's Short Cakes. All rights reserved.</p>
+            <p>&copy; 2025 Sarah's Short Cakes. All rights reserved.</p>
         </div>
     </footer>
 
+    <script src="js/order-id-generator.js"></script>
     <script src="js/order-confirmation.js"></script>
     <script src="js/header-footer.js"></script>
 </body>

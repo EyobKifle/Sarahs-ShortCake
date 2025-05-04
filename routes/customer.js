@@ -20,8 +20,7 @@ router.get('/me', authController.getProfile);
 // New route to update logged-in customer's profile
 router.put('/me', customerProfileController.updateProfile);
 
-router.get('/:id', customerController.getCustomerById);
-
+ 
 // New route to get dashboard stats for logged-in customer
 router.get('/dashboard-stats', customerController.getDashboardStats);
 
@@ -36,5 +35,7 @@ router.delete('/wishlist/:itemId', customerController.removeFromWishlist);
 
 // Get reviews for logged-in customer
 router.get('/reviews', customerController.getReviews);
+
+router.get('/:id', customerController.getCustomerById);
 
 module.exports = router;

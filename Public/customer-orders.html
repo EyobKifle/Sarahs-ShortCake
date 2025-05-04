@@ -114,11 +114,7 @@
             font-size: 2rem;
         }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+      
 
         .user-avatar {
             width: 40px;
@@ -293,17 +289,27 @@
         <div id="sidebar-container"></div>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                fetch('customer-sidebar.html')
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('sidebar-container').innerHTML = html;
-                        // Mark the active link
-                        const activeLink = document.querySelector('.nav-link[href="customer-orders.html"]');
-                        if (activeLink) activeLink.classList.add('active');
-                    })
-                    .catch(err => {
-                        console.error('Failed to load sidebar:', err);
+        fetch('customer-sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebar-container').innerHTML = html;
+                // Mark the active link
+                const activeLink = document.querySelector('.nav-link[href="customer-orders.html"]');
+                if (activeLink) activeLink.classList.add('active');
+
+                // Attach logout event listener after sidebar is loaded
+                const logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        localStorage.clear();
+                        window.location.href = 'index.html';
                     });
+                }
+            })
+            .catch(err => {
+                console.error('Failed to load sidebar:', err);
+            });
             });
         </script>
 
@@ -311,10 +317,6 @@
         <main class="dashboard-main">
             <header class="dashboard-header">
                 <h1>My Orders</h1>
-                <div class="user-profile">
-                    <div class="user-avatar">S</div>
-                    <span class="user-name">Sarah Johnson</span>
-                </div>
             </header>
 
             <!-- Orders Table Section -->
@@ -367,49 +369,74 @@
             alert('Viewing details for order: ' + orderId);
         }
 
-        // Load orders from localStorage and render in table
+        // Load orders from backend API and render in table
         document.addEventListener('DOMContentLoaded', () => {
             const ordersTableBody = document.getElementById('ordersTableBody');
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
 
-            if (orders.length === 0) {
+            fetch('/me/orders', {
+                method: 'GET',
+                credentials: 'include', // include cookies for authentication
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch orders');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!data.success || !Array.isArray(data.data) || data.data.length === 0) {
+                    ordersTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="fas fa-box-open"></i>
+                                <p>No orders found.</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                ordersTableBody.innerHTML = '';
+
+                data.data.forEach(order => {
+                    const orderDate = new Date(order.deliveryInfo?.deliveryDate || order.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                    const itemCount = order.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+
+                    // Determine badge class based on status
+                    let badgeClass = 'badge-pending';
+                    if (order.status?.toLowerCase() === 'processing') badgeClass = 'badge-processing';
+                    else if (order.status?.toLowerCase() === 'completed') badgeClass = 'badge-completed';
+                    else if (order.status?.toLowerCase() === 'cancelled') badgeClass = 'badge-cancelled';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="order-id">${order.orderNumber || order._id}</td>
+                        <td>${orderDate}</td>
+                        <td>${itemCount}</td>
+                        <td>$${order.total?.toFixed(2) || '0.00'}</td>
+                        <td><span class="badge ${badgeClass}">${order.status || 'Pending'}</span></td>
+                            <td>
+                                <a href="customer-order-confirmation.html?orderId=${order._id}" class="action-btn action-btn-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </td>
+                    `;
+                    ordersTableBody.appendChild(tr);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading orders:', error);
                 ordersTableBody.innerHTML = `
                     <tr>
                         <td colspan="6" class="empty-state">
-                            <i class="fas fa-box-open"></i>
-                            <p>No orders found.</p>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Failed to load orders. Please try again later.</p>
                         </td>
                     </tr>
                 `;
-                return;
-            }
-
-            ordersTableBody.innerHTML = '';
-
-            orders.forEach(order => {
-                const orderDate = new Date(order.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-                const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
-
-                // Determine badge class based on status
-                let badgeClass = 'badge-pending';
-                if (order.status.toLowerCase() === 'processing') badgeClass = 'badge-processing';
-                else if (order.status.toLowerCase() === 'completed') badgeClass = 'badge-completed';
-                else if (order.status.toLowerCase() === 'cancelled') badgeClass = 'badge-cancelled';
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="order-id">${order.orderId}</td>
-                    <td>${orderDate}</td>
-                    <td>${itemCount}</td>
-                    <td>$${order.total.toFixed(2)}</td>
-                    <td><span class="badge ${badgeClass}">${order.status}</span></td>
-                    <td>
-                        <button class="action-btn action-btn-primary" onclick="viewOrderDetails('${order.orderId}')">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </td>
-                `;
-                ordersTableBody.appendChild(tr);
             });
         });
     </script>

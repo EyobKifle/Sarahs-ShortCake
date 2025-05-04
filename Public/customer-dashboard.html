@@ -518,17 +518,27 @@
         <div id="sidebar-container"></div>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                fetch('customer-sidebar.html')
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('sidebar-container').innerHTML = html;
-                        // Mark the active link
-                        const activeLink = document.querySelector('.nav-link[href="customer-dashboard.html"]');
-                        if (activeLink) activeLink.classList.add('active');
-                    })
-                    .catch(err => {
-                        console.error('Failed to load sidebar:', err);
+        fetch('customer-sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebar-container').innerHTML = html;
+                // Mark the active link
+                const activeLink = document.querySelector('.nav-link[href="customer-dashboard.html"]');
+                if (activeLink) activeLink.classList.add('active');
+
+                // Attach logout event listener after sidebar is loaded
+                const logoutBtn = document.getElementById('logout-btn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        localStorage.clear();
+                        window.location.href = 'index.html';
                     });
+                }
+            })
+            .catch(err => {
+                console.error('Failed to load sidebar:', err);
+            });
             });
         </script>
 
@@ -574,5 +584,6 @@
     <script src="js/customer-dashboard.js"></script>
     <script src="js/customer-dashboard-error-logging.js"></script>
     <script src="js/customer-dashboard-sidebar-navigation.js"></script>
+    <!-- Removed customer-common.js as per request -->
 </body>
 </html>

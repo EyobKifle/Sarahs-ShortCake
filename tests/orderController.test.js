@@ -64,6 +64,36 @@ describe('Order API', () => {
     expect(response.body.data.items.length).toBe(1);
   });
 
+  test('should create a new order via customer route', async () => {
+    const newOrder = {
+      customerId: customerId.toString(),
+      items: [
+        {
+          quantity: 1,
+          cakeFlavor: 'Chocolate',
+          cakeColor: 'N/A',
+          icingFlavor: 'Butter Cream',
+          icingColor: 'N/A',
+          decoration: 'None'
+        }
+      ],
+      deliveryOption: 'delivery',
+      neededDate: new Date().toISOString(),
+      neededTime: '15:00',
+      totalPrice: 25.0,
+      status: 'pending'
+    };
+
+    const response = await request(app)
+      .post('/api/customers/me/orders')
+      .send(newOrder)
+      .expect(201);
+
+    expect(response.body.success).toBe(true);
+    expect(response.body.data.customerId).toBe(customerId.toString());
+    expect(response.body.data.items.length).toBe(1);
+  });
+
   test('should get orders for a customer', async () => {
     // Create an order
     const order = new Order({

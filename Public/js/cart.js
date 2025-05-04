@@ -8,6 +8,9 @@ const CartManager = {
         this.loadCart();
         this.updateCartCount();
         this.setupEventListeners();
+
+        // Load user info for the cart page
+        this.loadUserInfo();
         
         // Render cart if on cart page
         if (document.getElementById('cart-items-container')) {
@@ -37,15 +40,87 @@ const CartManager = {
                     this.showNotification('Your cart is empty!', 'error');
                     return;
                 }
-                window.location.href = 'order.html';
+                e.preventDefault();
+                this.proceedToCheckout();
             });
+        }
+    },
+
+    // Proceed to checkout: generate order, save, and redirect
+    async proceedToCheckout() {
+        try {
+            // Prepare order data
+            const subtotal = this.getSubtotal();
+            const deliveryMethodInput = document.getElementById('delivery-method');
+            const deliveryMethod = deliveryMethodInput ? deliveryMethodInput.value : 'pickup';
+            const deliveryFee = deliveryMethod === 'delivery' ? 5.00 : 0.00;
+            const tax = subtotal * 0.08;
+            const total = subtotal + deliveryFee + tax;
+
+            const orderPayload = {
+                items: this.cart,
+                date: new Date().toISOString(),
+                status: 'Processing',
+                subtotal: subtotal,
+                deliveryFee: deliveryFee,
+                tax: tax,
+                total: total,
+                deliveryMethod: deliveryMethod
+            };
+
+            // Send order to backend API
+            const token = localStorage.getItem('token');
+
+            const response = await fetch('/api/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                },
+                body: JSON.stringify(orderPayload)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                this.showNotification(data.message || 'Failed to place order. Please try again.', 'error');
+                return;
+            }
+
+            // Clear cart
+            this.clearCart();
+
+            // Redirect to order confirmation page with backend order ID
+            window.location.href = `order-confirmation.html?orderId=${data.data._id}`;
+        } catch (error) {
+            console.error('Error during checkout:', error);
+            this.showNotification('Error processing your order', 'error');
+        }
+    },
+
+    // Load user information from backend API
+    async loadUserInfo() {
+        try {
+            const response = await fetch('/api/customers/me');
+            if (!response.ok) throw new Error('Failed to fetch user info');
+            const data = await response.json();
+            if (data.success && data.user) {
+                const user = data.user;
+                document.getElementById('user-name').value = (user.firstName || '') + ' ' + (user.lastName || '');
+                document.getElementById('user-email').value = user.email || '';
+                document.getElementById('user-phone').value = user.phone || '';
+                document.getElementById('user-address').value = user.address || '';
+            }
+        } catch (error) {
+            console.error('Error loading user info:', error);
+            this.showNotification('Failed to load user information', 'error');
         }
     },
 
     // Add item to cart (compatible with menu page)
     addItem(itemData) {
         const item = {
-            id: itemData.id || Date.now().toString(),
+            id: null,
             name: itemData.name,
             price: parseFloat(itemData.price),
             quantity: parseInt(itemData.quantity) || 1,
@@ -53,6 +128,10 @@ const CartManager = {
             description: itemData.description || '',
             customizations: itemData.customizations || []
         };
+        const objectIdRegex = /^[a-f\d]{24}$/i;
+        if (itemData.id && objectIdRegex.test(itemData.id)) {
+            item.id = itemData.id;
+        }
 
         try {
             // Check for existing item with same ID and customizations
@@ -216,7 +295,7 @@ const CartManager = {
     // Render cart page
     renderCart() {
         const cartContainer = document.getElementById('cart-items-container');
-        const emptyMessage = document.querySelector('.empty-cart');
+        const emptyMessage = document.getElementById('empty-cart-message');
         const checkoutSection = document.querySelector('.checkout-section');
         
         if (!cartContainer) return;
@@ -272,11 +351,17 @@ const CartManager = {
     // Update order summary totals
     updateTotals() {
         const subtotal = this.getSubtotal();
+        const deliveryMethodInput = document.getElementById('delivery-method');
+        const deliveryMethod = deliveryMethodInput ? deliveryMethodInput.value : 'pickup';
+        const deliveryFee = deliveryMethod === 'delivery' ? 5.00 : 0.00;
         const tax = subtotal * 0.08; // 8% tax
-        const total = subtotal + tax;
+        const total = subtotal + deliveryFee + tax;
 
         if (document.getElementById('subtotal')) {
             document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+        }
+        if (document.getElementById('delivery-fee')) {
+            document.getElementById('delivery-fee').textContent = `$${deliveryFee.toFixed(2)}`;
         }
         if (document.getElementById('tax')) {
             document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
@@ -400,3 +485,7 @@ function updateCartCount() {
 function loadCart() {
     return CartManager.loadCart();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    CartManager.init();
+});

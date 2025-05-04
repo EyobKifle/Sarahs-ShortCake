@@ -7,13 +7,14 @@ const customizationOptionsSchema = new mongoose.Schema({
 }, { _id: false });
 
 const productSchema = new mongoose.Schema({
+  slug: { type: String, required: true, unique: true, trim: true },
   name: { type: String, required: true, trim: true },
   description: { type: String, trim: true },
   price: { type: Number, required: true, min: 0 },
   category: { type: String, enum: ['cupcake', 'cake', 'custom'], required: true },
   flavors: [String],
   basePrice: { type: Number, min: 0 },
-  imageUrl: { type: String, trim: true },
+  imagePath: { type: String, trim: true },
   isFeatured: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },

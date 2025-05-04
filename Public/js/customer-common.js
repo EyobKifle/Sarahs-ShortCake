@@ -26,24 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
   .catch(() => {
     console.error('Failed to fetch user profile');
   });
-
   // Logout button handler
-  const logoutLink = document.querySelector('.nav-link.logout-link');
-  if (logoutLink) {
-    logoutLink.addEventListener('click', (e) => {
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function(e) {
       e.preventDefault();
-      fetch('/api/auth/logout', {
-        method: 'GET',
-        credentials: 'include'
-      })
-      .then(res => {
-        if (res.ok) {
-          window.location.href = '/login.html';
-        } else {
-          alert('Logout failed');
-        }
-      })
-      .catch(() => alert('Logout failed'));
+      localStorage.clear();
+      window.location.href = 'index.html';
     });
   }
 });
