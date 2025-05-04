@@ -18,6 +18,7 @@ const adminRoutes = require('./routes/admin');
 const flavorRoutes = require('./routes/flavor');
 const mapsRoutes = require('./routes/maps');
 const contactRoutes = require('./routes/contact');
+const productRoutes = require('./routes/product');
 
 const app = express();
 const path = require('path');
@@ -123,6 +124,7 @@ app.use('/api/reports', protect, reportRoutes);
 app.use('/api/contact', protect, contactRoutes);
 app.use('/api/admin', protect, adminRoutes);
 app.use('/api/flavors', protect, flavorRoutes);
+app.use('/api/products', productRoutes);
 
 // Catch-all route for SPA support
 app.get('*', (req, res) => {
