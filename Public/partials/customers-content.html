@@ -1,0 +1,129 @@
+<!-- Extracted main content from customers.html -->
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4" id="customersContent">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Customer Management</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                    <i class="fas fa-plus me-1"></i> Add Customer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card customer-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Total Customers</h6>
+                            <h2 class="card-text" id="totalCustomers">0</h2>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">All registered customers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card customer-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Active Customers</h6>
+                            <h2 class="card-text" id="activeCustomers">0</h2>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">Customers with recent orders</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card customer-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">New This Month</h6>
+                            <h2 class="card-text" id="newCustomers">0</h2>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">New registrations</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card customer-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title">Avg. Order Value</h6>
+                            <h2 class="card-text" id="avgOrderValue">$0.00</h2>
+                        </div>
+                        <div class="card-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">Average per customer</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Search and Filters -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="search-box">
+                <input type="text" class="form-control" id="customerSearch" placeholder="Search customers...">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="customerStatusFilter">
+                <option value="all">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="customerSort">
+                <option value="recent">Most Recent</option>
+                <option value="orders">Most Orders</option>
+                <option value="spending">Highest Spending</option>
+                <option value="name">Name (A-Z)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Customer Table -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="customersTable">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th>Orders</th>
+                            <th>Total Spent</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>

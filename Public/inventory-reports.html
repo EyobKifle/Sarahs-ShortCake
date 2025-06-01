@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Reports - Sarah's Shortcakes Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.0.0/dist/chart.min.css" rel="stylesheet">
+    <style>
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: 1px solid rgba(0, 0, 0, 0.125);
+        }
+        .table th {
+            border-top: none;
+            font-weight: 600;
+        }
+        .badge {
+            font-size: 0.75em;
+        }
+        .progress {
+            background-color: #e9ecef;
+        }
+        .btn-group-sm > .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .table-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        .table-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin.html">
+                <i class="fas fa-cupcake me-2"></i>Sarah's Shortcakes Admin
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/admin.html">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2><i class="fas fa-boxes me-2"></i>Inventory Reports</h2>
+                <p class="text-muted">Comprehensive inventory analytics and stock management</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="btn-group">
+                    <button class="btn btn-outline-primary" id="refreshInventoryReport">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh
+                    </button>
+                    <button class="btn btn-success" id="exportInventoryReport">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" id="inventoryCategoryFilter">
+                                    <option value="all">All Categories</option>
+                                    <option value="Flour">Flour</option>
+                                    <option value="Sugar">Sugar</option>
+                                    <option value="Dairy">Dairy</option>
+                                    <option value="Eggs">Eggs</option>
+                                    <option value="Flavorings">Flavorings</option>
+                                    <option value="Decorations">Decorations</option>
+                                    <option value="Packaging">Packaging</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="inventoryStatusFilter">
+                                    <option value="all">All Status</option>
+                                    <option value="in-stock">In Stock</option>
+                                    <option value="low-stock">Low Stock</option>
+                                    <option value="out-of-stock">Out of Stock</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Sort By</label>
+                                <select class="form-select" id="inventorySortBy">
+                                    <option value="name">Name</option>
+                                    <option value="quantity">Quantity</option>
+                                    <option value="value">Value</option>
+                                    <option value="category">Category</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Order</label>
+                                <select class="form-select" id="inventoryOrderBy">
+                                    <option value="asc">Ascending</option>
+                                    <option value="desc">Descending</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Search</label>
+                                <input type="text" class="form-control" id="inventorySearchInput"
+                                       placeholder="Search inventory items...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="inventoryReportLoader" class="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading inventory report...</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div id="inventorySummaryCards"></div>
+
+        <!-- Main Content -->
+        <div class="row g-4">
+            <!-- Inventory Table -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-table me-2"></i>Inventory Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="inventoryTableContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-4">
+                <!-- Additional Info Panel -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Inventory Overview</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Use the filters above to narrow down your inventory view. Click refresh to get the latest data from the database.</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="inventoryReports.loadInventoryReport()">
+                                <i class="fas fa-sync-alt me-1"></i>Refresh Data
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" onclick="inventoryReports.exportReport()">
+                                <i class="fas fa-download me-1"></i>Export CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="row g-4 mt-4">
+            <div class="col-md-12">
+                <div id="categoryBreakdownContainer"></div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Item Details Modal -->
+    <div class="modal fade" id="itemDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Item Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="itemDetailsContent">
+                    <!-- Item details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success">Restock Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Restock Modal -->
+    <div class="modal fade" id="restockModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Restock Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="restockForm">
+                        <div class="mb-3">
+                            <label class="form-label">Item</label>
+                            <input type="text" class="form-control" id="restockItemName" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Quantity to Add</label>
+                            <input type="number" class="form-control" id="restockQuantity" min="0" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" id="restockNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" id="confirmRestock">Restock</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.0/dist/chart.min.js"></script>
+    <script src="/js/api-client.js"></script>
+    <script src="/js/modules/enhanced-inventory-reports.js"></script>
+
+    <script>
+        // Initialize API client
+        window.apiClient = new ApiClient();
+
+        // Initialize inventory reports
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔄 Inventory Reports page loaded');
+        });
+    </script>
+</body>
+</html>

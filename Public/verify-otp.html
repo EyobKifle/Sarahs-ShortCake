@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Code - Sarah's Short Cakes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .verify-container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #ff69b4;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .email-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #ff69b4;
+        }
+
+        .email-display p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .email-display strong {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .otp-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 24px;
+            text-align: center;
+            letter-spacing: 8px;
+            font-weight: bold;
+            transition: border-color 0.3s;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #ff69b4;
+        }
+
+        .otp-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            background: #e83e8c;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .resend-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .resend-button {
+            background: transparent;
+            color: #ff69b4;
+            border: 1px solid #ff69b4;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .resend-button:hover {
+            background: #ff69b4;
+            color: white;
+        }
+
+        .timer {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .form-footer {
+            margin-top: 20px;
+        }
+
+        .form-footer a {
+            color: #ff69b4;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .form-footer a:hover {
+            color: #e83e8c;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="verify-container">
+        <h2>Enter Verification Code</h2>
+        
+        <div class="email-display">
+            <p>We sent a 6-digit code to:</p>
+            <p><strong id="email-display"></strong></p>
+        </div>
+
+        <div id="error-container"></div>
+
+        <form id="verify-form" onsubmit="handleVerifyOTP(event)">
+            <div class="form-group">
+                <label for="otp">Verification Code</label>
+                <input type="text" id="otp" class="otp-input" placeholder="000000" maxlength="6" required />
+                <div class="otp-hint">Enter the 6-digit code from your email</div>
+            </div>
+            <button type="submit">Verify Code</button>
+        </form>
+
+        <div class="resend-section">
+            <div class="timer" id="timer">Code expires in: <span id="countdown">10:00</span></div>
+            <button type="button" class="resend-button" id="resend-btn" onclick="resendOTP()" disabled>
+                Resend Code
+            </button>
+        </div>
+
+        <div class="form-footer">
+            <p><a href="forgot-password.html">← Try Different Email</a></p>
+            <p><a href="login.html">Back to Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        let userEmail = '';
+        let countdownTimer;
+        let timeLeft = 600; // 10 minutes in seconds
+
+        // Get email from URL parameters
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            userEmail = urlParams.get('email');
+            
+            if (!userEmail) {
+                showError('Invalid verification link. Please request a new password reset.');
+                return;
+            }
+
+            document.getElementById('email-display').textContent = userEmail;
+            startCountdown();
+        });
+
+        function startCountdown() {
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                document.getElementById('countdown').textContent = 
+                    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    document.getElementById('timer').innerHTML = '<span style="color: red;">Code expired</span>';
+                    document.getElementById('resend-btn').disabled = false;
+                    document.getElementById('otp').disabled = true;
+                    document.querySelector('button[type="submit"]').disabled = true;
+                }
+            }, 1000);
+        }
+
+        async function handleVerifyOTP(event) {
+            event.preventDefault();
+            
+            const otp = document.getElementById('otp').value;
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            
+            if (otp.length !== 6) {
+                showError('Please enter a 6-digit code.');
+                return;
+            }
+
+            // Clear previous errors
+            clearError();
+
+            // Disable button and show loading state
+            submitButton.disabled = true;
+            submitButton.textContent = 'Verifying...';
+            
+            try {
+                const response = await fetch('/api/auth/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: userEmail, otp })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showSuccess('Code verified! Redirecting to password reset...');
+                    setTimeout(() => {
+                        window.location.href = `reset-password-otp.html?email=${encodeURIComponent(userEmail)}&verified=true`;
+                    }, 1500);
+                } else {
+                    showError(data.message || 'Invalid verification code.');
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Verify Code';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('An error occurred. Please try again.');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Verify Code';
+            }
+        }
+
+        async function resendOTP() {
+            const resendBtn = document.getElementById('resend-btn');
+            resendBtn.disabled = true;
+            resendBtn.textContent = 'Sending...';
+
+            try {
+                const response = await fetch('/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: userEmail })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showSuccess('New verification code sent!');
+                    timeLeft = 600; // Reset timer
+                    clearInterval(countdownTimer);
+                    startCountdown();
+                    document.getElementById('otp').disabled = false;
+                    document.querySelector('button[type="submit"]').disabled = false;
+                    document.getElementById('otp').value = '';
+                } else {
+                    showError('Failed to resend code. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('An error occurred while resending the code.');
+            }
+
+            resendBtn.disabled = false;
+            resendBtn.textContent = 'Resend Code';
+        }
+
+        // Auto-format OTP input
+        document.getElementById('otp').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            if (value.length > 6) value = value.slice(0, 6);
+            e.target.value = value;
+        });
+
+        function showError(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        function showSuccess(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `<div class="success-message">${message}</div>`;
+        }
+
+        function clearError() {
+            document.getElementById('error-container').innerHTML = '';
+        }
+    </script>
+</body>
+</html>

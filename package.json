@@ -8,10 +8,14 @@
         "dev": "nodemon server.js",
         "test": "jest --watchAll",
         "seed": "node utils/seedDatabase.js",
-        "live": "live-server --port=5500 --open=opera Public"
+        "live": "live-server --port=5500 --open=opera Public",
+        "setup-admin": "node scripts/setupAdmin.js",
+        "check-admin": "node scripts/checkAdminUsers.js",
+        "ensure-admin": "node scripts/ensureAdminExists.js"
     },
     "dependencies": {
-        "axios": "^1.8.4",
+        "africastalking": "^0.7.3",
+        "axios": "^1.9.0",
         "bcrypt": "^5.1.1",
         "bcryptjs": "^2.4.3",
         "cookie-parser": "^1.4.7",
@@ -24,14 +28,18 @@
         "express-validator": "^7.2.1",
         "geolib": "^3.3.3",
         "helmet": "^7.1.0",
+        "joi": "^17.9.2",
         "jsonwebtoken": "^9.0.2",
         "leaflet": "^1.9.4",
         "mongoose": "^7.8.6",
         "morgan": "^1.10.0",
+        "multer": "^2.0.0",
         "node-geocoder": "^4.2.0",
-        "nodemailer": "^6.9.5",
+        "nodemailer": "^6.10.1",
         "pdfkit": "^0.13.0",
-        "serve": "^14.2.4"
+        "serve": "^14.2.4",
+        "twilio": "^5.6.1",
+        "xlsx": "^0.18.5"
     },
     "devDependencies": {
         "jest": "^29.7.0",

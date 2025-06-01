@@ -1,0 +1,581 @@
+// Admin Manager - Main controller for the admin dashboard
+const AdminManager = {
+    // Initialize the admin dashboard
+    init() {
+        this.setupEventListeners();
+        this.loadDashboardData();
+        this.loadRecentOrders();
+
+        // Show dashboard by default
+        this.showSection('dashboard');
+    },
+
+    // Set up event listeners
+    setupEventListeners() {
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.getAttribute('data-section');
+                this.showSection(section);
+            });
+        });
+
+        // Logout button
+        document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                });
+                if (response.ok) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                } else {
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Logout error. Please try again.');
+            }
+        });
+
+        // Time period filter
+        document.getElementById('timePeriod').addEventListener('change', () => {
+            this.loadDashboardData();
+        });
+
+        // Order search
+        document.getElementById('orderSearch').addEventListener('input', (e) => {
+            this.filterOrders();
+        });
+
+        // Order status filter
+        document.getElementById('orderStatusFilter').addEventListener('change', () => {
+            this.filterOrders();
+        });
+
+        // Order date filter
+        document.getElementById('orderDateFilter').addEventListener('change', () => {
+            this.filterOrders();
+        });
+
+        // Save order button
+        document.getElementById('saveOrderBtn').addEventListener('click', () => {
+            this.saveOrderChanges();
+        });
+    },
+
+    // Show a specific section
+    showSection(section) {
+        // Hide all sections
+        document.querySelectorAll('#mainContent > section').forEach(sec => {
+            sec.classList.add('d-none');
+        });
+
+        // Show the selected section
+        document.getElementById(`${section}Section`).classList.remove('d-none');
+
+        // Update active nav link
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        document.querySelector(`.sidebar .nav-link[data-section="${section}"]`).classList.add('active');
+
+        // Load section data if needed
+        switch(section) {
+            case 'orders':
+                this.loadAllOrders();
+                break;
+            case 'products':
+                this.loadProducts();
+                break;
+            case 'customers':
+                this.loadCustomers();
+                break;
+            case 'inventory':
+                this.loadInventory();
+                break;
+            case 'reports':
+                this.loadReports();
+                break;
+            case 'settings':
+                this.loadSettings();
+                break;
+        }
+    },
+
+    // Load dashboard data
+    async loadDashboardData() {
+        const period = document.getElementById('timePeriod').value;
+        try {
+            const response = await fetch('/api/dashboard-stats', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch dashboard stats');
+            }
+            const data = await response.json();
+            // Update UI with data
+            document.getElementById('totalOrders').textContent = data.totalOrders;
+            document.getElementById('ordersChange').innerHTML = `
+                <i class="fas ${data.ordersChange >= 0 ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger'}"></i> 
+                ${Math.abs(data.ordersChange)}% from yesterday
+            `;
+            document.getElementById('totalRevenue').textContent = `$${data.totalRevenue.toFixed(2)}`;
+            document.getElementById('revenueChange').innerHTML = `
+                <i class="fas ${data.revenueChange >= 0 ? 'fa-arrow-up text-success' : 'fa-arrow-down text-danger'}"></i> 
+                ${Math.abs(data.revenueChange)}% from yesterday
+            `;
+            document.getElementById('newCustomers').textContent = data.newCustomers;
+            document.getElementById('customersChange').innerHTML = `
+                <i class="fas fa-arrow-up text-success"></i> 
+                ${data.customersChange} from yesterday
+            `;
+            document.getElementById('avgRating').textContent = data.avgRating.toFixed(1);
+            document.getElementById('ratingChange').innerHTML = `
+                <i class="fas fa-arrow-up text-success"></i> 
+                ${data.ratingChange} from last week
+            `;
+            this.updateCharts(data.orders);
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+            this.showNotification('Error loading dashboard data', 'error');
+        }
+    },
+
+    // Update charts with order data
+    updateCharts(orders) {
+        // Sales Chart
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+
+        // Group orders by day for the last 7 days
+        const dates = [];
+        const salesData = [];
+
+        for (let i = 6; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0];
+
+            dates.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+
+            const daySales = orders
+                .filter(order => order.order.status === 'completed' && 
+                       new Date(order.order.orderDate).toISOString().split('T')[0] === dateStr)
+                .reduce((total, order) => total + this.calculateOrderTotal(order.order.items), 0);
+
+            salesData.push(daySales);
+        }
+
+        if (this.salesChart) {
+            this.salesChart.destroy();
+        }
+
+        this.salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Daily Sales',
+                    data: salesData,
+                    backgroundColor: 'rgba(255, 107, 139, 0.2)',
+                    borderColor: 'rgba(255, 107, 139, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Products Chart
+        const productsCtx = document.getElementById('productsChart').getContext('2d');
+
+        // Count product occurrences
+        const productCounts = {};
+        orders.forEach(order => {
+            order.order.items.forEach(item => {
+                productCounts[item.name] = (productCounts[item.name] || 0) + item.quantity;
+            });
+        });
+
+        const sortedProducts = Object.entries(productCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+        if (this.productsChart) {
+            this.productsChart.destroy();
+        }
+
+        this.productsChart = new Chart(productsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: sortedProducts.map(p => p[0]),
+                datasets: [{
+                    data: sortedProducts.map(p => p[1]),
+                    backgroundColor: [
+                        'rgba(255, 107, 139, 0.8)',
+                        'rgba(255, 209, 102, 0.8)',
+                        'rgba(6, 214, 160, 0.8)',
+                        'rgba(23, 162, 184, 0.8)',
+                        'rgba(153, 102, 255, 0.8)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    },
+
+    // Load recent orders for dashboard
+    loadRecentOrders() {
+        const orders = JSON.parse(localStorage.getItem('orders') || '[]')
+            .sort((a, b) => new Date(b.order.orderDate) - new Date(a.order.orderDate))
+            .slice(0, 5);
+
+        const tbody = document.querySelector('#recentOrdersTable tbody');
+        tbody.innerHTML = '';
+
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">No recent orders</td></tr>';
+            return;
+        }
+
+        orders.forEach(order => {
+            const orderDate = new Date(order.order.orderDate);
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td class="order-id">#${order.orderId}</td>
+                <td>${order.customer.firstName} ${order.customer.lastName}</td>
+                <td>${orderDate.toLocaleDateString()}</td>
+                <td>$${this.calculateOrderTotal(order.order.items).toFixed(2)}</td>
+                <td><span class="badge badge-${order.order.status}">${order.order.status}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary view-order" data-id="${order.orderId}">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            `;
+
+            tbody.appendChild(row);
+        });
+
+        // Add event listeners to view buttons
+        document.querySelectorAll('.view-order').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.viewOrderDetails(btn.getAttribute('data-id'));
+            });
+        });
+    },
+
+    // Load all orders for orders section
+    loadAllOrders() {
+        const orders = JSON.parse(localStorage.getItem('orders') || '[]')
+            .sort((a, b) => new Date(b.order.orderDate) - new Date(a.order.orderDate));
+
+        const tbody = document.querySelector('#ordersTable tbody');
+        tbody.innerHTML = '';
+
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No orders found</td></tr>';
+            return;
+        }
+
+        orders.forEach(order => {
+            const orderDate = new Date(order.order.orderDate);
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td class="order-id">#${order.orderId}</td>
+                <td>${order.customer.firstName} ${order.customer.lastName}</td>
+                <td>${orderDate.toLocaleDateString()}</td>
+                <td>${order.order.items.reduce((total, item) => total + item.quantity, 0)}</td>
+                <td>$${this.calculateOrderTotal(order.order.items).toFixed(2)}</td>
+                <td><span class="badge badge-${order.order.status}">${order.order.status}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary view-order" data-id="${order.orderId}">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary edit-order" data-id="${order.orderId}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </td>
+            `;
+
+            tbody.appendChild(row);
+        });
+
+        // Add event listeners to action buttons
+        document.querySelectorAll('.view-order').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.viewOrderDetails(btn.getAttribute('data-id'));
+            });
+        });
+
+        document.querySelectorAll('.edit-order').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.editOrder(btn.getAttribute('data-id'));
+            });
+        });
+    },
+
+    // Filter orders based on search and filters
+    filterOrders() {
+        const searchTerm = (document.getElementById('orderSearch') && document.getElementById('orderSearch').value.toLowerCase()) || '';
+        const statusFilter = (document.getElementById('orderStatusFilter') && document.getElementById('orderStatusFilter').value) || 'all';
+        const dateFilter = (document.getElementById('orderDateFilter') && document.getElementById('orderDateFilter').value) || 'all';
+
+        const today = new Date().toISOString().split('T')[0];
+        const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+        const monthAgo = new Date();
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        const monthAgoStr = monthAgo.toISOString().split('T')[0];
+
+        const tbody = document.querySelector('#ordersTable tbody');
+        if (!tbody) return;
+
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.forEach(row => {
+            const orderId = (row.querySelector('.order-id') && row.querySelector('.order-id').textContent.toLowerCase()) || '';
+            const customerName = (row.children[1] && row.children[1].textContent.toLowerCase()) || '';
+            const orderDate = new Date(row.children[2] ? row.children[2].textContent : '').toISOString().split('T')[0];
+            const status = (row.children[5] && row.children[5].textContent.toLowerCase()) || '';
+
+            let show = true;
+
+            if (statusFilter !== 'all' && status !== statusFilter) {
+                show = false;
+            }
+
+            if (dateFilter === 'today' && orderDate !== today) {
+                show = false;
+            }
+            if (dateFilter === 'week' && orderDate < weekAgo) {
+                show = false;
+            }
+            if (dateFilter === 'month' && orderDate < monthAgoStr) {
+                show = false;
+            }
+
+            if (searchTerm && !orderId.includes(searchTerm) && !customerName.includes(searchTerm)) {
+                show = false;
+            }
+
+            row.style.display = show ? '' : 'none';
+        });
+    },
+
+    // View order details
+    async viewOrderDetails(orderId) {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No authentication token found. Please log in.');
+            }
+
+            const response = await fetch('/api/orders/' + orderId, {
+                credentials: 'include',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch order details: ' + response.statusText);
+            }
+            const order = await response.json();
+
+            const modal = new bootstrap.Modal(document.getElementById('orderModal'));
+            document.getElementById('orderModalTitle').textContent = 'Order #' + order._id;
+
+            const orderDate = new Date(order.createdAt);
+            const deliveryDate = new Date((order.deliveryInfo && order.deliveryInfo.deliveryDate) || order.dateNeeded);
+
+            let itemsHtml = '';
+            for (let i = 0; i < order.items.length; i++) {
+                const item = order.items[i];
+                itemsHtml += '<div class="row mb-3">' +
+                    '<div class="col-2">' +
+                    '<img src="' + (item.image || 'images/default-preview.jpg') + '" alt="' + item.name + '" class="img-fluid rounded item-image" onerror="this.src=\'images/default-preview.jpg\'">' +
+                    '</div>' +
+                    '<div class="col-6">' +
+                    '<h6>' + item.name + '</h6>' +
+                    '<p class="text-muted mb-1">Quantity: ' + item.quantity + '</p>';
+                if (item.type === 'custom') {
+                    itemsHtml += '<div class="custom-details">' +
+                        '<p class="mb-1"><small>Cupcake: ' + item.details.cupcakeFlavor + ' (' + item.details.cupcakeColor + ')</small></p>' +
+                        '<p class="mb-1"><small>Icing: ' + item.details.icingFlavor + ' (' + item.details.icingColor + ')</small></p>';
+                    if (item.details.specialDecorations) {
+                        itemsHtml += '<p class="mb-1"><small>Decorations: ' + item.details.specialDecorations + '</small></p>';
+                    }
+                    itemsHtml += '</div>';
+                }
+                itemsHtml += '</div>' +
+                    '<div class="col-2 text-end"><span>$' + item.price.toFixed(2) + '</span></div>' +
+                    '<div class="col-2 text-end"><span>$' + (item.price * item.quantity).toFixed(2) + '</span></div>' +
+                    '</div>';
+            }
+
+            let timelineHtml = '';
+            const statusTimeline = [
+                { status: 'Order Placed', date: orderDate, completed: true },
+                { status: 'Order Confirmed', date: new Date(orderDate.getTime() + 3600000), completed: true },
+                { status: 'Processing', date: null, completed: false, active: order.status === 'processing' },
+                { status: 'Completed', date: null, completed: order.status === 'completed', active: false },
+                { status: 'Cancelled', date: null, completed: order.status === 'cancelled', active: false }
+            ];
+
+            for (let i = 0; i < statusTimeline.length; i++) {
+                const step = statusTimeline[i];
+                if (step.completed || step.active) {
+                    timelineHtml += '<div class="timeline-item ' + (step.completed ? 'completed' : '') + ' ' + (step.active ? 'active' : '') + '">' +
+                        '<div class="timeline-icon">' +
+                        '<i class="fas ' + (step.completed ? 'fa-check' : (step.active ? 'fa-spinner fa-spin' : 'fa-circle')) + '" aria-hidden="true"></i>' +
+                        '</div>' +
+                        '<div class="timeline-content">' +
+                        '<h5>' + step.status + '</h5>' +
+                        '<p>' + (step.date ? step.date.toLocaleString() : '') + '</p>' +
+                        '</div>' +
+                        '</div>';
+                }
+            }
+
+            document.getElementById('orderModalBody').innerHTML =
+                '<div class="row mb-4">' +
+                '<div class="col-md-6">' +
+                '<h3 class="h6">Customer Information</h3>' +
+                '<p><strong>Name:</strong> ' + (order.customer && order.customer.firstName ? order.customer.firstName : 'N/A') + ' ' + (order.customer && order.customer.lastName ? order.customer.lastName : '') + '</p>' +
+                '<p><strong>Email:</strong> ' + (order.customer && order.customer.email ? order.customer.email : 'N/A') + '</p>' +
+                '<p><strong>Phone:</strong> ' + (order.customer && order.customer.phone ? order.customer.phone : 'N/A') + '</p>' +
+                '<p><strong>Type:</strong> ' + (order.customer && order.customer.isGuest ? 'Guest' : 'Registered') + '</p>' +
+                '</div>' +
+                '<div class="col-md-6">' +
+                '<h3 class="h6">Delivery Information</h3>' +
+                '<p><strong>Type:</strong> ' + ((order.deliveryInfo && order.deliveryInfo.method) || 'N/A') + '</p>';
+
+            if (order.deliveryInfo && order.deliveryInfo.method === 'delivery') {
+                document.getElementById('orderModalBody').innerHTML +=
+                    '<p><strong>Address:</strong> ' + order.deliveryInfo.address + '</p>' +
+                    '<p><strong>City:</strong> ' + order.deliveryInfo.city + '</p>';
+            }
+
+            document.getElementById('orderModalBody').innerHTML +=
+                '<p><strong>Date Needed:</strong> ' + deliveryDate.toLocaleDateString() + '</p>' +
+                '<p><strong>Time Needed:</strong> ' + (order.timeNeeded || 'Anytime') + '</p>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="mb-4">' +
+                '<h3 class="h6">Order Items</h3>' +
+                itemsHtml +
+                '<div class="row mt-3">' +
+                '<div class="col-8"></div>' +
+                '<div class="col-2 text-end">' +
+                '<p><strong>Subtotal:</strong></p>' +
+                '<p>$' + this.calculateOrderTotal(order.items).toFixed(2) + '</p>' +
+                '<p><strong>Delivery Fee:</strong></p>' +
+                '<p>$' + ((order.deliveryInfo && order.deliveryInfo.method === 'delivery') ? '5.00' : '0.00') + '</p>' +
+                '<p><strong>Total:</strong></p>' +
+                '<p>$' + ((this.calculateOrderTotal(order.items)) + ((order.deliveryInfo && order.deliveryInfo.method === 'delivery') ? 5 : 0)).toFixed(2) + '</p>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+
+                '<div class="mb-3">' +
+                '<h3 class="h6">Special Instructions</h3>' +
+                '<p>' + (order.specialInstructions || 'None') + '</p>' +
+                '</div>';
+
+            modal.show();
+        } catch (error) {
+            console.error('Error fetching order details:', error);
+            this.showNotification('Error fetching order details: ' + error.message, 'error');
+        }
+    },
+
+    editOrder(orderId) {
+        this.showNotification('Edit order feature not implemented yet', 'info');
+    },
+
+    saveOrderChanges() {
+        this.showNotification('Save order changes feature not implemented yet', 'info');
+    },
+
+    calculateOrderTotal(items) {
+        let total = 0;
+        for (let i = 0; i < items.length; i++) {
+            total += items[i].price * items[i].quantity;
+        }
+        return total;
+    },
+
+    showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = 'alert alert-' + type + ' alert-dismissible fade show position-fixed';
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.zIndex = '9999';
+        notification.innerHTML = message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 150);
+        }, 5000);
+    },
+
+    async loadProducts() {
+        this.showNotification('Load products feature not implemented yet', 'info');
+    },
+
+    async loadCustomers() {
+        this.showNotification('Load customers feature not implemented yet', 'info');
+    },
+
+    async loadInventory() {
+        this.showNotification('Load inventory feature not implemented yet', 'info');
+    },
+
+    async loadReports() {
+        this.showNotification('Load reports feature not implemented yet', 'info');
+    },
+
+    async loadSettings() {
+        this.showNotification('Load settings feature not implemented yet', 'info');
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    AdminManager.init();
+});

@@ -4,7 +4,24 @@ const bcrypt = require('bcryptjs');
 const adminSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Please provide admin name'],
+        trim: true
+    },
+    firstName: {
+        type: String,
+        required: [true, 'Please provide first name'],
+        trim: true
+    },
+    lastName: {
+        type: String,
+        required: [true, 'Please provide last name'],
+        trim: true
+    },
+    phone: {
+        type: String,
+        trim: true
+    },
+    address: {
+        type: String,
         trim: true
     },
     email: {
@@ -59,7 +76,7 @@ adminSchema.pre('save', async function(next) {
     if (!this.isModified('password')) {
         return next();
     }
-    
+
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);

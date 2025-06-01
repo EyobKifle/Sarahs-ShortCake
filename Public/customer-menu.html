@@ -20,7 +20,7 @@
             --white: #FFFFFF;
             --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
         }
-        
+
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -29,12 +29,12 @@
             background-color: var(--light);
             line-height: 1.6;
         }
-        
+
         .dashboard-container {
             display: flex;
             min-height: 100vh;
         }
-        
+
         /* Sidebar Styles */
         .dashboard-sidebar {
             width: 250px;
@@ -48,29 +48,29 @@
             flex-direction: column;
             justify-content: space-between;
         }
-        
+
         .sidebar-header {
             padding: 0 1.5rem 1.5rem;
             border-bottom: 1px solid rgba(0,0,0,0.1);
             margin-bottom: 1rem;
         }
-        
+
         .sidebar-header h2 {
             color: var(--primary);
             margin-bottom: 0.5rem;
         }
-        
+
         .sidebar-header p {
             color: var(--dark);
             opacity: 0.8;
             font-size: 0.9rem;
         }
-        
+
         .sidebar-nav {
             padding: 0 1rem;
             flex-grow: 1;
         }
-        
+
         .nav-link {
             display: flex;
             align-items: center;
@@ -82,23 +82,23 @@
             transition: all 0.3s;
             font-weight: 500;
         }
-        
+
         .nav-link i {
             margin-right: 0.75rem;
             width: 20px;
             text-align: center;
         }
-        
+
         .nav-link:hover {
             background-color: rgba(255,107,139,0.1);
             color: var(--primary);
         }
-        
+
         .nav-link.active {
             background-color: var(--primary);
             color: white;
         }
-        
+
         /* Main Content Styles */
         .dashboard-main {
             flex: 1;
@@ -106,57 +106,57 @@
             background-color: var(--light);
             overflow-y: auto;
         }
-        
+
         .page-header {
             text-align: center;
             margin-bottom: 2rem;
         }
-        
+
         .page-header h2 {
             color: var(--primary);
             font-size: 2.2rem;
             margin-bottom: 0.5rem;
         }
-        
+
         .page-header .subtitle {
             color: var(--dark);
             opacity: 0.8;
             font-size: 1.1rem;
         }
-        
+
         .menu-container {
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .menu-section {
             margin-bottom: 3rem;
         }
-        
+
         .section-header {
             text-align: center;
             margin-bottom: 2rem;
         }
-        
+
         .section-header h3 {
             color: var(--primary);
             font-size: 1.8rem;
             margin-bottom: 0.5rem;
         }
-        
+
         .section-header p {
             color: var(--dark);
             opacity: 0.8;
             font-size: 1rem;
         }
-        
+
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             margin-top: 2rem;
         }
-        
+
         .menu-item {
             background: var(--white);
             border-radius: 15px;
@@ -166,33 +166,33 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .menu-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
-        
+
         .menu-item img {
             width: 100%;
             height: 200px;
             object-fit: cover;
             border-bottom: 3px solid var(--primary-light);
         }
-        
+
         .menu-item-content {
             padding: 1.5rem;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
-        
+
         .menu-item-title {
             font-size: 1.2rem;
             margin-bottom: 0.5rem;
             color: var(--primary);
             font-weight: 600;
         }
-        
+
         .menu-item-description {
             color: var(--dark);
             margin-bottom: 1rem;
@@ -200,21 +200,21 @@
             line-height: 1.4;
             flex-grow: 1;
         }
-        
+
         .menu-item-price {
             font-weight: bold;
             color: var(--primary-dark);
             margin-bottom: 1rem;
             font-size: 1.1rem;
         }
-        
+
         .quantity-control {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 1rem;
         }
-        
+
         .quantity-btn {
             background: var(--primary);
             color: white;
@@ -229,11 +229,11 @@
             justify-content: center;
             font-size: 1rem;
         }
-        
+
         .quantity-btn:hover {
             background: var(--primary-dark);
         }
-        
+
         .quantity-input {
             width: 50px;
             text-align: center;
@@ -245,13 +245,13 @@
             -webkit-appearance: textfield;
             appearance: textfield;
         }
-        
+
         .quantity-input::-webkit-outer-spin-button,
         .quantity-input::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
-        
+
         .add-to-cart {
             width: 100%;
             padding: 0.75rem;
@@ -263,12 +263,16 @@
             transition: background-color 0.3s ease;
             font-weight: 600;
             font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
-        
+
         .add-to-cart:hover {
             background: var(--primary-dark);
         }
-        
+
         /* Custom Order Section */
         .custom-order {
             background: var(--white);
@@ -277,23 +281,23 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             margin-top: 3rem;
         }
-        
+
         .custom-order-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             color: var(--primary);
         }
-        
+
         .form-group input,
         .form-group select,
         .form-group textarea {
@@ -303,7 +307,7 @@
             border-radius: 5px;
             font-size: 1rem;
         }
-        
+
         /* Cupcake Visualization */
         .cupcake-visualization {
             display: flex;
@@ -315,18 +319,18 @@
             box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
             position: relative;
         }
-        
+
         .cupcake-container {
             position: relative;
             width: 400px;
             height: 400px;
             transition: transform 0.3s ease;
         }
-        
+
         .cupcake-container:hover {
             transform: scale(1.05);
         }
-        
+
         .cupcake-base {
             position: absolute;
             bottom: 21px;
@@ -337,7 +341,7 @@
             background: #8B4513;
             clip-path: polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%);
         }
-        
+
         .cloud-icing {
             position: absolute;
             bottom: 161px;
@@ -350,7 +354,7 @@
             filter: drop-shadow(0 3px 2px rgba(0,0,0,0.2));
             overflow: hidden;
         }
-        
+
         .cloud-icing::before {
             content: '';
             position: absolute;
@@ -362,7 +366,7 @@
             border-radius: 50%;
             filter: blur(5px);
         }
-        
+
         .cloud-icing::after {
             content: '';
             position: absolute;
@@ -374,7 +378,7 @@
             border-radius: 50% 50% 0 0;
             transform: translateY(30px);
         }
-        
+
         /* Notification Styles */
         .notification {
             position: fixed;
@@ -392,59 +396,59 @@
             opacity: 0;
             transition: all 0.3s ease;
         }
-        
+
         .notification.show {
             transform: translateX(0);
             opacity: 1;
         }
-        
+
         .notification.success {
             background-color: #4CAF50;
         }
-        
+
         .notification.error {
             background-color: #f44336;
         }
-        
+
         @media (max-width: 768px) {
             .dashboard-container {
                 flex-direction: column;
             }
-            
+
             .dashboard-sidebar {
                 width: 100%;
                 height: auto;
                 position: relative;
             }
-            
+
             .custom-order-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .cupcake-container {
                 width: 300px;
                 height: 300px;
             }
-            
+
             .cupcake-base {
                 width: 150px;
                 height: 120px;
                 bottom: 16px;
             }
-            
+
             .cloud-icing {
                 width: 180px;
                 height: 90px;
                 bottom: 121px;
             }
-            
+
             .cloud-icing::before {
                 bottom: -8px;
                 left: -8px;
                 right: -8px;
                 height: 24px;
             }
-            
+
             .cloud-icing::after {
                 left: -15px;
                 right: -15px;
@@ -470,31 +474,27 @@
                     });
             });
         </script>
-        
+
         <!-- Main Content -->
         <main class="dashboard-main">
             <div class="page-header">
                 <h2><i class="fas fa-cake-candles"></i> Our Menu</h2>
                 <p class="subtitle">Discover our delicious selection of cupcakes</p>
             </div>
-            
+
             <div class="menu-container">
                 <section class="menu-section">
-                    <div class="section-header">
-                        <h3><i class="fas fa-cookie"></i> Cupcake Flavors</h3>
-                        <p>Choose from our selection of delicious cake bases</p>
-                    </div>
                     <div class="menu-grid" id="menu-grid">
                         <!-- Menu items will be populated by JavaScript -->
                     </div>
                 </section>
-                
+
                 <section class="custom-order">
                     <div class="section-header">
                         <h2><i class="fas fa-birthday-cake"></i> Custom Cakes</h2>
                         <p>Create your perfect cake with our customization options</p>
                     </div>
-                    
+
                     <div class="custom-order-grid">
                         <div class="cupcake-visualization">
                             <div class="cupcake-container">
@@ -502,7 +502,7 @@
                                 <div class="cloud-icing" id="cakeIcing"></div>
                             </div>
                         </div>
-                        
+
                         <form id="customCakeForm">
                             <div class="form-section">
                                 <legend><i class="fas fa-cookie"></i> Base Flavor & Color</legend>
@@ -528,7 +528,7 @@
                                         <option value="mississippi-mud">Mississippi Mud</option>
                                     </select>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="baseColor">Base Color</label>
                                     <select id="baseColor" name="baseColor" required>
@@ -551,7 +551,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="form-section">
                                 <legend><i class="fas fa-layer-group"></i> Icing & Color</legend>
                                 <div class="form-group">
@@ -569,7 +569,7 @@
                                         <option value="coconut-pecan">Coconut Pecan</option>
                                     </select>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="icingColor">Icing Color</label>
                                     <select id="icingColor" name="icingColor" required>
@@ -586,7 +586,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="form-section">
                                 <legend><i class="fas fa-magic"></i> Decorations</legend>
                                 <div class="form-group">
@@ -608,10 +608,10 @@
                                         <option value="holiday">Holiday Design</option>
                                     </select>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="specialInstructions">Special Instructions</label>
-                                    <textarea id="specialInstructions" name="specialInstructions" rows="3" 
+                                    <textarea id="specialInstructions" name="specialInstructions" rows="3"
                                             placeholder="Any specific requirements or preferences?"></textarea>
                                 </div>
 
@@ -624,7 +624,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-actions">
                                 <button type="submit" class="add-to-cart">
                                     <i class="fas fa-shopping-cart"></i> Add to Cart
@@ -636,13 +636,13 @@
             </div>
         </main>
     </div>
-    
+
     <!-- Notification System -->
     <div id="notification" class="notification">
         <i id="notification-icon" class="fas fa-check-circle"></i>
         <span id="notification-message"></span>
     </div>
-    
+
 
     <script>
         // Menu items data
@@ -772,7 +772,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize menu items
             const menuGrid = document.getElementById('menu-grid');
-            
+
             menuItems.forEach(item => {
                 const menuItem = document.createElement('div');
                 menuItem.className = 'menu-item';
@@ -800,12 +800,12 @@
                 if (e.target.classList.contains('add-to-cart')) {
                     const itemData = JSON.parse(e.target.dataset.item);
                     const quantity = parseInt(e.target.closest('.menu-item').querySelector('.quantity-input').value);
-                    
+
                     const cartItem = {
                         ...itemData,
                         quantity: quantity
                     };
-                    
+
                     try {
                         if (CartManager.addItem(cartItem)) {
                             showNotification('Item added to cart!', 'success');
@@ -818,13 +818,13 @@
                         showNotification('Error adding to cart', 'error');
                     }
                 }
-                
+
                 // Quantity button handlers
                 if (e.target.classList.contains('minus')) {
                     const input = e.target.nextElementSibling;
                     if (input.value > 1) input.value = parseInt(input.value) - 1;
                 }
-                
+
                 if (e.target.classList.contains('plus')) {
                     const input = e.target.previousElementSibling;
                     if (input.value < 12) input.value = parseInt(input.value) + 1;
@@ -838,7 +838,7 @@
                 document.getElementById('baseColor').addEventListener('change', function() {
                     document.getElementById('cakeBase').style.backgroundColor = this.value;
                 });
-                
+
                 document.getElementById('icingColor').addEventListener('change', function() {
                     document.getElementById('cakeIcing').style.backgroundColor = this.value;
                 });
@@ -847,7 +847,7 @@
                 customCakeForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     const formData = new FormData(customCakeForm);
-                    
+
                     const customCake = {
                         id: `custom-${Date.now()}`,
                         name: 'Custom Cake',
@@ -885,31 +885,31 @@
         function calculateCustomCakePrice(formData) {
             // Base price for custom cakes
             let price = 25.00;
-            
+
             // Add pricing based on selections if needed
             const flavor = formData.get('flavor');
             const icing = formData.get('icing');
             const decorations = formData.get('decorations');
-            
+
             // Example pricing adjustments
             if (flavor === 'red-velvet' || flavor === 'french-vanilla') {
                 price += 2.00;
             } else if (flavor === 'chocolate-cheesecake' || flavor === 'mississippi-mud') {
                 price += 3.00;
             }
-            
+
             if (icing === 'fondant') {
                 price += 5.00;
             } else if (icing === 'ganache') {
                 price += 3.00;
             }
-            
+
             if (decorations === 'floral' || decorations === 'geometric') {
                 price += 4.00;
             } else if (decorations === 'custom' || decorations === 'themed') {
                 price += 6.00;
             }
-            
+
             return price;
         }
 
@@ -942,16 +942,16 @@
             const notification = document.getElementById('notification');
             const icon = document.getElementById('notification-icon');
             const msg = document.getElementById('notification-message');
-            
+
             if (!notification) return;
-            
+
             notification.className = `notification ${type}`;
             msg.textContent = message;
             icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
-            
+
             notification.style.display = 'flex';
             setTimeout(() => notification.classList.add('show'), 10);
-            
+
             setTimeout(() => {
                 notification.classList.remove('show');
                 setTimeout(() => notification.style.display = 'none', 300);
@@ -967,6 +967,11 @@
             }
         }
     </script>
+
+    <!-- Unified Authentication Client -->
+    <script src="js/auth-client.js"></script>
+    <script src="js/auth-guard.js"></script>
     <script src="js/customer-cart.js"></script>
+    <script src="js/customer-menu.js"></script>
 </body>
 </html>

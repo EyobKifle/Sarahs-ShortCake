@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // Check if user is already authenticated
+  checkExistingAuth();
+
   // DOM Elements
   const authTabs = document.querySelectorAll('.auth-tab');
   const forms = document.querySelectorAll('form');
@@ -24,6 +27,32 @@ document.addEventListener('DOMContentLoaded', function() {
   setupEventListeners();
   renderView();
 
+  // Check if user is already authenticated and redirect using unified auth client
+  async function checkExistingAuth() {
+    try {
+      if (authClient.isAuthenticated) {
+        console.log('User already authenticated, checking validity...');
+
+        const isValid = await authClient.checkAuth();
+        if (isValid) {
+          console.log('Valid authentication found, redirecting...');
+
+          if (authClient.isAdmin()) {
+            window.location.href = '/admin.html';
+          } else {
+            window.location.href = '/customer-dashboard.html';
+          }
+        } else {
+          console.log('Invalid authentication, clearing...');
+          authClient.clearAuth();
+        }
+      }
+    } catch (error) {
+      console.error('Error checking existing auth:', error);
+      authClient.clearAuth();
+    }
+  }
+
   function setupEventListeners() {
     // Toggle password visibility
     document.querySelectorAll('.toggle-password').forEach(toggle => {
@@ -39,10 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Password strength checker
     passwordInput.addEventListener('input', checkPasswordStrength);
-    
+
     // Password match checker
     confirmPasswordInput.addEventListener('input', checkPasswordMatch);
-    
+
     // Tab switching
     authTabs.forEach(tab => {
       tab.addEventListener('click', function() {
@@ -92,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function checkPasswordStrength() {
     const password = passwordInput.value;
     let strength = 0;
-    
+
     // Check password length
     if (password.length >= 8) {
       strength += 1;
@@ -100,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       passwordHints.length.classList.remove('valid');
     }
-    
+
     // Check for uppercase letters
     if (/[A-Z]/.test(password)) {
       strength += 1;
@@ -108,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       passwordHints.uppercase.classList.remove('valid');
     }
-    
+
     // Check for numbers
     if (/\d/.test(password)) {
       strength += 1;
@@ -116,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       passwordHints.number.classList.remove('valid');
     }
-    
+
     // Check for special characters
     if (/[^A-Za-z0-9]/.test(password)) {
       strength += 1;
@@ -124,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       passwordHints.special.classList.remove('valid');
     }
-    
+
     // Update strength meter
     passwordStrength.className = 'password-strength';
     if (password.length > 0) {
@@ -136,14 +165,14 @@ document.addEventListener('DOMContentLoaded', function() {
         passwordStrength.classList.add('strong');
       }
     }
-    
+
     validateSignupForm();
   }
 
   function checkPasswordMatch() {
     const password = passwordInput.value;
     const confirmPassword = confirmPasswordInput.value;
-    
+
     if (password && confirmPassword && password !== confirmPassword) {
       passwordMatch.style.display = 'block';
       return false;
@@ -157,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const name = document.getElementById('signup-name').value.trim();
     const email = document.getElementById('signup-email').value.trim();
     const password = passwordInput.value;
-    const isStrong = passwordStrength.classList.contains('medium') || 
+    const isStrong = passwordStrength.classList.contains('medium') ||
                     passwordStrength.classList.contains('strong');
     const passwordsMatch = checkPasswordMatch();
 
@@ -169,45 +198,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitButton = e.target.querySelector('.auth-submit');
     const buttonText = submitButton.querySelector('.button-text');
     const originalText = buttonText.textContent;
-    
+
     submitButton.disabled = true;
     buttonText.textContent = 'Logging in...';
-    
+
     try {
       const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value;
-      
+
       if (!email || !password) {
         throw new Error('Please enter both email and password');
       }
-      
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Login failed with status ${response.status}`);
+
+      console.log('🔐 Attempting login with unified auth client');
+
+      // Determine user type based on email or use auto-detection
+      let userType = 'auto';
+      if (email.toLowerCase().includes('admin')) {
+        userType = 'admin';
       }
-      
-      const data = await response.json();
-      
-      localStorage.setItem('token', data.token);
-      const userWithName = {
-        ...data.user,
-        name: `${data.user.firstName || ''} ${data.user.lastName || ''}`.trim()
-      };
-      localStorage.setItem('user', JSON.stringify(userWithName));
-      
-      if (data.user.role === 'admin') {
-        window.location.href = '/Admin/admin.html';
+
+      // Use unified auth client for login
+      const result = await authClient.login(email, password, userType);
+
+      if (result.success) {
+        console.log('✅ Login successful, redirecting to:', result.redirectUrl);
+        showAlert('success', 'Login successful! Redirecting...');
+
+        setTimeout(() => {
+          window.location.href = result.redirectUrl;
+        }, 1000);
       } else {
-        window.location.href = '/customer-dashboard.html';
+        throw new Error(result.message || 'Login failed');
       }
-      
+
     } catch (error) {
+      console.error('❌ Login error:', error);
       showAlert('error', error.message || 'Login failed. Please try again.');
     } finally {
       submitButton.disabled = false;
@@ -220,56 +246,62 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitButton = e.target.querySelector('.auth-submit');
     const buttonText = submitButton.querySelector('.button-text');
     const originalText = buttonText.textContent;
-    
+
     if (submitButton.disabled) return;
-    
+
     submitButton.disabled = true;
     buttonText.textContent = 'Creating account...';
-    
+
     try {
       const name = document.getElementById('signup-name').value.trim();
       const email = document.getElementById('signup-email').value.trim();
+      const phone = document.getElementById('signup-phone').value.trim();
       const password = document.getElementById('signup-password').value;
-      
-      if (!name || !email || !password) {
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (!name || !email || !phone || !password || !confirmPassword) {
         throw new Error('Please fill all required fields');
       }
-      
+
+      if (password !== confirmPassword) {
+        throw new Error('Passwords do not match');
+      }
+
       if (password.length < 8) {
         throw new Error('Password must be at least 8 characters');
       }
-      
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          firstName: name, 
-          lastName: '', 
-          email, 
-          password 
-        })
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Registration failed with status ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      localStorage.setItem('token', data.token);
-      const userWithName = {
-        ...data.user,
-        name: `${data.user.firstName || ''} ${data.user.lastName || ''}`.trim()
+
+      console.log('📝 Attempting registration with unified auth client');
+
+      // Split name into first and last name
+      const nameParts = name.split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        phone,
+        password
       };
-      localStorage.setItem('user', JSON.stringify(userWithName));
-      
-      showAlert('success', 'Account created successfully! Redirecting...');
-      setTimeout(() => {
-        window.location.href = '/customer-dashboard.html';
-      }, 1500);
-      
+
+      // Use unified auth client for registration
+      const result = await authClient.register(userData);
+
+      if (result.success) {
+        console.log('✅ Registration successful, redirecting to:', result.redirectUrl);
+        showAlert('success', 'Account created successfully! Redirecting...');
+
+        setTimeout(() => {
+          window.location.href = result.redirectUrl;
+        }, 1500);
+      } else {
+        throw new Error(result.message || 'Registration failed');
+      }
+
     } catch (error) {
+      console.error('❌ Registration error:', error);
       showAlert('error', error.message || 'Registration failed. Please try again.');
     } finally {
       submitButton.disabled = false;
@@ -279,18 +311,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function showAlert(type, message) {
     clearAlerts();
-    
+
     const alertEl = document.createElement('div');
     alertEl.className = `alert ${type}`;
-    
+
     const icon = type === 'error' ? 'exclamation-circle' : 'check-circle';
     alertEl.innerHTML = `
       <i class="fas fa-${icon}"></i>
       <span>${message}</span>
     `;
-    
+
     alertContainer.appendChild(alertEl);
-    
+
     if (type !== 'error') {
       setTimeout(() => {
         alertEl.style.opacity = '0';

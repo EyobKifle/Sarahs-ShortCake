@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Fetch products from backend API
+    // Disabled fetching products from backend API to show only inline menu items
+    /*
     fetch('/api/products')
         .then(response => {
             if (!response.ok) {
@@ -54,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error loading products:', error);
             menuGrid.innerHTML = '<p>Failed to load products. Please try again later.</p>';
         });
+    */
 
     // Add to cart functionality delegated to document
     document.addEventListener('click', function(e) {

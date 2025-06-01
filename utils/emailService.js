@@ -25,13 +25,13 @@ exports.sendOrderConfirmation = async (order, customer) => {
         html: `
             <h1>Thank you for your order, ${customer.firstName}!</h1>
             <p>We're busy preparing your delicious cupcakes and will notify you when they're ready.</p>
-            
+
             <h2>Order Details</h2>
             <p><strong>Order #:</strong> ${order._id.toString().slice(-6)}</p>
-            <p><strong>Pickup/Delivery:</strong> ${order.deliveryOption === 'delivery' ? 
+            <p><strong>Pickup/Delivery:</strong> ${order.deliveryOption === 'delivery' ?
                 `Delivery to ${customer.streetAddress}, ${customer.city}` : 'Store Pickup'}</p>
             <p><strong>Date/Time:</strong> ${order.neededDate.toDateString()} at ${order.neededTime}</p>
-            
+
             <h3>Items</h3>
             <ul>
                 ${order.items.map(item => `
@@ -44,9 +44,9 @@ exports.sendOrderConfirmation = async (order, customer) => {
                     </li>
                 `).join('')}
             </ul>
-            
+
             <p><strong>Total:</strong> $${order.totalPrice.toFixed(2)}</p>
-            
+
             <p>If you have any questions, please reply to this email or call us at (555) 123-4567.</p>
             <p>We hope you enjoy your cupcakes!</p>
             <p>- The Sarah's Short Cakes Team</p>
@@ -128,6 +128,30 @@ exports.sendPickupReady = async (to, orderId) => {
         console.log(`Pickup ready email sent to ${to}`);
     } catch (error) {
         console.error('Error sending pickup ready email:', error);
+        throw error;
+    }
+};
+
+/**
+ * Generic email sending function
+ * @param {string} to - Recipient email address
+ * @param {string} subject - Email subject
+ * @param {string} htmlContent - HTML content of the email
+ * @returns {Promise} Promise that resolves when email is sent
+ */
+exports.sendEmail = async (to, subject, htmlContent) => {
+    const mailOptions = {
+        from: `"Sarah's Short Cakes" <${process.env.EMAIL_FROM}>`,
+        to,
+        subject,
+        html: htmlContent
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log(`Email sent to ${to} with subject: ${subject}`);
+    } catch (error) {
+        console.error('Error sending email:', error);
         throw error;
     }
 };

@@ -252,7 +252,7 @@ function setTextContentById(id, text) {
 function updateTrackOrderButton(orderId) {
     const trackBtn = document.getElementById('track-order-btn');
     if (trackBtn && orderId) {
-        trackBtn.href = `track.html?orderId=${encodeURIComponent(orderId)}`;
+        trackBtn.href = `order.html?orderId=${encodeURIComponent(orderId)}`;
     }
 }
 

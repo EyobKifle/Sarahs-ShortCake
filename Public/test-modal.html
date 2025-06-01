@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Contact Modal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Contact Modal Test</h1>
+        <p>This page tests the contact message modal functionality.</p>
+        
+        <div class="alert alert-info">
+            <h5>Test Instructions:</h5>
+            <ol>
+                <li>Open browser console (F12)</li>
+                <li>Click the "Test Modal" button below</li>
+                <li>Check console for debug messages</li>
+                <li>Modal should appear with test message</li>
+            </ol>
+        </div>
+        
+        <button id="testModalBtn" class="btn btn-primary">
+            <i class="fas fa-eye me-2"></i>Test Modal
+        </button>
+        
+        <div class="mt-4">
+            <h5>Debug Info:</h5>
+            <div id="debugInfo" class="bg-light p-3 rounded">
+                <p>Bootstrap loaded: <span id="bootstrapStatus">Checking...</span></p>
+                <p>Contact Management: <span id="contactMgmtStatus">Checking...</span></p>
+                <p>Test message created: <span id="testMsgStatus">Checking...</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/modules/contact-management.js"></script>
+    
+    <script>
+        // Test the modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧪 Starting modal test...');
+            
+            // Check Bootstrap
+            const bootstrapStatus = document.getElementById('bootstrapStatus');
+            if (typeof bootstrap !== 'undefined') {
+                bootstrapStatus.textContent = '✅ Loaded';
+                bootstrapStatus.className = 'text-success';
+            } else {
+                bootstrapStatus.textContent = '❌ Not loaded';
+                bootstrapStatus.className = 'text-danger';
+            }
+            
+            // Check Contact Management
+            const contactMgmtStatus = document.getElementById('contactMgmtStatus');
+            if (typeof ContactManagement !== 'undefined') {
+                contactMgmtStatus.textContent = '✅ Available';
+                contactMgmtStatus.className = 'text-success';
+            } else {
+                contactMgmtStatus.textContent = '❌ Not available';
+                contactMgmtStatus.className = 'text-danger';
+            }
+            
+            // Create test message
+            const testMessage = {
+                _id: 'test-message-123',
+                name: 'Test User',
+                email: 'test@example.com',
+                phone: '+1234567890',
+                subject: 'Test Message Subject',
+                message: 'This is a test message to verify the modal functionality is working correctly.',
+                status: 'new',
+                isRead: false,
+                createdAt: new Date().toISOString(),
+                readAt: null,
+                repliedAt: null,
+                reply: null
+            };
+            
+            const testMsgStatus = document.getElementById('testMsgStatus');
+            testMsgStatus.textContent = '✅ Created';
+            testMsgStatus.className = 'text-success';
+            
+            // Create contact management instance
+            let contactMgmt = null;
+            try {
+                contactMgmt = new ContactManagement();
+                contactMgmt.messages = [testMessage];
+                console.log('✅ Contact management instance created');
+            } catch (error) {
+                console.error('❌ Error creating contact management:', error);
+            }
+            
+            // Test button click handler
+            document.getElementById('testModalBtn').addEventListener('click', function() {
+                console.log('🔘 Test button clicked');
+                
+                if (!contactMgmt) {
+                    alert('Contact management not available');
+                    return;
+                }
+                
+                try {
+                    console.log('🚀 Calling viewMessage...');
+                    contactMgmt.viewMessage('test-message-123');
+                } catch (error) {
+                    console.error('❌ Error calling viewMessage:', error);
+                    alert('Error: ' + error.message);
+                }
+            });
+            
+            console.log('🧪 Test setup complete');
+        });
+    </script>
+</body>
+</html>

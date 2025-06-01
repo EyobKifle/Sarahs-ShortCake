@@ -25,11 +25,11 @@
             --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
             --transition: all 0.3s ease;
         }
-        
+
         * {
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -41,7 +41,7 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         /* Header Styles - Consistent with index.html */
         header {
             background-color: white;
@@ -51,7 +51,7 @@
             top: 0;
             z-index: 1000;
         }
-        
+
         .header-container {
             display: flex;
             justify-content: space-between;
@@ -60,23 +60,23 @@
             margin: 0 auto;
             padding: 0 2rem;
         }
-        
+
         .logo-container {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        
+
         .logo {
             height: 50px;
             width: auto;
             transition: var(--transition);
         }
-        
+
         .logo:hover {
             transform: scale(1.05);
         }
-        
+
         nav ul {
             display: flex;
             gap: 2rem;
@@ -85,7 +85,7 @@
             margin: 0;
             padding: 0;
         }
-        
+
         nav a {
             text-decoration: none;
             color: var(--dark);
@@ -95,7 +95,7 @@
             position: relative;
             font-size: 1rem;
         }
-        
+
         nav a:after {
             content: '';
             position: absolute;
@@ -106,30 +106,30 @@
             background-color: var(--primary);
             transition: var(--transition);
         }
-        
+
         nav a:hover:after {
             width: 100%;
         }
-        
+
         nav a.active {
             color: var(--primary);
             font-weight: 600;
         }
-        
+
         .cart-icon {
             position: relative;
         }
-        
+
         .cart-icon a {
             color: var(--dark);
             font-size: 1.25rem;
             transition: var(--transition);
         }
-        
+
         .cart-icon a:hover {
             color: var(--primary);
         }
-        
+
         .cart-count {
             position: absolute;
             top: -8px;
@@ -145,7 +145,7 @@
             font-size: 0.7rem;
             font-weight: bold;
         }
-        
+
         /* Main Cart Content */
         main {
             flex: 1;
@@ -154,7 +154,7 @@
             padding: 0 2rem;
             width: 100%;
         }
-        
+
         .cart-title {
             font-size: 2rem;
             color: var(--dark);
@@ -162,7 +162,7 @@
             text-align: center;
             font-weight: 600;
         }
-        
+
         .cart-container {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -192,14 +192,14 @@
             font-size: 1.5rem;
             color: var(--dark);
         }
-        
+
         /* Empty Cart State */
         .cart-empty {
             text-align: center;
             padding: 3rem 1rem;
             display: none;
         }
-        
+
         .cart-empty-content {
             background: white;
             padding: 2rem;
@@ -208,26 +208,26 @@
             max-width: 500px;
             margin: 0 auto;
         }
-        
+
         .cart-empty i {
             font-size: 4rem;
             color: var(--primary-light);
             margin-bottom: 1rem;
         }
-        
+
         .cart-empty h3 {
             color: var(--dark);
             font-size: 1.5rem;
             margin-bottom: 1rem;
         }
-        
+
         .cart-empty p {
             font-size: 1rem;
             color: #666;
             margin-bottom: 2rem;
             line-height: 1.6;
         }
-        
+
         .continue-shopping {
             display: inline-block;
             background-color: var(--primary);
@@ -241,13 +241,13 @@
             cursor: pointer;
             font-size: 1rem;
         }
-        
+
         .continue-shopping:hover {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: var(--shadow-sm);
         }
-        
+
         /* Cart Item Styles */
         .cart-item {
             display: grid;
@@ -258,11 +258,11 @@
             align-items: center;
             animation: fadeIn 0.3s ease forwards;
         }
-        
+
         .cart-item:last-child {
             border-bottom: none;
         }
-        
+
         .item-image-container {
             position: relative;
             width: 100px;
@@ -271,18 +271,18 @@
             overflow: hidden;
             box-shadow: var(--shadow-sm);
         }
-        
+
         .item-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s;
         }
-        
+
         .item-image-container:hover .item-image {
             transform: scale(1.05);
         }
-        
+
         .item-badge {
             position: absolute;
             top: -8px;
@@ -299,50 +299,50 @@
             font-weight: bold;
             box-shadow: var(--shadow-sm);
         }
-        
+
         .item-details {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
         }
-        
+
         .item-name {
             font-weight: 600;
             color: var(--dark);
             font-size: 1.1rem;
             margin: 0;
         }
-        
+
         .item-customization {
             margin-top: 0.5rem;
             font-size: 0.85rem;
             color: #666;
         }
-        
+
         .item-customization p {
             margin: 0.2rem 0;
         }
-        
+
         .item-controls {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             gap: 1rem;
         }
-        
+
         .item-price {
             color: var(--primary-dark);
             font-weight: 600;
             font-size: 1.1rem;
             white-space: nowrap;
         }
-        
+
         .quantity-controls {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         .quantity-btn {
             background: none;
             border: 1px solid #ddd;
@@ -356,19 +356,19 @@
             transition: var(--transition);
             font-size: 0.9rem;
         }
-        
+
         .quantity-btn:hover {
             background-color: var(--primary-light);
             color: white;
             border-color: var(--primary-light);
         }
-        
+
         .quantity-value {
             min-width: 20px;
             text-align: center;
             font-weight: 500;
         }
-        
+
         .remove-item {
             color: #999;
             background: none;
@@ -381,11 +381,11 @@
             align-items: center;
             gap: 0.3rem;
         }
-        
+
         .remove-item:hover {
             color: var(--primary-dark);
         }
-        
+
         /* Checkout Section */
         .checkout-section {
             background: white;
@@ -395,7 +395,7 @@
             position: sticky;
             top: 120px;
         }
-        
+
         .checkout-section h2 {
             color: var(--dark);
             font-size: 1.5rem;
@@ -403,22 +403,22 @@
             padding-bottom: 1rem;
             border-bottom: 1px solid #eee;
         }
-        
+
         .form-section {
             margin-bottom: 1.5rem;
         }
-        
+
         .form-section h3 {
             color: var(--dark);
             margin-bottom: 1rem;
             font-size: 1.1rem;
             font-weight: 600;
         }
-        
+
         .form-group {
             margin-bottom: 1rem;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
@@ -426,7 +426,7 @@
             font-weight: 500;
             font-size: 0.9rem;
         }
-        
+
         .form-group input,
         .form-group select,
         .form-group textarea {
@@ -438,7 +438,7 @@
             transition: var(--transition);
             font-family: 'Poppins', sans-serif;
         }
-        
+
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
@@ -446,13 +446,13 @@
             outline: none;
             box-shadow: 0 0 0 2px rgba(255, 107, 139, 0.2);
         }
-        
+
         .delivery-options {
             display: flex;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        
+
         .delivery-option {
             flex: 1;
             padding: 1rem;
@@ -462,39 +462,39 @@
             transition: var(--transition);
             text-align: center;
         }
-        
+
         .delivery-option:hover,
         .delivery-option.selected {
             border-color: var(--primary);
             background-color: rgba(255, 107, 139, 0.05);
         }
-        
+
         .delivery-option i {
             font-size: 1.5rem;
             color: var(--primary);
             margin-bottom: 0.5rem;
         }
-        
+
         .delivery-option h4 {
             margin: 0.5rem 0;
             color: var(--dark);
             font-size: 1rem;
             font-weight: 600;
         }
-        
+
         .delivery-option p {
             margin: 0;
             font-size: 0.85rem;
             color: #666;
         }
-        
+
         /* Payment Options */
         .payment-options {
             display: flex;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        
+
         .payment-option {
             flex: 1;
             padding: 1rem;
@@ -504,46 +504,46 @@
             transition: var(--transition);
             text-align: center;
         }
-        
+
         .payment-option:hover,
         .payment-option.selected {
             border-color: var(--primary);
             background-color: rgba(255, 107, 139, 0.05);
         }
-        
+
         .payment-option i {
             font-size: 1.5rem;
             color: var(--primary);
             margin-bottom: 0.5rem;
         }
-        
+
         .payment-option h4 {
             margin: 0.5rem 0;
             color: var(--dark);
             font-size: 1rem;
             font-weight: 600;
         }
-        
+
         .payment-option p {
             margin: 0;
             font-size: 0.85rem;
             color: #666;
         }
-        
+
         /* Order Summary */
         .cart-summary {
             margin-top: 2rem;
             padding-top: 1.5rem;
             border-top: 1px solid #eee;
         }
-        
+
         .summary-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 0.75rem;
             font-size: 0.95rem;
         }
-        
+
         .summary-total {
             font-size: 1.2rem;
             font-weight: 600;
@@ -552,7 +552,7 @@
             padding-top: 1rem;
             border-top: 1px solid #eee;
         }
-        
+
         .checkout-btn {
             width: 100%;
             padding: 1rem;
@@ -567,20 +567,20 @@
             margin-top: 1.5rem;
             box-shadow: var(--shadow-sm);
         }
-        
+
         .checkout-btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
-        
+
         .checkout-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
-        
+
         /* Footer Styles - Consistent with index.html */
         footer {
             background-color: var(--dark);
@@ -588,7 +588,7 @@
             padding: 3rem 2rem 1.5rem;
             margin-top: 3rem;
         }
-        
+
         .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -596,30 +596,30 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .footer-logo {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-        
+
         .footer-logo img {
             height: 40px;
         }
-        
+
         .footer-logo h3 {
             color: white;
             font-size: 1.5rem;
             margin: 0;
         }
-        
+
         .footer-logo p {
             margin: 0.5rem 0 0;
             opacity: 0.8;
             font-size: 0.9rem;
         }
-        
+
         .footer-links h3,
         .footer-contact h3,
         .footer-social h3 {
@@ -628,7 +628,7 @@
             margin-bottom: 1rem;
             font-weight: 600;
         }
-        
+
         .footer-links ul {
             list-style: none;
             padding: 0;
@@ -637,7 +637,7 @@
             flex-direction: column;
             gap: 0.5rem;
         }
-        
+
         .footer-links a {
             color: white;
             text-decoration: none;
@@ -646,12 +646,12 @@
             display: inline-block;
             padding: 0.2rem 0;
         }
-        
+
         .footer-links a:hover {
             color: var(--primary);
             transform: translateX(5px);
         }
-        
+
         .footer-contact p {
             margin: 0.5rem 0;
             display: flex;
@@ -660,17 +660,17 @@
             font-size: 0.95rem;
             opacity: 0.9;
         }
-        
+
         .footer-contact i {
             width: 20px;
             text-align: center;
         }
-        
+
         .social-icons {
             display: flex;
             gap: 1rem;
         }
-        
+
         .social-icons a {
             color: white;
             font-size: 1.2rem;
@@ -683,53 +683,53 @@
             justify-content: center;
             background: rgba(255,255,255,0.1);
         }
-        
+
         .social-icons a:hover {
             color: var(--primary);
             background: rgba(255,255,255,0.2);
             transform: translateY(-3px);
         }
-        
+
         .footer-bottom {
             text-align: center;
             margin-top: 2rem;
             padding-top: 1.5rem;
             border-top: 1px solid rgba(255,255,255,0.1);
         }
-        
+
         .footer-bottom p {
             margin: 0;
             font-size: 0.85rem;
             opacity: 0.7;
         }
-        
+
         /* Responsive Styles */
         @media (max-width: 992px) {
             .cart-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .checkout-section {
                 position: static;
                 margin-top: 2rem;
             }
         }
-        
+
         @media (max-width: 768px) {
             .header-container {
                 padding: 0 1rem;
             }
-            
+
             nav ul {
                 gap: 1rem;
             }
-            
+
             .cart-item {
                 grid-template-columns: 80px 1fr;
                 grid-template-rows: auto auto;
                 gap: 1rem;
             }
-            
+
             .item-controls {
                 grid-column: 1 / -1;
                 flex-direction: row;
@@ -739,47 +739,124 @@
                 padding-top: 0.5rem;
                 border-top: 1px dashed #eee;
             }
-            
+
             .delivery-options,
             .payment-options {
                 flex-direction: column;
             }
-            
+
             .footer-content {
                 grid-template-columns: 1fr 1fr;
             }
         }
-        
+
         @media (max-width: 576px) {
             main {
                 padding: 0 1rem;
             }
-            
+
             .cart-items,
             .checkout-section {
                 padding: 1.5rem;
             }
-            
+
             .footer-content {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
-            
+
             .footer-logo {
                 flex-direction: column;
                 text-align: center;
             }
         }
-        
+
+        /* Alert Styles */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-info {
+            background-color: rgba(6, 214, 160, 0.1);
+            border: 1px solid rgba(6, 214, 160, 0.3);
+            color: var(--dark);
+        }
+
+        .alert i {
+            color: var(--accent);
+        }
+
+        .text-muted {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
         /* Animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         @keyframes fadeOut {
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* Notification System Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            min-width: 300px;
+            font-weight: 500;
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        .notification.warning {
+            background: #ff9800;
+        }
+
+        .notification.show {
+            display: flex;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        #notification-icon {
+            font-size: 18px;
+        }
+
+        #notification-message {
+            flex: 1;
         }
     </style>
 </head>
@@ -808,13 +885,13 @@
 
     <main>
         <h1 class="cart-title">Your Shopping Cart</h1>
-        
+
         <div class="cart-container">
             <div class="cart-items">
                 <div class="cart-header">
                     <h2>Items</h2>
                 </div>
-                
+
                 <!-- Empty Cart State (hidden by default) -->
                 <div class="cart-empty" id="empty-cart-message">
                     <div class="cart-empty-content">
@@ -824,13 +901,13 @@
                         <a href="menu.html" class="continue-shopping">Continue Shopping</a>
                     </div>
                 </div>
-                
+
                 <!-- Cart Items Container -->
                 <div id="cart-items-container">
                     <!-- Cart items will be loaded here by CartManager -->
                 </div>
             </div>
-            
+
             <div class="checkout-section">
                 <form id="checkout-form">
                     <div class="form-section">
@@ -852,7 +929,7 @@
                             <input type="tel" id="phone" name="phone" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-section">
                         <h3>Delivery Address</h3>
                         <div class="form-group">
@@ -872,7 +949,7 @@
                             <input type="text" id="zipCode" name="zipCode" required>
                         </div>
                     </div>
-                    
+
                     <div class="form-section">
                         <h3>Delivery Method</h3>
                         <div class="delivery-options">
@@ -893,24 +970,50 @@
                             <textarea id="delivery-instructions" name="delivery-instructions" rows="3" placeholder="Any special instructions for delivery..."></textarea>
                         </div>
                     </div>
-                    
+
                     <div class="form-section">
                         <h3>Payment Method</h3>
-                        <div class="payment-options">
-                            <div class="payment-option selected" data-value="cash">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <h4>Cash</h4>
-                                <p>Pay at pickup/delivery</p>
+                        <div id="guest-payment-section">
+                            <div class="payment-options">
+                                <div class="payment-option selected" data-value="telebirr">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <h4>Telebirr</h4>
+                                    <p>Upload payment proof</p>
+                                </div>
+                                <div class="payment-option" data-value="cbe">
+                                    <i class="fas fa-credit-card"></i>
+                                    <h4>CBE</h4>
+                                    <p>Upload payment proof</p>
+                                </div>
                             </div>
-                            <div class="payment-option" data-value="card">
-                                <i class="fas fa-credit-card"></i>
-                                <h4>Card</h4>
-                                <p>Pay securely online</p>
+                            <input type="hidden" id="payment-method" name="payment-method" value="telebirr">
+                            <div class="form-group" id="payment-confirmation-upload" style="margin-top: 1rem;">
+                                <label for="paymentConfirmationFile">Upload Payment Confirmation *</label>
+                                <input type="file" id="paymentConfirmationFile" name="paymentConfirmationFile" accept="image/*,application/pdf" required>
+                                <small class="text-muted">Please upload a screenshot or photo of your payment confirmation</small>
                             </div>
                         </div>
-                        <input type="hidden" id="payment-method" name="payment-method" value="cash">
+                        <div id="registered-payment-section" style="display: none;">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Integrated Payment:</strong> As a registered customer, you can use our secure integrated payment system.
+                            </div>
+                            <div class="payment-options">
+                                <div class="payment-option selected" data-value="stripe">
+                                    <i class="fas fa-credit-card"></i>
+                                    <h4>Credit/Debit Card</h4>
+                                    <p>Secure payment via Stripe</p>
+                                </div>
+                                <div class="payment-option" data-value="paypal">
+                                    <i class="fab fa-paypal"></i>
+                                    <h4>PayPal</h4>
+                                    <p>Pay with PayPal</p>
+                                </div>
+                            </div>
+                            <input type="hidden" id="registered-payment-method" name="registered-payment-method" value="stripe">
+                        </div>
                     </div>
-                    
+
                     <div class="cart-summary">
                         <div class="summary-row">
                             <span>Subtotal:</span>
@@ -929,7 +1032,7 @@
                             <span id="total">$0.00</span>
                         </div>
                     </div>
-                    
+
                     <button type="button" class="checkout-btn" id="checkout-button">Proceed to Checkout</button>
                 </form>
             </div>
@@ -960,11 +1063,192 @@
         </div>
     </footer>
 
+    <!-- Notification System -->
+    <div id="notification" class="notification">
+        <i id="notification-icon" class="fas fa-check-circle"></i>
+        <span id="notification-message"></span>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize cart manager
-            CartManager.init();
+            console.log('🛒 Cart page loading...');
+
+            // Wait a bit to ensure CartManager is fully loaded
+            setTimeout(() => {
+                if (typeof CartManager !== 'undefined') {
+                    console.log('🛒 CartManager found, initializing...');
+
+                    // Initialize cart manager
+                    CartManager.init();
+
+                    // Force render cart items after a short delay
+                    setTimeout(() => {
+                        console.log('🛒 Force rendering cart...');
+                        CartManager.renderCart();
+                        console.log('🛒 Current cart contents:', CartManager.cart);
+                    }, 100);
+
+                    // Listen for storage changes (when items are added from other pages)
+                    window.addEventListener('storage', function(e) {
+                        if (e.key === 'publicCart') {
+                            console.log('🛒 Public cart updated from another page, reloading...');
+                            CartManager.loadCart();
+                            CartManager.renderCart();
+                            CartManager.updateCartCount();
+                        }
+                    });
+
+                    // Also listen for custom cart events
+                    document.addEventListener('cartUpdated', function(e) {
+                        console.log('🛒 Cart updated event received');
+                        CartManager.loadCart();
+                        CartManager.renderCart();
+                        CartManager.updateCartCount();
+                    });
+
+                    console.log('✅ Cart initialized and rendered');
+                } else {
+                    console.error('❌ CartManager not found!');
+                }
+
+                // Check login status and update UI
+                checkLoginStatus();
+
+                // Setup payment option event listeners
+                setupPaymentEventListeners();
+
+                // Setup checkout button
+                console.log('🔧 About to call setupCheckoutButton()...');
+                setupCheckoutButton();
+                console.log('🔧 setupCheckoutButton() called');
+            }, 50);
         });
+
+        async function checkLoginStatus() {
+            const token = localStorage.getItem('token');
+            const isLoggedIn = !!token;
+
+            const guestSection = document.getElementById('guest-payment-section');
+            const registeredSection = document.getElementById('registered-payment-section');
+            const contactSection = document.querySelector('.form-section');
+
+            if (isLoggedIn) {
+                // Show registered customer payment options
+                guestSection.style.display = 'none';
+                registeredSection.style.display = 'block';
+
+                // Hide contact information form for registered customers
+                if (contactSection && contactSection.querySelector('h3').textContent === 'Contact Information') {
+                    contactSection.style.display = 'none';
+                }
+
+                // Try to load user information
+                try {
+                    const response = await fetch('/api/auth/me', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Logged in as:', data.user?.firstName || 'User');
+                    }
+                } catch (error) {
+                    console.error('Error checking auth status:', error);
+                }
+            } else {
+                // Show guest customer payment options
+                guestSection.style.display = 'block';
+                registeredSection.style.display = 'none';
+
+                // Show contact information form for guest customers
+                if (contactSection && contactSection.querySelector('h3').textContent === 'Contact Information') {
+                    contactSection.style.display = 'block';
+                }
+            }
+        }
+
+        function setupPaymentEventListeners() {
+            // Guest payment options
+            document.querySelectorAll('#guest-payment-section .payment-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('#guest-payment-section .payment-option').forEach(opt =>
+                        opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    document.getElementById('payment-method').value = option.dataset.value;
+                });
+            });
+
+            // Registered payment options
+            document.querySelectorAll('#registered-payment-section .payment-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('#registered-payment-section .payment-option').forEach(opt =>
+                        opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    document.getElementById('registered-payment-method').value = option.dataset.value;
+                });
+            });
+        }
+
+        function setupCheckoutButton() {
+            console.log('🔧 Setting up checkout button...');
+            const checkoutButton = document.getElementById('checkout-button');
+            console.log('🔧 Checkout button found:', !!checkoutButton);
+
+            if (checkoutButton) {
+                console.log('🔧 Adding click event listener to checkout button');
+                checkoutButton.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    console.log('🛒 Checkout button clicked!');
+
+                    // Debug CartManager availability
+                    console.log('🔧 CartManager available:', typeof CartManager !== 'undefined');
+                    console.log('🔧 CartManager.cart:', CartManager?.cart);
+                    console.log('🔧 Cart length:', CartManager?.cart?.length);
+
+                    // Validate cart has items
+                    if (!CartManager || !CartManager.cart || CartManager.cart.length === 0) {
+                        console.error('❌ Cart is empty or CartManager not available');
+                        if (CartManager && CartManager.showNotification) {
+                            CartManager.showNotification('Your cart is empty', 'error');
+                        } else {
+                            alert('Your cart is empty');
+                        }
+                        return;
+                    }
+
+                    // Show loading state
+                    checkoutButton.disabled = true;
+                    checkoutButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+                    try {
+                        console.log('🛒 Calling CartManager.proceedToCheckout()...');
+                        // Check if proceedToCheckout method exists
+                        if (typeof CartManager.proceedToCheckout === 'function') {
+                            await CartManager.proceedToCheckout();
+                        } else {
+                            console.error('❌ CartManager.proceedToCheckout is not a function');
+                            throw new Error('Checkout method not available');
+                        }
+                    } catch (error) {
+                        console.error('❌ Checkout error:', error);
+                        if (CartManager && CartManager.showNotification) {
+                            CartManager.showNotification('Error processing checkout: ' + error.message, 'error');
+                        } else {
+                            alert('Error processing checkout: ' + error.message);
+                        }
+                    } finally {
+                        // Reset button state
+                        checkoutButton.disabled = false;
+                        checkoutButton.innerHTML = 'Proceed to Checkout';
+                    }
+                });
+                console.log('✅ Checkout button event listener attached');
+            } else {
+                console.error('❌ Checkout button not found in DOM');
+            }
+        }
 
         function updateCartCount() {
             const cartCountElement = document.querySelector('.cart-count');
@@ -978,6 +1262,514 @@
         function showAuthModal() {
             alert('Login/Signup functionality would appear here');
         }
+
+        // Debug function to check public cart state
+        function debugCart() {
+            console.log('🔍 Debug Public Cart State:');
+            console.log('- CartManager exists:', typeof CartManager !== 'undefined');
+            console.log('- Cart array:', CartManager?.cart);
+            console.log('- Cart length:', CartManager?.cart?.length);
+            console.log('- localStorage publicCart:', localStorage.getItem('publicCart'));
+            console.log('- localStorage customerCart:', localStorage.getItem('customerCart'));
+            console.log('- Cart container exists:', !!document.getElementById('cart-items-container'));
+            console.log('- Empty message exists:', !!document.getElementById('empty-cart-message'));
+
+            // Try to manually render
+            if (typeof CartManager !== 'undefined') {
+                console.log('🔄 Manually triggering public cart render...');
+                CartManager.renderCart();
+            }
+        }
+
+        // Make debug function available globally
+        window.debugCart = debugCart;
+
+        // Test function to add sample items for debugging
+        function addTestItems() {
+            console.log('🧪 Adding test items to cart...');
+
+            const testItems = [
+                {
+                    id: 'test-vanilla',
+                    name: 'Test Vanilla Cupcake',
+                    price: 4.99,
+                    quantity: 2,
+                    image: 'images/menu images/Vanilla cupcake with Vanilla icing.jpg',
+                    description: 'Delicious vanilla cupcake with vanilla icing'
+                },
+                {
+                    id: 'test-chocolate',
+                    name: 'Test Chocolate Cupcake',
+                    price: 5.49,
+                    quantity: 1,
+                    image: 'images/menu images/Chocolate cupcake with vanilla icing.jpg',
+                    description: 'Rich chocolate cupcake with vanilla icing'
+                }
+            ];
+
+            if (typeof CartManager !== 'undefined') {
+                testItems.forEach(item => {
+                    CartManager.addItem(item);
+                });
+
+                // Force render after adding items
+                setTimeout(() => {
+                    CartManager.renderCart();
+                    CartManager.updateCartCount();
+                }, 200);
+
+                console.log('✅ Test items added');
+            } else {
+                console.error('❌ CartManager not available');
+            }
+        }
+
+        window.addTestItems = addTestItems;
+
+        // Test function to add sample items
+        function addTestItem() {
+            const testItem = {
+                id: 'test-vanilla',
+                name: 'Test Vanilla Cupcake',
+                price: 4.99,
+                quantity: 1,
+                image: 'images/menu images/Vanilla cupcake with Vanilla icing.jpg',
+                description: 'Test vanilla cupcake'
+            };
+
+            console.log('🧪 Adding test item:', testItem);
+
+            if (typeof CartManager !== 'undefined') {
+                const result = CartManager.addItem(testItem);
+                console.log('🧪 Add result:', result);
+
+                // Force render
+                setTimeout(() => {
+                    CartManager.renderCart();
+                }, 100);
+            } else {
+                console.error('❌ CartManager not available');
+            }
+        }
+
+        window.addTestItem = addTestItem;
+
+        // Test isolation function
+        function testIsolation() {
+            console.log('🧪 Testing Cart System Isolation:');
+
+            // Clear both carts first
+            localStorage.removeItem('publicCart');
+            localStorage.removeItem('customerCart');
+
+            // Add test item to public cart
+            const publicTestItem = {
+                id: 'public-test',
+                name: 'Public Test Item',
+                price: 1.99,
+                quantity: 1,
+                image: 'images/default-preview.jpg',
+                description: 'Test item for public cart'
+            };
+
+            // Add test item to customer cart
+            const customerTestItem = {
+                id: 'customer-test',
+                name: 'Customer Test Item',
+                price: 2.99,
+                quantity: 1,
+                image: 'images/default-preview.jpg',
+                description: 'Test item for customer cart'
+            };
+
+            // Add to public cart
+            let publicCart = [];
+            publicCart.push(publicTestItem);
+            localStorage.setItem('publicCart', JSON.stringify(publicCart));
+
+            // Add to customer cart
+            let customerCart = [];
+            customerCart.push(customerTestItem);
+            localStorage.setItem('customerCart', JSON.stringify(customerCart));
+
+            // Verify isolation
+            const storedPublicCart = JSON.parse(localStorage.getItem('publicCart') || '[]');
+            const storedCustomerCart = JSON.parse(localStorage.getItem('customerCart') || '[]');
+
+            console.log('✅ Public cart contains:', storedPublicCart);
+            console.log('✅ Customer cart contains:', storedCustomerCart);
+            console.log('✅ Public cart length:', storedPublicCart.length);
+            console.log('✅ Customer cart length:', storedCustomerCart.length);
+            console.log('✅ Isolation test complete!');
+
+            // Reload CartManager to show the public cart
+            if (typeof CartManager !== 'undefined') {
+                CartManager.loadCart();
+                CartManager.renderCart();
+                CartManager.updateCartCount();
+            }
+        }
+
+        window.testIsolation = testIsolation;
+
+        // Comprehensive test function
+        function fullCartTest() {
+            console.log('🧪 === FULL CART TEST STARTING ===');
+
+            // Step 1: Clear everything
+            localStorage.removeItem('publicCart');
+            localStorage.removeItem('customerCart');
+            console.log('✅ Step 1: Cleared localStorage');
+
+            // Step 2: Check CartManager
+            console.log('✅ Step 2: CartManager available:', typeof CartManager !== 'undefined');
+            if (typeof CartManager === 'undefined') {
+                console.error('❌ CRITICAL: CartManager not available!');
+                return;
+            }
+
+            // Step 3: Check DOM elements
+            const cartContainer = document.getElementById('cart-items-container');
+            const emptyMessage = document.getElementById('empty-cart-message');
+            console.log('✅ Step 3: DOM elements:', {
+                cartContainer: !!cartContainer,
+                emptyMessage: !!emptyMessage
+            });
+
+            // Step 4: Initialize CartManager
+            CartManager.init();
+            console.log('✅ Step 4: CartManager initialized');
+
+            // Step 5: Add test item
+            const testItem = {
+                id: 'full-test-item',
+                name: 'Full Test Item',
+                price: 9.99,
+                quantity: 2,
+                image: 'images/default-preview.jpg',
+                description: 'This is a comprehensive test item'
+            };
+
+            console.log('✅ Step 5: Adding test item:', testItem);
+            const addResult = CartManager.addItem(testItem);
+            console.log('✅ Step 5 Result:', addResult);
+
+            // Step 6: Check localStorage
+            const storedCart = localStorage.getItem('publicCart');
+            console.log('✅ Step 6: localStorage publicCart:', storedCart);
+
+            // Step 7: Check CartManager cart
+            console.log('✅ Step 7: CartManager.cart:', CartManager.cart);
+            console.log('✅ Step 7: Cart length:', CartManager.cart.length);
+
+            // Step 8: Force render
+            console.log('✅ Step 8: Force rendering...');
+            CartManager.renderCart();
+
+            // Step 9: Check if items appeared in DOM
+            setTimeout(() => {
+                const cartItems = document.querySelectorAll('.cart-item');
+                console.log('✅ Step 9: Cart items in DOM:', cartItems.length);
+
+                if (cartItems.length > 0) {
+                    console.log('🎉 SUCCESS: Items are displaying in cart!');
+                } else {
+                    console.error('❌ FAILURE: Items not displaying in cart!');
+
+                    // Additional debugging
+                    console.log('🔍 Additional Debug Info:');
+                    console.log('- Cart container innerHTML:', cartContainer?.innerHTML);
+                    console.log('- Empty message display:', emptyMessage?.style.display);
+                }
+
+                console.log('🧪 === FULL CART TEST COMPLETE ===');
+            }, 500);
+        }
+
+        window.fullCartTest = fullCartTest;
+
+        // Test checkout process
+        function testCheckout() {
+            console.log('🧪 === TESTING CHECKOUT PROCESS ===');
+
+            // Step 1: Add test items to cart
+            if (typeof CartManager !== 'undefined') {
+                // Clear cart first
+                CartManager.clearCart();
+
+                // Add test items
+                const testItems = [
+                    {
+                        id: 'checkout-test-vanilla',
+                        name: 'Checkout Test Vanilla Cupcake',
+                        price: 4.99,
+                        quantity: 2,
+                        image: 'images/menu images/Vanilla cupcake with Vanilla icing.jpg',
+                        description: 'Test vanilla cupcake for checkout'
+                    },
+                    {
+                        id: 'checkout-test-chocolate',
+                        name: 'Checkout Test Chocolate Cupcake',
+                        price: 5.49,
+                        quantity: 1,
+                        image: 'images/menu images/Chocolate cupcake with vanilla icing.jpg',
+                        description: 'Test chocolate cupcake for checkout'
+                    }
+                ];
+
+                testItems.forEach(item => {
+                    CartManager.addItem(item);
+                });
+
+                // Force render
+                CartManager.renderCart();
+
+                console.log('✅ Test items added to cart');
+                console.log('✅ Cart total items:', CartManager.getItemCount());
+                console.log('✅ Cart subtotal:', CartManager.getSubtotal());
+
+                // Step 2: Fill in test guest information
+                document.getElementById('firstName').value = 'Test';
+                document.getElementById('lastName').value = 'Customer';
+                document.getElementById('email').value = 'test@example.com';
+                document.getElementById('phone').value = '555-0123';
+                document.getElementById('address').value = '123 Test Street';
+                document.getElementById('city').value = 'Test City';
+                document.getElementById('state').value = 'Test State';
+                document.getElementById('zipCode').value = '12345';
+
+                console.log('✅ Test guest information filled');
+
+                // Step 3: Set delivery method to pickup (no delivery fee)
+                document.getElementById('delivery-method').value = 'pickup';
+
+                console.log('✅ Delivery method set to pickup');
+                console.log('🧪 === CHECKOUT TEST SETUP COMPLETE ===');
+                console.log('💡 Now you can click "Proceed to Checkout" to test the full flow');
+                console.log('⚠️  Note: You will need to upload a payment confirmation file');
+
+            } else {
+                console.error('❌ CartManager not available');
+            }
+        }
+
+        window.testCheckout = testCheckout;
+
+        // Comprehensive checkout debugging function
+        function debugCheckout() {
+            console.log('🔍 === COMPREHENSIVE CHECKOUT DEBUG ===');
+
+            // 1. Check DOM elements
+            console.log('🔍 1. DOM Elements Check:');
+            const checkoutButton = document.getElementById('checkout-button');
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const email = document.getElementById('email');
+            const phone = document.getElementById('phone');
+            const paymentFile = document.getElementById('paymentConfirmationFile');
+
+            console.log('- Checkout button:', !!checkoutButton);
+            console.log('- First name field:', !!firstName);
+            console.log('- Last name field:', !!lastName);
+            console.log('- Email field:', !!email);
+            console.log('- Phone field:', !!phone);
+            console.log('- Payment file field:', !!paymentFile);
+
+            // 2. Check CartManager
+            console.log('🔍 2. CartManager Check:');
+            console.log('- CartManager exists:', typeof CartManager !== 'undefined');
+            console.log('- proceedToCheckout method:', typeof CartManager?.proceedToCheckout);
+            console.log('- Cart array:', CartManager?.cart);
+            console.log('- Cart length:', CartManager?.cart?.length);
+
+            // 3. Check event listeners
+            console.log('🔍 3. Event Listeners Check:');
+            if (checkoutButton) {
+                const listeners = getEventListeners ? getEventListeners(checkoutButton) : 'getEventListeners not available';
+                console.log('- Button event listeners:', listeners);
+            }
+
+            // 4. Test button click simulation
+            console.log('🔍 4. Button Click Test:');
+            if (checkoutButton) {
+                console.log('- Button disabled:', checkoutButton.disabled);
+                console.log('- Button innerHTML:', checkoutButton.innerHTML);
+                console.log('- Button onclick:', checkoutButton.onclick);
+            }
+
+            // 5. Check form validation
+            console.log('🔍 5. Form Validation Check:');
+            if (firstName) console.log('- First name value:', firstName.value);
+            if (lastName) console.log('- Last name value:', lastName.value);
+            if (email) console.log('- Email value:', email.value);
+            if (phone) console.log('- Phone value:', phone.value);
+
+            console.log('🔍 === DEBUG COMPLETE ===');
+        }
+
+        window.debugCheckout = debugCheckout;
+
+        // Manual checkout trigger for testing
+        function manualCheckout() {
+            console.log('🧪 Manual checkout trigger...');
+            if (typeof CartManager !== 'undefined' && typeof CartManager.proceedToCheckout === 'function') {
+                CartManager.proceedToCheckout().catch(error => {
+                    console.error('Manual checkout error:', error);
+                });
+            } else {
+                console.error('CartManager or proceedToCheckout not available');
+            }
+        }
+
+        window.manualCheckout = manualCheckout;
+
+        // Test upload endpoint directly
+        function testUploadEndpoint() {
+            console.log('🧪 Testing upload endpoint...');
+
+            // Create a simple test file (fake image)
+            const testContent = 'This is a test payment confirmation file';
+            const testFile = new File([testContent], 'test-payment-proof.jpg', { type: 'image/jpeg' });
+
+            const formData = new FormData();
+            formData.append('file', testFile);
+
+            fetch('/api/uploads/payment-confirmation', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('📁 Upload test response status:', response.status);
+                console.log('📁 Upload test response ok:', response.ok);
+                return response.text();
+            })
+            .then(data => {
+                console.log('📁 Upload test response data:', data);
+                try {
+                    const jsonData = JSON.parse(data);
+                    console.log('📁 Upload test parsed JSON:', jsonData);
+                } catch (e) {
+                    console.log('📁 Response is not JSON:', data);
+                }
+            })
+            .catch(error => {
+                console.error('❌ Upload test error:', error);
+            });
+        }
+
+        window.testUploadEndpoint = testUploadEndpoint;
+
+        // Complete guest checkout test
+        function testCompleteGuestCheckout() {
+            console.log('🧪 Starting complete guest checkout test...');
+
+            // Step 1: Add test items to cart
+            addTestItems();
+
+            // Step 2: Fill in guest information
+            setTimeout(() => {
+                document.getElementById('guest-name').value = 'Test Guest';
+                document.getElementById('guest-email').value = 'test@example.com';
+                document.getElementById('guest-phone').value = '123-456-7890';
+                document.getElementById('guest-address').value = '123 Test Street, Test City';
+
+                // Step 3: Set delivery method to pickup
+                const pickupRadio = document.querySelector('input[name="delivery-method"][value="pickup"]');
+                if (pickupRadio) {
+                    pickupRadio.checked = true;
+                }
+
+                console.log('✅ Guest information filled');
+                console.log('✅ Delivery method set to pickup');
+                console.log('🎯 Now upload a payment file and click "Proceed to Checkout"');
+
+                // Step 4: Create a test file for upload
+                const testContent = 'Test payment confirmation';
+                const testFile = new File([testContent], 'payment-proof.jpg', { type: 'image/jpeg' });
+
+                // Simulate file selection
+                const fileInput = document.getElementById('payment-confirmation');
+                if (fileInput) {
+                    // Create a new FileList with our test file
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(testFile);
+                    fileInput.files = dataTransfer.files;
+
+                    // Trigger change event
+                    const event = new Event('change', { bubbles: true });
+                    fileInput.dispatchEvent(event);
+
+                    console.log('✅ Test payment file selected');
+                    console.log('🚀 Ready for checkout! Click "Proceed to Checkout" button');
+                } else {
+                    console.error('❌ Payment confirmation file input not found');
+                }
+
+            }, 1000);
+        }
+
+        window.testCompleteGuestCheckout = testCompleteGuestCheckout;
+
+        // Test guest order endpoint directly
+        function testGuestOrderEndpoint() {
+            console.log('🧪 Testing guest order endpoint directly...');
+
+            const testOrderData = {
+                items: [
+                    {
+                        productId: '507f1f77bcf86cd799439011',
+                        name: 'Test Cupcake',
+                        price: 5.99,
+                        quantity: 2
+                    }
+                ],
+                guestInfo: {
+                    name: 'Test Guest',
+                    email: 'test@example.com',
+                    phone: '123-456-7890'
+                },
+                deliveryInfo: {
+                    method: 'pickup',
+                    address: '123 Test Street'
+                },
+                payment: {
+                    method: 'proof_upload',
+                    amount: 11.98,
+                    status: 'pending'
+                },
+                totalAmount: 11.98,
+                subtotal: 11.98,
+                tax: 0,
+                deliveryFee: 0
+            };
+
+            fetch('/api/orders/guest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(testOrderData)
+            })
+            .then(response => {
+                console.log('📁 Guest order test response status:', response.status);
+                console.log('📁 Guest order test response ok:', response.ok);
+                return response.text();
+            })
+            .then(data => {
+                console.log('📁 Guest order test response data:', data);
+                try {
+                    const jsonData = JSON.parse(data);
+                    console.log('📁 Guest order test parsed JSON:', jsonData);
+                } catch (e) {
+                    console.log('📁 Response is not JSON:', data);
+                }
+            })
+            .catch(error => {
+                console.error('❌ Guest order test error:', error);
+            });
+        }
+
+        window.testGuestOrderEndpoint = testGuestOrderEndpoint;
     </script>
 </body>
 </html>

@@ -156,6 +156,8 @@
         }
 
         .add-to-cart:hover {
+        }
+
             background: var(--primary-dark);
         }
 
@@ -194,16 +196,16 @@
             font-size: 1rem;
         }
 
-        /* Cupcake Visualization */
+        /* Enhanced Cupcake Visualization */
         .cupcake-visualization {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 400px;
             background: white;
             border-radius: 10px;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
             position: relative;
+            padding: 2rem;
         }
 
         .cupcake-container {
@@ -265,6 +267,67 @@
             transform: translateY(30px);
         }
 
+        /* Decorations Layer */
+        .decorations {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Price Display */
+        .price-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 20;
+        }
+
+        /* Customization Tips */
+        .customization-tips {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .customization-tips h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .customization-tips ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .customization-tips li {
+            padding: 0.25rem 0;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .customization-tips li::before {
+            content: '✨';
+            margin-right: 0.5rem;
+        }
+
         /* Notification Styles */
         .notification {
             position: fixed;
@@ -282,16 +345,16 @@
             opacity: 0;
             transition: all 0.3s ease;
         }
-        
+
         .notification.show {
             transform: translateX(0);
             opacity: 1;
         }
-        
+
         .notification.success {
             background-color: #4CAF50;
         }
-        
+
         .notification.error {
             background-color: #f44336;
         }
@@ -361,6 +424,9 @@
         </div>
     </header>
 
+    <!-- Load Cart Manager before any scripts that use it -->
+    <script src="js/cart.js"></script>
+
     <main class="menu-page">
         <div class="page-header">
             <h2><i class="fas fa-cake-candles"></i> Our Menu</h2>
@@ -369,10 +435,6 @@
 
         <div class="menu-container">
             <section class="menu-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-cookie"></i> Cupcake Flavors</h3>
-                    <p>Choose from our selection of delicious cake bases</p>
-                </div>
                 <div class="menu-grid" id="menu-grid">
                     <!-- Menu items will be populated by JavaScript -->
                 </div>
@@ -380,18 +442,29 @@
 
             <section class="custom-order">
                 <div class="section-header">
-                    <h2><i class="fas fa-birthday-cake"></i> Custom Cakes</h2>
-                    <p>Create your perfect cake with our customization options</p>
+                    <h2><i class="fas fa-birthday-cake"></i> Custom Cupcakes</h2>
+                    <p>Design your perfect cupcake with our interactive customization tool</p>
                 </div>
-                
+
                 <div class="custom-order-grid">
                     <div class="cupcake-visualization">
                         <div class="cupcake-container">
                             <div class="cupcake-base" id="cakeBase"></div>
                             <div class="cloud-icing" id="cakeIcing"></div>
+                            <div class="decorations" id="decorations"></div>
+                            <div class="price-display" id="priceDisplay">$25.00</div>
+                        </div>
+                        <div class="customization-tips">
+                            <h4><i class="fas fa-lightbulb"></i> Customization Tips</h4>
+                            <ul>
+                                <li>Choose your base flavor and color</li>
+                                <li>Select icing type and color</li>
+                                <li>Add decorations for extra flair</li>
+                                <li>Price updates automatically</li>
+                            </ul>
                         </div>
                     </div>
-                    
+
                     <form id="customCakeForm">
                         <div class="form-section">
                             <legend><i class="fas fa-cookie"></i> Base Flavor & Color</legend>
@@ -417,7 +490,7 @@
                                     <option value="mississippi-mud">Mississippi Mud</option>
                                 </select>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="baseColor">Base Color</label>
                                 <select id="baseColor" name="baseColor" required>
@@ -440,7 +513,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="form-section">
                             <legend><i class="fas fa-layer-group"></i> Icing & Color</legend>
                             <div class="form-group">
@@ -458,7 +531,7 @@
                                     <option value="coconut-pecan">Coconut Pecan</option>
                                 </select>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="icingColor">Icing Color</label>
                                 <select id="icingColor" name="icingColor" required>
@@ -475,7 +548,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="form-section">
                             <legend><i class="fas fa-magic"></i> Decorations</legend>
                             <div class="form-group">
@@ -497,10 +570,10 @@
                                     <option value="holiday">Holiday Design</option>
                                 </select>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="specialInstructions">Special Instructions</label>
-                                <textarea id="specialInstructions" name="specialInstructions" rows="3" 
+                                <textarea id="specialInstructions" name="specialInstructions" rows="3"
                                         placeholder="Any specific requirements or preferences?"></textarea>
                             </div>
 
@@ -513,7 +586,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-actions">
                             <button type="submit" class="add-to-cart">
                                 <i class="fas fa-shopping-cart"></i> Add to Cart
@@ -680,9 +753,26 @@
 
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🍰 Menu page loading...');
+
+            // Initialize CartManager first
+            if (typeof CartManager !== 'undefined') {
+                // Load cart from localStorage first
+                CartManager.loadCart();
+                console.log('🛒 Cart loaded from localStorage:', CartManager.cart);
+
+                // Initialize other components
+                CartManager.updateCartCount();
+                CartManager.setupEventListeners();
+
+                console.log('✅ CartManager initialized');
+            } else {
+                console.error('❌ CartManager not found!');
+            }
+
             // Initialize menu items
             const menuGrid = document.getElementById('menu-grid');
-            
+
             menuItems.forEach(item => {
                 const menuItem = document.createElement('div');
                 menuItem.className = 'menu-item';
@@ -697,7 +787,7 @@
                             <input type="number" class="quantity-input" value="1" min="1" max="12">
                             <button class="quantity-btn plus">+</button>
                         </div>
-                        <button class="add-to-cart" data-item='${JSON.stringify(item)}'>
+                        <button class="add-to-cart" data-item="${encodeURIComponent(JSON.stringify(item))}">
                             Add to Cart
                         </button>
                     </div>
@@ -708,67 +798,129 @@
             // Add to cart functionality
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('add-to-cart')) {
-                    const itemData = JSON.parse(e.target.dataset.item);
-                    const quantity = parseInt(e.target.closest('.menu-item').querySelector('.quantity-input').value);
-                    
-                    const cartItem = {
-                        ...itemData,
-                        quantity: quantity
-                    };
-                    
+                    console.log('🛒 Add to cart button clicked');
+
                     try {
-                        if (CartManager.addItem(cartItem)) {
-                            showNotification('Item added to cart!', 'success');
-                            updateCartCount();
+                        const itemData = JSON.parse(decodeURIComponent(e.target.dataset.item));
+                        const quantityInput = e.target.closest('.menu-item').querySelector('.quantity-input');
+                        const quantity = parseInt(quantityInput.value) || 1;
+
+                        console.log('🛒 Adding item to cart:', itemData, 'Quantity:', quantity);
+
+                        const cartItem = {
+                            ...itemData,
+                            quantity: quantity
+                        };
+
+                        // Use CartManager if available, otherwise use localStorage directly
+                        if (typeof CartManager !== 'undefined') {
+                            const result = CartManager.addItem(cartItem);
+                            if (result) {
+                                showNotification('Item added to cart!', 'success');
+                                updateCartCount();
+
+                                // Dispatch custom event for cart updates
+                                document.dispatchEvent(new CustomEvent('cartUpdated', {
+                                    detail: { item: cartItem, action: 'add' }
+                                }));
+                            } else {
+                                showNotification('Failed to add item to cart', 'error');
+                            }
                         } else {
-                            showNotification('Failed to add item to cart', 'error');
+                            // Fallback: add directly to publicCart localStorage
+                            let cart = JSON.parse(localStorage.getItem('publicCart') || '[]');
+                            cart.push(cartItem);
+                            localStorage.setItem('publicCart', JSON.stringify(cart));
+                            showNotification('Item added to public cart!', 'success');
+                            updateCartCount();
+
+                            // Dispatch custom event for cart updates
+                            document.dispatchEvent(new CustomEvent('cartUpdated', {
+                                detail: { item: cartItem, action: 'add' }
+                            }));
                         }
                     } catch (error) {
-                        console.error('Error adding to cart:', error);
-                        showNotification('Error adding to cart', 'error');
+                        console.error('❌ Error adding to cart:', error);
+                        showNotification('Error adding to cart: ' + error.message, 'error');
                     }
                 }
             });
 
-            // Custom cake form handling
+            // Quantity control functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('quantity-btn')) {
+                    const input = e.target.parentElement.querySelector('.quantity-input');
+                    let currentValue = parseInt(input.value) || 1;
+
+                    if (e.target.classList.contains('minus')) {
+                        if (currentValue > 1) {
+                            input.value = currentValue - 1;
+                        }
+                    } else if (e.target.classList.contains('plus')) {
+                        if (currentValue < 12) {
+                            input.value = currentValue + 1;
+                        }
+                    }
+                }
+            });
+
+            // Enhanced custom cake form handling
             const customCakeForm = document.getElementById('customCakeForm');
             if (customCakeForm) {
-                // Update cake colors when changed
+                // Initialize price display
+                updateCustomCakePrice();
+
+                // Update cake colors and price when changed
                 document.getElementById('baseColor').addEventListener('change', function() {
                     document.getElementById('cakeBase').style.backgroundColor = this.value;
+                    updateCustomCakePrice();
                 });
-                
+
                 document.getElementById('icingColor').addEventListener('change', function() {
                     document.getElementById('cakeIcing').style.backgroundColor = this.value;
+                    updateCustomCakePrice();
+                });
+
+                // Update price when other options change
+                ['flavor', 'icing', 'decorations', 'quantity'].forEach(fieldName => {
+                    const field = document.getElementById(fieldName);
+                    if (field) {
+                        field.addEventListener('change', updateCustomCakePrice);
+                    }
                 });
 
                 // Form submission
                 customCakeForm.addEventListener('submit', function(e) {
                     e.preventDefault();
+                    console.log('🧁 Custom cupcake form submitted');
+
                     const formData = new FormData(customCakeForm);
-                    
+                    const price = calculateCustomCakePrice(formData);
+
                     const customCake = {
                         id: `custom-${Date.now()}`,
-                        name: 'Custom Cake',
-                        price: calculateCustomCakePrice(formData),
+                        name: 'Custom Cupcake',
+                        price: price,
                         quantity: parseInt(formData.get('quantity')) || 1,
                         image: 'images/default-preview.jpg',
-                        customizations: getCustomizations(formData)
+                        customizations: getCustomizations(formData),
+                        isCustom: true
                     };
+
+                    console.log('🧁 Custom cupcake data:', customCake);
 
                     try {
                         if (CartManager.addItem(customCake)) {
-                            showNotification('Custom cake added to cart!', 'success');
+                            showNotification('Custom cupcake added to cart!', 'success');
                             customCakeForm.reset();
-                            document.getElementById('cakeBase').style.backgroundColor = '#8B4513';
-                            document.getElementById('cakeIcing').style.backgroundColor = '#FFB6C1';
+                            resetCupcakeVisualization();
                             updateCartCount();
                         } else {
-                            showNotification('Failed to add custom cake', 'error');
+                            showNotification('Failed to add custom cupcake', 'error');
                         }
                     } catch (error) {
-                        console.error('Error adding custom cake:', error);
-                        showNotification('Error adding custom cake', 'error');
+                        console.error('Error adding custom cupcake:', error);
+                        showNotification('Error adding custom cupcake', 'error');
                     }
                 });
             }
@@ -787,31 +939,31 @@
         function calculateCustomCakePrice(formData) {
             // Base price for custom cakes
             let price = 25.00;
-            
+
             // Add pricing based on selections if needed
             const flavor = formData.get('flavor');
             const icing = formData.get('icing');
             const decorations = formData.get('decorations');
-            
+
             // Example pricing adjustments
             if (flavor === 'red-velvet' || flavor === 'french-vanilla') {
                 price += 2.00;
             } else if (flavor === 'chocolate-cheesecake' || flavor === 'mississippi-mud') {
                 price += 3.00;
             }
-            
+
             if (icing === 'fondant') {
                 price += 5.00;
             } else if (icing === 'ganache') {
                 price += 3.00;
             }
-            
+
             if (decorations === 'floral' || decorations === 'geometric') {
                 price += 4.00;
             } else if (decorations === 'custom' || decorations === 'themed') {
                 price += 6.00;
             }
-            
+
             return price;
         }
 
@@ -844,35 +996,143 @@
             const notification = document.getElementById('notification');
             const icon = document.getElementById('notification-icon');
             const msg = document.getElementById('notification-message');
-            
+
             if (!notification) return;
-            
+
             notification.className = `notification ${type}`;
             msg.textContent = message;
             icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
-            
+
             notification.style.display = 'flex';
             setTimeout(() => notification.classList.add('show'), 10);
-            
+
             setTimeout(() => {
                 notification.classList.remove('show');
                 setTimeout(() => notification.style.display = 'none', 300);
             }, 3000);
         }
 
-        // Update cart count
+        // Update cart count (public cart only)
         function updateCartCount() {
-            const cartCount = document.getElementById('cart-count');
-            if (cartCount) {
-                const count = CartManager.getItemCount();
-                cartCount.textContent = count;
+            try {
+                let count = 0;
+
+                if (typeof CartManager !== 'undefined') {
+                    count = CartManager.getItemCount();
+                } else {
+                    // Fallback: count from publicCart localStorage
+                    const cart = JSON.parse(localStorage.getItem('publicCart') || '[]');
+                    count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+                }
+
+                console.log('🔢 Updating public cart count to:', count);
+
+                const cartCountElements = document.querySelectorAll('#cart-count, .cart-count');
+                cartCountElements.forEach(element => {
+                    if (element) {
+                        element.textContent = count;
+                        element.style.display = count > 0 ? 'inline' : 'none';
+                    }
+                });
+            } catch (error) {
+                console.error('❌ Error updating public cart count:', error);
             }
+        }
+
+        // Enhanced custom cupcake functions
+        function updateCustomCakePrice() {
+            const form = document.getElementById('customCakeForm');
+            if (!form) return;
+
+            const formData = new FormData(form);
+            const price = calculateCustomCakePrice(formData);
+            const priceDisplay = document.getElementById('priceDisplay');
+
+            if (priceDisplay) {
+                priceDisplay.textContent = `$${price.toFixed(2)}`;
+                priceDisplay.style.animation = 'pulse 0.3s ease-in-out';
+                setTimeout(() => {
+                    priceDisplay.style.animation = '';
+                }, 300);
+            }
+        }
+
+        function resetCupcakeVisualization() {
+            document.getElementById('cakeBase').style.backgroundColor = '#8B4513';
+            document.getElementById('cakeIcing').style.backgroundColor = '#FFB6C1';
+            updateCustomCakePrice();
         }
 
         // Show auth modal
         function showAuthModal() {
             alert('Login/Signup functionality would appear here');
         }
+
+        // Test function to verify cart integration
+        function testMenuCartIntegration() {
+            console.log('🧪 Testing Menu-Cart Integration:');
+            console.log('- CartManager available:', typeof CartManager !== 'undefined');
+
+            if (typeof CartManager !== 'undefined') {
+                // Add a test item
+                const testItem = {
+                    id: 'menu-test-item',
+                    name: 'Menu Test Item',
+                    price: 2.99,
+                    quantity: 1,
+                    image: 'images/default-preview.jpg',
+                    description: 'Test item from menu page'
+                };
+
+                const result = CartManager.addItem(testItem);
+                console.log('✅ Test item added:', result);
+                console.log('✅ Current cart:', CartManager.cart);
+                console.log('✅ localStorage publicCart:', localStorage.getItem('publicCart'));
+
+                updateCartCount();
+            } else {
+                console.error('❌ CartManager not available in menu page');
+            }
+        }
+
+        window.testMenuCartIntegration = testMenuCartIntegration;
+
+        // Simple test to add item and check localStorage
+        function quickAddTest() {
+            console.log('🧪 === QUICK ADD TEST ===');
+
+            // Clear first
+            localStorage.removeItem('publicCart');
+
+            if (typeof CartManager !== 'undefined') {
+                const testItem = {
+                    id: 'quick-test',
+                    name: 'Quick Test Item',
+                    price: 5.99,
+                    quantity: 1,
+                    image: 'images/default-preview.jpg',
+                    description: 'Quick test from menu'
+                };
+
+                console.log('Adding item:', testItem);
+                const result = CartManager.addItem(testItem);
+                console.log('Add result:', result);
+                console.log('Cart after add:', CartManager.cart);
+                console.log('localStorage publicCart:', localStorage.getItem('publicCart'));
+
+                // Update count
+                updateCartCount();
+
+                console.log('✅ Quick test complete - check cart.html now!');
+            } else {
+                console.error('❌ CartManager not available');
+            }
+        }
+
+        window.quickAddTest = quickAddTest;
     </script>
+
+    <!-- Unified Authentication Client -->
+    <script src="js/auth-client.js"></script>
 </body>
 </html>

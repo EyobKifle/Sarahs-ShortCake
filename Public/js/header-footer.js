@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Update cart count
 function updateCartCount() {
     const cartCountElements = document.querySelectorAll('#cart-count, .cart-count');
-    if (cartCountElements) {
+    if (cartCountElements && typeof CartManager !== 'undefined') {
         const count = CartManager.getItemCount();
         cartCountElements.forEach(element => {
             element.textContent = count;
@@ -84,7 +84,7 @@ function updateProfileIcon() {
 
                 // Add dashboard link based on role
                 if (user.role === 'admin') {
-                    menuLinks += `<a href="Admin/admin.html" class="dashboard-link">Admin Dashboard</a>`;
+                    menuLinks += `<a href="Public/admin.html" class="dashboard-link">Admin Dashboard</a>`;
                 } else {
                     menuLinks += `<a href="customer-dashboard.html" class="dashboard-link">Customer Dashboard</a>`;
                 }

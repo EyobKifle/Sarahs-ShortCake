@@ -6,6 +6,12 @@ const customizationOptionsSchema = new mongoose.Schema({
   decorations: [String]
 }, { _id: false });
 
+const recipeIngredientSchema = new mongoose.Schema({
+  ingredient: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  unit: { type: String, required: true }
+}, { _id: false });
+
 const productSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true, trim: true },
   name: { type: String, required: true, trim: true },
@@ -19,7 +25,8 @@ const productSchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  customizationOptions: customizationOptionsSchema
+  customizationOptions: customizationOptionsSchema,
+  recipe: [recipeIngredientSchema] // Recipe with ingredients and quantities
 });
 
 // Update updatedAt before save

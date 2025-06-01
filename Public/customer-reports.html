@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reports - Sarah's Shortcakes Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.0.0/dist/chart.min.css" rel="stylesheet">
+    <style>
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: 1px solid rgba(0, 0, 0, 0.125);
+        }
+        .table th {
+            border-top: none;
+            font-weight: 600;
+        }
+        .badge {
+            font-size: 0.75em;
+        }
+        .progress {
+            background-color: #e9ecef;
+        }
+        .btn-group-sm > .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin.html">
+                <i class="fas fa-cupcake me-2"></i>Sarah's Shortcakes Admin
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/admin.html">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h2><i class="fas fa-users me-2"></i>Customer Reports</h2>
+                <p class="text-muted">Comprehensive customer analytics and insights</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="btn-group">
+                    <button class="btn btn-outline-primary" id="refreshCustomerReport">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh
+                    </button>
+                    <button class="btn btn-success" id="exportCustomerReport">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <label class="form-label">Date Range</label>
+                                <select class="form-select" id="customerDateRange">
+                                    <option value="all">All Time</option>
+                                    <option value="week">Last Week</option>
+                                    <option value="month">Last Month</option>
+                                    <option value="quarter">Last Quarter</option>
+                                    <option value="year">Last Year</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Segment</label>
+                                <select class="form-select" id="customerSegmentFilter">
+                                    <option value="all">All Segments</option>
+                                    <option value="vip">VIP</option>
+                                    <option value="loyal">Loyal</option>
+                                    <option value="regular">Regular</option>
+                                    <option value="new">New</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Sort By</label>
+                                <select class="form-select" id="customerSortBy">
+                                    <option value="totalSpent">Total Spent</option>
+                                    <option value="name">Name</option>
+                                    <option value="orderCount">Order Count</option>
+                                    <option value="lastOrder">Last Order</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Order</label>
+                                <select class="form-select" id="customerOrderBy">
+                                    <option value="desc">Descending</option>
+                                    <option value="asc">Ascending</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Search</label>
+                                <input type="text" class="form-control" id="customerSearchInput"
+                                       placeholder="Search customers...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="customerReportLoader" class="loading-spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading customer report...</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div id="customerSummaryCards"></div>
+
+        <!-- Main Content -->
+        <div class="row g-4">
+            <!-- Customer Table -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-table me-2"></i>Customer Details</h6>
+                    </div>
+                    <div class="card-body">
+                        <div id="customerTableContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-4">
+                <!-- Top Customers -->
+                <div id="topCustomersContainer" class="mb-4"></div>
+
+                <!-- Additional Info Panel -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Customer Overview</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Use the filters above to narrow down your customer view. Click refresh to get the latest data from the database.</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="customerReports.loadCustomerReport()">
+                                <i class="fas fa-sync-alt me-1"></i>Refresh Data
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" onclick="customerReports.exportReport()">
+                                <i class="fas fa-download me-1"></i>Export CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Customer Details Modal -->
+    <div class="modal fade" id="customerDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Customer Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="customerDetailsContent">
+                    <!-- Customer details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Contact Customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.0/dist/chart.min.js"></script>
+    <script src="/js/api-client.js"></script>
+    <script src="/js/modules/enhanced-customer-reports.js"></script>
+
+    <script>
+        // Initialize API client
+        window.apiClient = new ApiClient();
+
+        // Initialize customer reports
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔄 Customer Reports page loaded');
+        });
+    </script>
+</body>
+</html>

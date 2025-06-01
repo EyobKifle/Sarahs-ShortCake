@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Contact API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { margin: 5px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Contact API Test</h1>
+    
+    <div>
+        <h3>Token Information</h3>
+        <button onclick="checkTokens()">Check Tokens</button>
+        <div id="tokenInfo"></div>
+    </div>
+    
+    <div>
+        <h3>API Tests</h3>
+        <button onclick="testContactAPI()">Test Contact API</button>
+        <button onclick="testOtherAPI()">Test Other API (Orders)</button>
+        <div id="apiResults"></div>
+    </div>
+    
+    <div>
+        <h3>Manual Token Test</h3>
+        <input type="text" id="manualToken" placeholder="Enter token manually" style="width: 500px;">
+        <button onclick="testWithManualToken()">Test with Manual Token</button>
+    </div>
+
+    <script>
+        function checkTokens() {
+            const adminToken = localStorage.getItem('adminToken');
+            const token = localStorage.getItem('token');
+            
+            const info = `
+                <div class="result">
+                    <strong>adminToken:</strong> ${adminToken ? 'EXISTS (' + adminToken.substring(0, 50) + '...)' : 'NOT FOUND'}<br>
+                    <strong>token:</strong> ${token ? 'EXISTS (' + token.substring(0, 50) + '...)' : 'NOT FOUND'}<br>
+                    <strong>Same token:</strong> ${adminToken === token ? 'YES' : 'NO'}
+                </div>
+            `;
+            
+            document.getElementById('tokenInfo').innerHTML = info;
+        }
+        
+        async function testContactAPI() {
+            const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
+            
+            try {
+                console.log('Testing contact API with token:', token ? token.substring(0, 50) + '...' : 'NO TOKEN');
+                
+                const response = await fetch('/api/contact', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+                resultDiv.innerHTML = `
+                    <strong>Contact API Test:</strong><br>
+                    Status: ${response.status}<br>
+                    Response: ${JSON.stringify(result, null, 2)}
+                `;
+                
+                document.getElementById('apiResults').appendChild(resultDiv);
+                
+            } catch (error) {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>Contact API Test Error:</strong><br>
+                    ${error.message}
+                `;
+                
+                document.getElementById('apiResults').appendChild(resultDiv);
+            }
+        }
+        
+        async function testOtherAPI() {
+            const token = localStorage.getItem('token') || localStorage.getItem('adminToken');
+            
+            try {
+                console.log('Testing orders API with token:', token ? token.substring(0, 50) + '...' : 'NO TOKEN');
+                
+                const response = await fetch('/api/orders?limit=1', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+                resultDiv.innerHTML = `
+                    <strong>Orders API Test:</strong><br>
+                    Status: ${response.status}<br>
+                    Response: ${JSON.stringify(result, null, 2).substring(0, 200)}...
+                `;
+                
+                document.getElementById('apiResults').appendChild(resultDiv);
+                
+            } catch (error) {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>Orders API Test Error:</strong><br>
+                    ${error.message}
+                `;
+                
+                document.getElementById('apiResults').appendChild(resultDiv);
+            }
+        }
+        
+        async function testWithManualToken() {
+            const manualToken = document.getElementById('manualToken').value;
+            
+            if (!manualToken) {
+                alert('Please enter a token');
+                return;
+            }
+            
+            try {
+                console.log('Testing contact API with manual token:', manualToken.substring(0, 50) + '...');
+                
+                const response = await fetch('/api/contact', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': `Bearer ${manualToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+                resultDiv.innerHTML = `
+                    <strong>Manual Token Test:</strong><br>
+                    Status: ${response.status}<br>
+                    Response: ${JSON.stringify(result, null, 2)}
+                `;
+                
+                document.getElementById('apiResults').appendChild(resultDiv);
+                
+            } catch (error) {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>Manual Token Test Error:</strong><br>
+                    ${error.message}
+                `;
+                
+                document.getElementById('apiResults').appendChild(resultDiv);
+            }
+        }
+        
+        // Auto-check tokens on load
+        window.onload = function() {
+            checkTokens();
+        };
+    </script>
+</body>
+</html>

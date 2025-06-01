@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Notifications Test - Sarah's Short Cakes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #28a745;
+        }
+        .test-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .test-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .test-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .provider-card {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .provider-card:hover {
+            border-color: #007bff;
+            box-shadow: 0 4px 8px rgba(0,123,255,0.1);
+        }
+        .provider-card.active {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1><i class="fas fa-sms text-success"></i> SMS Notifications Test Center</h1>
+                    <div>
+                        <button class="btn btn-success" onclick="runAllSmsTests()">
+                            <i class="fas fa-play"></i> Run All SMS Tests
+                        </button>
+                        <a href="/admin-settings.html" class="btn btn-outline-primary">
+                            <i class="fas fa-cog"></i> SMS Settings
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SMS Provider Setup Guide -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="provider-card p-4">
+                            <h4><i class="fas fa-cloud text-primary"></i> Twilio (Recommended)</h4>
+                            <p class="text-muted">Global SMS provider with reliable delivery</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Works worldwide</li>
+                                <li><i class="fas fa-check text-success"></i> Free trial credits</li>
+                                <li><i class="fas fa-check text-success"></i> Easy setup</li>
+                                <li><i class="fas fa-check text-success"></i> Delivery reports</li>
+                            </ul>
+                            <a href="https://www.twilio.com/" target="_blank" class="btn btn-primary">
+                                <i class="fas fa-external-link-alt"></i> Sign Up for Twilio
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="provider-card p-4">
+                            <h4><i class="fas fa-building text-info"></i> Ethiopia Telecom</h4>
+                            <p class="text-muted">Local Ethiopian SMS provider</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Local provider</li>
+                                <li><i class="fas fa-check text-success"></i> Potentially lower costs</li>
+                                <li><i class="fas fa-check text-success"></i> Local support</li>
+                                <li><i class="fas fa-info text-info"></i> Requires API access</li>
+                            </ul>
+                            <button class="btn btn-info" onclick="showEthiopianTelecomGuide()">
+                                <i class="fas fa-info-circle"></i> Setup Guide
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Results Summary -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h3 id="totalSmsTests">0</h3>
+                                <p class="mb-0">Total SMS Tests</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h3 id="passedSmsTests">0</h3>
+                                <p class="mb-0">Passed</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-danger text-white">
+                            <div class="card-body text-center">
+                                <h3 id="failedSmsTests">0</h3>
+                                <p class="mb-0">Failed</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <h3 id="smsTestProgress">0%</h3>
+                                <p class="mb-0">Progress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer SMS Tests -->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <h3><i class="fas fa-user text-success"></i> Customer SMS Tests</h3>
+
+                        <!-- Order Confirmation SMS Test -->
+                        <div class="card test-card mb-3">
+                            <div class="card-header">
+                                <h5><i class="fas fa-shopping-cart"></i> Order Confirmation SMS</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Tests SMS sent to customers when they place a new order.</p>
+                                <div class="mb-3">
+                                    <label class="form-label">Test Phone Number:</label>
+                                    <input type="tel" class="form-control" id="customerPhone" placeholder="+251912345678">
+                                    <small class="text-muted">Include country code (e.g., +251 for Ethiopia)</small>
+                                </div>
+                                <button class="btn btn-success" onclick="testOrderConfirmationSms()">
+                                    <i class="fas fa-paper-plane"></i> Test Order Confirmation SMS
+                                </button>
+                                <div id="orderConfirmationSmsResult"></div>
+                            </div>
+                        </div>
+
+                        <!-- Order Status Update SMS Test -->
+                        <div class="card test-card mb-3">
+                            <div class="card-header">
+                                <h5><i class="fas fa-sync-alt"></i> Order Status Update SMS</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Tests SMS sent when order status changes.</p>
+                                <div class="mb-3">
+                                    <label class="form-label">New Status:</label>
+                                    <select class="form-control" id="smsOrderStatus">
+                                        <option value="confirmed">Confirmed</option>
+                                        <option value="processing">Processing</option>
+                                        <option value="ready">Ready for Pickup</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-success" onclick="testOrderStatusSms()">
+                                    <i class="fas fa-paper-plane"></i> Test Status Update SMS
+                                </button>
+                                <div id="orderStatusSmsResult"></div>
+                            </div>
+                        </div>
+
+                        <!-- Order Ready SMS Test -->
+                        <div class="card test-card mb-3">
+                            <div class="card-header">
+                                <h5><i class="fas fa-bell"></i> Order Ready SMS</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Tests SMS sent when order is ready for pickup.</p>
+                                <button class="btn btn-success" onclick="testOrderReadySms()">
+                                    <i class="fas fa-paper-plane"></i> Test Order Ready SMS
+                                </button>
+                                <div id="orderReadySmsResult"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin SMS Tests -->
+                    <div class="col-lg-6">
+                        <h3><i class="fas fa-user-shield text-warning"></i> Admin SMS Tests</h3>
+
+                        <!-- New Order Alert SMS Test -->
+                        <div class="card test-card mb-3">
+                            <div class="card-header">
+                                <h5><i class="fas fa-bell"></i> New Order Alert SMS</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Tests SMS alert sent to admin when new orders are placed.</p>
+                                <button class="btn btn-warning" onclick="testNewOrderAlertSms()">
+                                    <i class="fas fa-paper-plane"></i> Test New Order Alert SMS
+                                </button>
+                                <div id="newOrderAlertSmsResult"></div>
+                            </div>
+                        </div>
+
+                        <!-- Low Stock Alert SMS Test -->
+                        <div class="card test-card mb-3">
+                            <div class="card-header">
+                                <h5><i class="fas fa-exclamation-triangle"></i> Low Stock Alert SMS</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Tests low stock alert SMS sent to admin.</p>
+                                <button class="btn btn-warning" onclick="testLowStockAlertSms()">
+                                    <i class="fas fa-paper-plane"></i> Test Low Stock Alert SMS
+                                </button>
+                                <div id="lowStockAlertSmsResult"></div>
+                            </div>
+                        </div>
+
+                        <!-- SMS Configuration Test -->
+                        <div class="card test-card mb-3">
+                            <div class="card-header">
+                                <h5><i class="fas fa-cog"></i> SMS Configuration Test</h5>
+                            </div>
+                            <div class="card-body">
+                                <p>Tests basic SMS configuration and connectivity.</p>
+                                <button class="btn btn-warning" onclick="testSmsConfiguration()">
+                                    <i class="fas fa-paper-plane"></i> Test SMS Configuration
+                                </button>
+                                <div id="smsConfigResult"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SMS Configuration Status -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-info-circle"></i> SMS Configuration Status</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="smsConfigStatus">
+                                    <p class="text-muted">Loading SMS configuration...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ethiopian Telecom Guide Modal -->
+    <div class="modal fade" id="ethiopianTelecomModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ethiopia Telecom SMS Setup Guide</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Step 1: Contact Ethiopia Telecom</h6>
+                    <p>Contact Ethiopia Telecom's business services to request SMS API access:</p>
+                    <ul>
+                        <li>Phone: +251-11-515-5555</li>
+                        <li>Email: business@ethiotelecom.et</li>
+                        <li>Visit: Local Ethiopia Telecom office</li>
+                    </ul>
+
+                    <h6>Step 2: Required Information</h6>
+                    <p>You'll need to provide:</p>
+                    <ul>
+                        <li>Business registration documents</li>
+                        <li>Purpose of SMS usage (customer notifications)</li>
+                        <li>Expected monthly SMS volume</li>
+                        <li>Technical contact information</li>
+                    </ul>
+
+                    <h6>Step 3: API Credentials</h6>
+                    <p>Once approved, you'll receive:</p>
+                    <ul>
+                        <li>API Key</li>
+                        <li>Sender ID (e.g., "SARAHS")</li>
+                        <li>API endpoint URL</li>
+                        <li>Documentation</li>
+                    </ul>
+
+                    <h6>Step 4: Configuration</h6>
+                    <p>Enter the credentials in Admin Settings → SMS Settings tab</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/api-client.js"></script>
+    <script>
+        let smsTestResults = {
+            total: 0,
+            passed: 0,
+            failed: 0
+        };
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSmsConfiguration();
+            document.getElementById('customerPhone').value = '+251912345678';
+        });
+
+        // Update SMS test statistics
+        function updateSmsTestStats() {
+            document.getElementById('totalSmsTests').textContent = smsTestResults.total;
+            document.getElementById('passedSmsTests').textContent = smsTestResults.passed;
+            document.getElementById('failedSmsTests').textContent = smsTestResults.failed;
+            const progress = smsTestResults.total > 0 ? Math.round((smsTestResults.passed / smsTestResults.total) * 100) : 0;
+            document.getElementById('smsTestProgress').textContent = progress + '%';
+        }
+
+        // Show SMS test result
+        function showSmsTestResult(elementId, success, message, details = '') {
+            const element = document.getElementById(elementId);
+            const resultClass = success ? 'test-success' : 'test-error';
+            const icon = success ? 'fas fa-check-circle' : 'fas fa-times-circle';
+
+            element.innerHTML = `
+                <div class="test-result ${resultClass}">
+                    <i class="${icon}"></i> ${message}
+                    ${details ? `<div class="mt-2"><small>${details}</small></div>` : ''}
+                </div>
+            `;
+
+            smsTestResults.total++;
+            if (success) smsTestResults.passed++;
+            else smsTestResults.failed++;
+            updateSmsTestStats();
+        }
+
+        // Load SMS configuration status
+        async function loadSmsConfiguration() {
+            try {
+                const response = await apiClient.get('/api/settings');
+                const settings = response.data;
+
+                let configHtml = '<div class="row">';
+
+                // SMS Configuration
+                configHtml += `
+                    <div class="col-md-6">
+                        <h6>SMS Configuration</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-mobile-alt"></i> Provider: ${settings.smsSettings?.provider || 'Not configured'}</li>
+                            <li><i class="fas fa-key"></i> API Key: ${settings.smsSettings?.apiKey ? '***configured***' : 'Not configured'}</li>
+                            <li><i class="fas fa-phone"></i> From Number: ${settings.smsSettings?.fromNumber || 'Not configured'}</li>
+                        </ul>
+                    </div>
+                `;
+
+                // Notification Settings
+                configHtml += `
+                    <div class="col-md-6">
+                        <h6>SMS Notification Settings</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-sms"></i> SMS Notifications: ${settings.notificationSettings?.smsNotifications ? 'Enabled' : 'Disabled'}</li>
+                            <li><i class="fas fa-bell"></i> New Order SMS: ${settings.notificationSettings?.newOrderSms ? 'Enabled' : 'Disabled'}</li>
+                            <li><i class="fas fa-exclamation-triangle"></i> Low Stock SMS: ${settings.notificationSettings?.lowStockSms ? 'Enabled' : 'Disabled'}</li>
+                        </ul>
+                    </div>
+                `;
+
+                configHtml += '</div>';
+
+                document.getElementById('smsConfigStatus').innerHTML = configHtml;
+            } catch (error) {
+                document.getElementById('smsConfigStatus').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> Error loading SMS configuration: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Show Ethiopian Telecom guide
+        function showEthiopianTelecomGuide() {
+            const modal = new bootstrap.Modal(document.getElementById('ethiopianTelecomModal'));
+            modal.show();
+        }
+
+        // Test order confirmation SMS
+        async function testOrderConfirmationSms() {
+            const phone = document.getElementById('customerPhone').value;
+            if (!phone) {
+                showSmsTestResult('orderConfirmationSmsResult', false, 'Please enter a test phone number');
+                return;
+            }
+
+            try {
+                showSmsTestResult('orderConfirmationSmsResult', null, 'Sending test order confirmation SMS...', '');
+
+                const response = await fetch('/api/test/sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({
+                        testPhone: phone,
+                        messageType: 'order_confirmation'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSmsTestResult('orderConfirmationSmsResult', true, 'Order confirmation SMS sent successfully!',
+                        `Sent to: ${phone}`);
+                } else {
+                    showSmsTestResult('orderConfirmationSmsResult', false, 'Failed to send order confirmation SMS', result.message);
+                }
+            } catch (error) {
+                showSmsTestResult('orderConfirmationSmsResult', false, 'Error sending order confirmation SMS', error.message);
+            }
+        }
+
+        // Test order status SMS
+        async function testOrderStatusSms() {
+            const phone = document.getElementById('customerPhone').value;
+            const status = document.getElementById('smsOrderStatus').value;
+
+            if (!phone) {
+                showSmsTestResult('orderStatusSmsResult', false, 'Please enter a test phone number');
+                return;
+            }
+
+            try {
+                showSmsTestResult('orderStatusSmsResult', null, 'Sending test status update SMS...', '');
+
+                const response = await fetch('/api/test/sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({
+                        testPhone: phone,
+                        messageType: 'order_status_update',
+                        orderStatus: status
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSmsTestResult('orderStatusSmsResult', true, 'Order status SMS sent successfully!',
+                        `Status: ${status}<br>Sent to: ${phone}`);
+                } else {
+                    showSmsTestResult('orderStatusSmsResult', false, 'Failed to send status update SMS', result.message);
+                }
+            } catch (error) {
+                showSmsTestResult('orderStatusSmsResult', false, 'Error sending status update SMS', error.message);
+            }
+        }
+
+        // Test order ready SMS
+        async function testOrderReadySms() {
+            const phone = document.getElementById('customerPhone').value;
+
+            if (!phone) {
+                showSmsTestResult('orderReadySmsResult', false, 'Please enter a test phone number');
+                return;
+            }
+
+            try {
+                showSmsTestResult('orderReadySmsResult', null, 'Sending test order ready SMS...', '');
+
+                const response = await fetch('/api/test/sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({
+                        testPhone: phone,
+                        messageType: 'order_ready'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSmsTestResult('orderReadySmsResult', true, 'Order ready SMS sent successfully!',
+                        `Sent to: ${phone}`);
+                } else {
+                    showSmsTestResult('orderReadySmsResult', false, 'Failed to send order ready SMS', result.message);
+                }
+            } catch (error) {
+                showSmsTestResult('orderReadySmsResult', false, 'Error sending order ready SMS', error.message);
+            }
+        }
+
+        // Test new order alert SMS
+        async function testNewOrderAlertSms() {
+            try {
+                showSmsTestResult('newOrderAlertSmsResult', null, 'Sending test new order alert SMS...', '');
+
+                const response = await fetch('/api/test/sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({
+                        messageType: 'new_order_alert'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSmsTestResult('newOrderAlertSmsResult', true, 'New order alert SMS sent successfully!',
+                        `Sent to admin phone`);
+                } else {
+                    showSmsTestResult('newOrderAlertSmsResult', false, 'Failed to send new order alert SMS', result.message);
+                }
+            } catch (error) {
+                showSmsTestResult('newOrderAlertSmsResult', false, 'Error sending new order alert SMS', error.message);
+            }
+        }
+
+        // Test low stock alert SMS
+        async function testLowStockAlertSms() {
+            try {
+                showSmsTestResult('lowStockAlertSmsResult', null, 'Sending test low stock alert SMS...', '');
+
+                const response = await fetch('/api/test/sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({
+                        messageType: 'low_stock_alert'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSmsTestResult('lowStockAlertSmsResult', true, 'Low stock alert SMS sent successfully!',
+                        `Items checked: ${result.data?.itemsCount || 'N/A'}`);
+                } else {
+                    showSmsTestResult('lowStockAlertSmsResult', false, 'Failed to send low stock alert SMS', result.message);
+                }
+            } catch (error) {
+                showSmsTestResult('lowStockAlertSmsResult', false, 'Error sending low stock alert SMS', error.message);
+            }
+        }
+
+        // Test SMS configuration
+        async function testSmsConfiguration() {
+            try {
+                showSmsTestResult('smsConfigResult', null, 'Testing SMS configuration...', '');
+
+                const response = await fetch('/api/test/sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({
+                        messageType: 'configuration_test'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showSmsTestResult('smsConfigResult', true, 'SMS configuration test completed!',
+                        'SMS service is properly configured');
+                } else {
+                    showSmsTestResult('smsConfigResult', false, 'SMS configuration test failed', result.message);
+                }
+            } catch (error) {
+                showSmsTestResult('smsConfigResult', false, 'Error testing SMS configuration', error.message);
+            }
+        }
+
+        // Run all SMS tests
+        async function runAllSmsTests() {
+            // Reset test results
+            smsTestResults = { total: 0, passed: 0, failed: 0 };
+            updateSmsTestStats();
+
+            // Clear all previous results
+            const resultElements = [
+                'orderConfirmationSmsResult', 'orderStatusSmsResult', 'orderReadySmsResult',
+                'newOrderAlertSmsResult', 'lowStockAlertSmsResult', 'smsConfigResult'
+            ];
+
+            resultElements.forEach(id => {
+                document.getElementById(id).innerHTML = '';
+            });
+
+            // Run tests with delays
+            await testSmsConfiguration();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await testOrderConfirmationSms();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await testOrderStatusSms();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await testOrderReadySms();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await testNewOrderAlertSms();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            await testLowStockAlertSms();
+
+            // Show completion message
+            setTimeout(() => {
+                alert(`All SMS tests completed!\nTotal: ${smsTestResults.total}\nPassed: ${smsTestResults.passed}\nFailed: ${smsTestResults.failed}`);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

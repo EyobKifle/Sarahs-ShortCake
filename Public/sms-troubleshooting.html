@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Troubleshooting - Sarah's Short Cakes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .error-card {
+            border-left: 4px solid #dc3545;
+            margin-bottom: 20px;
+        }
+        .solution-card {
+            border-left: 4px solid #28a745;
+            margin-bottom: 20px;
+        }
+        .warning-card {
+            border-left: 4px solid #ffc107;
+            margin-bottom: 20px;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .step-number {
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1><i class="fas fa-tools text-danger"></i> SMS Troubleshooting Guide</h1>
+                    <div>
+                        <a href="/admin-settings.html" class="btn btn-primary">
+                            <i class="fas fa-cog"></i> SMS Settings
+                        </a>
+                        <a href="/sms-setup-guide.html" class="btn btn-success">
+                            <i class="fas fa-book"></i> Setup Guide
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Current Error Analysis -->
+                <div class="card error-card">
+                    <div class="card-header bg-danger text-white">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Current Error Detected</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-danger">
+                            <strong>Error Code 21266:</strong> 'To' and 'From' number cannot be the same: +251 90679XXXX
+                        </div>
+                        <p><strong>What this means:</strong> You're trying to use your personal Ethiopian phone number as both the sender and recipient of the SMS.</p>
+                        <p><strong>Why this happens:</strong> Twilio requires a dedicated Twilio phone number as the sender. You cannot use your personal number to send SMS through Twilio.</p>
+                    </div>
+                </div>
+
+                <!-- Solution Steps -->
+                <div class="card solution-card">
+                    <div class="card-header bg-success text-white">
+                        <h3><i class="fas fa-check-circle"></i> Complete Solution (15 minutes)</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5><span class="step-number">1</span>Buy a Twilio Phone Number</h5>
+                        <ol>
+                            <li>Go to <a href="https://console.twilio.com/us1/develop/phone-numbers/manage/incoming" target="_blank">Twilio Phone Numbers</a></li>
+                            <li>Click "Buy a number"</li>
+                            <li>Select <strong>United States</strong> (works globally)</li>
+                            <li>Check <strong>"SMS" capability</strong></li>
+                            <li>Choose any available number</li>
+                            <li>Purchase it (costs ~$1/month)</li>
+                        </ol>
+
+                        <h5><span class="step-number">2</span>Configure SMS Settings</h5>
+                        <div class="code-block">
+                            SMS Provider: Twilio<br>
+                            Account SID: ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<br>
+                            Auth Token: your_auth_token_here<br>
+                            From Number: +1234567890 (your purchased Twilio number)
+                        </div>
+
+                        <h5><span class="step-number">3</span>Test Configuration</h5>
+                        <ol>
+                            <li>Go to Admin Settings → SMS Settings</li>
+                            <li>Enter your Twilio credentials</li>
+                            <li>In "Test SMS", enter <strong>your Ethiopian number</strong>: +251906790000</li>
+                            <li>Click "Send Test SMS"</li>
+                            <li>You should receive SMS from your Twilio number</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Common Twilio Errors -->
+                <div class="row">
+                    <div class="col-12">
+                        <h3><i class="fas fa-bug"></i> Common Twilio SMS Errors & Solutions</h3>
+                    </div>
+                </div>
+
+                <!-- Error 21266 -->
+                <div class="card error-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-times-circle text-danger"></i> Error 21266: Same From/To Number</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Error:</strong> 'To' and 'From' number cannot be the same</p>
+                        <p><strong>Solution:</strong> Buy a Twilio phone number and use it as the sender</p>
+                        <div class="alert alert-info">
+                            <strong>Quick Fix:</strong> Go to <a href="https://console.twilio.com/us1/develop/phone-numbers/manage/incoming" target="_blank">Twilio Console</a> → Buy a number → Use as From Number
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error 21659 -->
+                <div class="card error-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-times-circle text-danger"></i> Error 21659: Invalid From Number</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Error:</strong> The From number is not a valid Twilio phone number</p>
+                        <p><strong>Solution:</strong> You must use a phone number purchased from Twilio</p>
+                        <div class="alert alert-warning">
+                            <strong>Note:</strong> Personal phone numbers cannot be used as senders in Twilio
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error 21608 -->
+                <div class="card warning-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-exclamation-triangle text-warning"></i> Error 21608: Unverified Number</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Error:</strong> Phone number is unverified. Trial accounts can only send to verified numbers</p>
+                        <p><strong>Solutions (choose one):</strong></p>
+                        <ul>
+                            <li><strong>Option 1:</strong> Verify your phone number at <a href="https://console.twilio.com/us1/develop/phone-numbers/manage/verified" target="_blank">Twilio Verified Numbers</a></li>
+                            <li><strong>Option 2:</strong> Add $20+ credits to remove trial restrictions</li>
+                            <li><strong>Option 3:</strong> Upgrade to a paid Twilio account</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Error 21211 -->
+                <div class="card error-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-times-circle text-danger"></i> Error 21211: Invalid Phone Format</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Error:</strong> Invalid phone number format</p>
+                        <p><strong>Correct Format for Ethiopian Numbers:</strong></p>
+                        <div class="code-block">
+                            ✅ Correct: +251912345678<br>
+                            ❌ Wrong: 0912345678<br>
+                            ❌ Wrong: +251 91 234 5678<br>
+                            ❌ Wrong: 251912345678
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error 20003 -->
+                <div class="card error-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-times-circle text-danger"></i> Error 20003: Authentication Failed</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Error:</strong> Authentication failed</p>
+                        <p><strong>Check these credentials:</strong></p>
+                        <ul>
+                            <li>Account SID starts with "AC" (34 characters)</li>
+                            <li>Auth Token is correct (32 characters)</li>
+                            <li>Credentials are from <a href="https://console.twilio.com/" target="_blank">Twilio Console</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Fix -->
+                <div class="card solution-card">
+                    <div class="card-header bg-primary text-white">
+                        <h3><i class="fas fa-wrench"></i> Step-by-Step Fix for Your Current Issue</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>What You Need to Do:</h5>
+                                <ol>
+                                    <li><strong>Sign up for Twilio</strong> (if not done)</li>
+                                    <li><strong>Buy a US phone number</strong> (~$1/month)</li>
+                                    <li><strong>Use Twilio number as sender</strong></li>
+                                    <li><strong>Use your Ethiopian number as recipient</strong></li>
+                                    <li><strong>Test the configuration</strong></li>
+                                </ol>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Expected Result:</h5>
+                                <div class="alert alert-success">
+                                    <strong>✅ SMS Flow:</strong><br>
+                                    From: +1234567890 (Twilio number)<br>
+                                    To: +251906790000 (Your number)<br>
+                                    Message: "SMS Test from Sarah's Short Cakes!"
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="https://www.twilio.com/" target="_blank" class="btn btn-success btn-lg me-3">
+                                <i class="fab fa-twilio"></i> Sign Up for Twilio
+                            </a>
+                            <a href="https://console.twilio.com/us1/develop/phone-numbers/manage/incoming" target="_blank" class="btn btn-primary btn-lg">
+                                <i class="fas fa-phone"></i> Buy Phone Number
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alternative: Ethiopia Telecom -->
+                <div class="card warning-card">
+                    <div class="card-header bg-warning text-dark">
+                        <h3><i class="fas fa-building"></i> Alternative: Ethiopia Telecom SMS</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>If you prefer a local solution, you can use Ethiopia Telecom's SMS API:</p>
+                        <ul>
+                            <li><strong>Contact:</strong> +251-11-515-5555 or business@ethiotelecom.et</li>
+                            <li><strong>Requirements:</strong> Business registration, trade license</li>
+                            <li><strong>Timeline:</strong> 1-2 weeks for approval</li>
+                            <li><strong>Benefits:</strong> Local rates, local support</li>
+                        </ul>
+                        <div class="alert alert-info">
+                            <strong>Recommendation:</strong> Use Twilio for immediate setup, consider Ethiopia Telecom for long-term cost savings
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testing Guide -->
+                <div class="card solution-card">
+                    <div class="card-header bg-info text-white">
+                        <h3><i class="fas fa-vial"></i> Testing Your SMS Setup</h3>
+                    </div>
+                    <div class="card-body">
+                        <h5>After Configuration:</h5>
+                        <ol>
+                            <li>Go to Admin Settings → SMS Settings tab</li>
+                            <li>Enter your Twilio credentials</li>
+                            <li>Click "Send Test SMS"</li>
+                            <li>Check your phone for the test message</li>
+                            <li>Visit <a href="/test-sms-notifications.html">SMS Test Center</a> for comprehensive testing</li>
+                        </ol>
+
+                        <h5>Success Indicators:</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Green success message in admin panel</li>
+                            <li><i class="fas fa-check text-success"></i> SMS received on your phone</li>
+                            <li><i class="fas fa-check text-success"></i> Message shows Twilio sender number</li>
+                            <li><i class="fas fa-check text-success"></i> Professional message formatting</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Quick Action -->
+                <div class="text-center mt-4 p-4 bg-light rounded">
+                    <h4>Ready to Fix SMS?</h4>
+                    <p class="text-muted">Follow the steps above to get SMS notifications working in 15 minutes</p>
+                    <a href="https://www.twilio.com/" target="_blank" class="btn btn-success btn-lg me-3">
+                        <i class="fab fa-twilio"></i> Start with Twilio
+                    </a>
+                    <a href="/admin-settings.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-cog"></i> Configure SMS
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

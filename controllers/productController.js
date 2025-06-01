@@ -3,7 +3,7 @@ const Product = require('../models/Product');
 // Get all products
 exports.getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().sort({ name: 1 });
+        const products = await Product.find().sort({ name: 1 }).limit(17);
         res.status(200).json({
             success: true,
             data: products

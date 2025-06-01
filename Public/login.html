@@ -26,13 +26,13 @@
       --box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       --transition: all 0.3s ease;
     }
-    
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    
+
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -44,7 +44,7 @@
       display: flex;
       flex-direction: column;
     }
-    
+
     .main-header {
       background: white;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -53,7 +53,7 @@
       top: 0;
       z-index: 1000;
     }
-    
+
     .header-container {
       display: flex;
       justify-content: space-between;
@@ -62,35 +62,35 @@
       max-width: 1200px;
       margin: 0 auto;
     }
-    
+
     .logo-container {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-    
+
     .logo {
       height: 50px;
       width: auto;
     }
-    
+
     .nav-links {
       display: flex;
       list-style: none;
       gap: 1.5rem;
     }
-    
+
     .nav-links a {
       text-decoration: none;
       color: var(--dark);
       font-weight: 500;
       transition: var(--transition);
     }
-    
+
     .nav-links a:hover {
       color: var(--primary);
     }
-    
+
     .login-signup-button {
       background: var(--gradient);
       color: white;
@@ -98,12 +98,12 @@
       border-radius: var(--border-radius);
       font-weight: 600;
     }
-    
+
     .login-signup-button:hover {
       background: var(--primary-dark);
       color: white;
     }
-    
+
     .container {
       max-width: 1200px;
       margin: 100px auto 2rem auto;
@@ -116,13 +116,13 @@
       position: relative;
       overflow: hidden;
     }
-    
+
     .auth-tabs {
       display: flex;
       border-bottom: 1px solid var(--light-gray);
       margin-bottom: 1.5rem;
     }
-    
+
     .auth-tab {
       padding: 0.75rem 1.5rem;
       cursor: pointer;
@@ -131,11 +131,11 @@
       position: relative;
       transition: var(--transition);
     }
-    
+
     .auth-tab.active {
       color: var(--primary);
     }
-    
+
     .auth-tab.active::after {
       content: '';
       position: absolute;
@@ -146,18 +146,18 @@
       background: var(--primary);
       border-radius: 3px 3px 0 0;
     }
-    
+
     .form-group {
       margin-bottom: 1.25rem;
     }
-    
+
     .form-group label {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
       color: var(--dark-gray);
     }
-    
+
     .form-group input {
       width: 100%;
       padding: 0.75rem 1rem;
@@ -166,17 +166,17 @@
       font-family: 'Poppins', sans-serif;
       transition: var(--transition);
     }
-    
+
     .form-group input:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.2);
     }
-    
+
     .password-container {
       position: relative;
     }
-    
+
     .toggle-password {
       position: absolute;
       right: 1rem;
@@ -186,27 +186,27 @@
       color: var(--medium-gray);
       transition: var(--transition);
     }
-    
+
     .toggle-password:hover {
       color: var(--primary);
     }
-    
+
     .forgot-password {
       text-align: right;
       margin: -0.5rem 0 1rem 0;
     }
-    
+
     .forgot-password a {
       color: var(--primary);
       text-decoration: none;
       font-size: 0.875rem;
       transition: var(--transition);
     }
-    
+
     .forgot-password a:hover {
       text-decoration: underline;
     }
-    
+
     .auth-submit {
       width: 100%;
       padding: 0.75rem;
@@ -221,88 +221,88 @@
       transition: var(--transition);
       margin-top: 0.5rem;
     }
-    
+
     .auth-submit:hover {
       background: var(--primary-dark);
       transform: translateY(-2px);
     }
-    
+
     .auth-submit:disabled {
       background: var(--medium-gray);
       cursor: not-allowed;
       transform: none;
     }
-    
+
     .form-footer {
       text-align: center;
       margin-top: 1.5rem;
       color: var(--dark-gray);
       font-size: 0.875rem;
     }
-    
+
     .form-footer a {
       color: var(--primary);
       text-decoration: none;
       font-weight: 500;
       transition: var(--transition);
     }
-    
+
     .form-footer a:hover {
       text-decoration: underline;
     }
-    
+
     .password-strength {
       height: 4px;
       margin-top: 0.5rem;
       border-radius: 2px;
       transition: var(--transition);
     }
-    
+
     .password-strength.weak {
       background: var(--error);
       width: 25%;
     }
-    
+
     .password-strength.medium {
       background: var(--warning);
       width: 50%;
     }
-    
+
     .password-strength.strong {
       background: var(--success);
       width: 100%;
     }
-    
+
     .password-hints {
       margin-top: 0.5rem;
       font-size: 0.75rem;
       color: var(--medium-gray);
     }
-    
+
     .password-hints p {
       margin-bottom: 0.25rem;
     }
-    
+
     .password-hints ul {
       list-style: none;
       padding-left: 1rem;
     }
-    
+
     .password-hints li {
       position: relative;
       margin-bottom: 0.25rem;
     }
-    
+
     .password-hints li::before {
       content: '•';
       position: absolute;
       left: -1rem;
     }
-    
+
     .password-hints li.valid {
       color: var(--success);
     }
-    
+
     .alert {
       padding: 0.75rem 1rem;
       border-radius: var(--border-radius);
@@ -312,44 +312,44 @@
       gap: 0.75rem;
       font-size: 0.875rem;
     }
-    
+
     .alert.error {
       background: rgba(239, 71, 111, 0.1);
       color: var(--error);
     }
-    
+
     .alert.success {
       background: rgba(6, 214, 160, 0.1);
       color: var(--success);
     }
-    
+
     form {
       display: none;
     }
     form.active {
       display: block;
     }
-    
+
     .password-match {
       color: var(--error);
       font-size: 0.75rem;
       margin-top: 0.25rem;
       display: none;
     }
-    
+
     @media (max-width: 768px) {
       .header-container {
         flex-direction: column;
         padding: 1rem;
       }
-      
+
       .nav-links {
         margin-top: 1rem;
         flex-wrap: wrap;
         justify-content: center;
         gap: 0.75rem;
       }
-      
+
       .container {
         margin-top: 150px;
         padding: 1.5rem;
@@ -414,6 +414,10 @@
         <input type="email" id="signup-email" placeholder="Enter your email" required />
       </div>
       <div class="form-group">
+        <label for="signup-phone">Phone Number</label>
+        <input type="tel" id="signup-phone" placeholder="Enter your phone number" required />
+      </div>
+      <div class="form-group">
         <label for="signup-password">Password</label>
         <div class="password-container">
           <input type="password" id="signup-password" placeholder="Create a password (min 8 characters)" required minlength="8" />
@@ -447,6 +451,8 @@
     </form>
   </div>
 
+  <!-- Unified Authentication Client -->
+  <script src="js/auth-client.js"></script>
   <script src="js/login.js"></script>
 </body>
 </html>

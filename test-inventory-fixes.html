@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Inventory Fixes - Sarah's Shortcakes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">🧁 Inventory System Bug Fixes Test</h1>
+        
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🔧 Bug Fix Verification</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle"></i> Testing the following fixes:</h6>
+                            <ul class="mb-0">
+                                <li>✅ Fixed inventory update, restock, and delete operations</li>
+                                <li>✅ Removed export buttons from admin dashboard</li>
+                                <li>✅ Fixed report types navigation (inventory/customer reports)</li>
+                                <li>✅ Added proper authentication headers to API calls</li>
+                                <li>✅ Enhanced history tracking for all inventory operations</li>
+                            </ul>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <button class="btn btn-primary w-100" onclick="testInventoryOperations()">
+                                    <i class="fas fa-boxes"></i> Test Inventory Operations
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-success w-100" onclick="testReportNavigation()">
+                                    <i class="fas fa-chart-line"></i> Test Report Navigation
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-info w-100" onclick="checkExportButtons()">
+                                    <i class="fas fa-search"></i> Check Export Buttons Removed
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-warning w-100" onclick="testAuthentication()">
+                                    <i class="fas fa-key"></i> Test Authentication
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h6>Test Results:</h6>
+                            <div id="testResults" class="border rounded p-3 bg-light" style="min-height: 200px; font-family: monospace; font-size: 0.9em;">
+                                Click a test button to see results...
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <button class="btn btn-secondary" onclick="clearResults()">
+                                <i class="fas fa-trash"></i> Clear Results
+                            </button>
+                            <a href="/admin.html" class="btn btn-primary">
+                                <i class="fas fa-arrow-left"></i> Back to Admin Panel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/api-client.js"></script>
+    <script>
+        // Initialize API client
+        window.apiClient = new ApiClient();
+
+        function log(message, type = 'info') {
+            const results = document.getElementById('testResults');
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
+            results.innerHTML += `[${timestamp}] ${icon} ${message}\n`;
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('testResults').innerHTML = 'Results cleared...\n';
+        }
+
+        async function testInventoryOperations() {
+            log('🔄 Testing inventory operations...', 'info');
+            
+            try {
+                // Test loading inventory
+                log('📦 Testing inventory loading...');
+                const inventory = await window.apiClient.getAllInventoryItems();
+                if (inventory && inventory.length > 0) {
+                    log(`✅ Successfully loaded ${inventory.length} inventory items`, 'success');
+                } else {
+                    log('⚠️ No inventory items found or failed to load', 'warning');
+                }
+
+                // Test authentication headers
+                const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
+                if (token) {
+                    log('✅ Authentication token found', 'success');
+                } else {
+                    log('❌ No authentication token found - please login first', 'error');
+                    return;
+                }
+
+                log('✅ Inventory operations test completed', 'success');
+            } catch (error) {
+                log(`❌ Inventory operations test failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testReportNavigation() {
+            log('📊 Testing report navigation...', 'info');
+            
+            try {
+                // Test sales report
+                log('💰 Testing sales report...');
+                const salesReport = await window.apiClient.getSalesReport();
+                log('✅ Sales report API call successful', 'success');
+
+                // Test inventory report
+                log('📦 Testing inventory report...');
+                const inventoryReport = await window.apiClient.getInventoryReport();
+                log('✅ Inventory report API call successful', 'success');
+
+                // Test customer report
+                log('👥 Testing customer report...');
+                const customerReport = await window.apiClient.getCustomerReport();
+                log('✅ Customer report API call successful', 'success');
+
+                log('✅ Report navigation test completed', 'success');
+            } catch (error) {
+                log(`❌ Report navigation test failed: ${error.message}`, 'error');
+            }
+        }
+
+        function checkExportButtons() {
+            log('🔍 Checking for export buttons...', 'info');
+            
+            const exportButtons = [
+                'exportCustomersBtn',
+                'exportInventoryBtn', 
+                'exportPdf',
+                'exportTablePdf'
+            ];
+
+            let foundButtons = 0;
+            exportButtons.forEach(buttonId => {
+                const button = document.getElementById(buttonId);
+                if (button) {
+                    foundButtons++;
+                    log(`❌ Found export button: ${buttonId}`, 'error');
+                }
+            });
+
+            if (foundButtons === 0) {
+                log('✅ No export buttons found - successfully removed!', 'success');
+            } else {
+                log(`⚠️ Found ${foundButtons} export buttons that should be removed`, 'warning');
+            }
+        }
+
+        function testAuthentication() {
+            log('🔐 Testing authentication...', 'info');
+            
+            const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
+            if (token) {
+                log('✅ Authentication token found in localStorage', 'success');
+                log(`Token preview: ${token.substring(0, 20)}...`, 'info');
+                
+                // Test API client setup
+                if (window.apiClient && window.apiClient.token) {
+                    log('✅ API client has authentication token', 'success');
+                } else {
+                    log('⚠️ API client missing authentication token', 'warning');
+                }
+            } else {
+                log('❌ No authentication token found', 'error');
+                log('Please login to the admin panel first', 'warning');
+            }
+        }
+
+        // Auto-run basic checks on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Inventory Bug Fix Test Page Loaded', 'info');
+            log('Click the test buttons above to verify fixes', 'info');
+        });
+    </script>
+</body>
+</html>

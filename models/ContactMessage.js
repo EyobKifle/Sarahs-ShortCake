@@ -27,6 +27,20 @@ const contactMessageSchema = new mongoose.Schema({
         enum: ['new', 'read', 'replied', 'archived'],
         default: 'new'
     },
+    reply: {
+        type: String
+    },
+    repliedAt: {
+        type: Date
+    },
+    isRead: {
+        type: Boolean,
+        default: false
+    },
+    readAt: {
+        type: Date,
+        default: null
+    },
     replies: [{
         message: String,
         repliedBy: {

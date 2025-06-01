@@ -1,49 +1,68 @@
-  document.addEventListener('DOMContentLoaded', () => {
-    // Fetch and display user profile and dashboard data
-    fetch('/api/customers/me', {
-      method: 'GET',
-      credentials: 'include', // to send cookies
-      headers: {
-        'Content-Type': 'application/json'
+  document.addEventListener('DOMContentLoaded', async () => {
+    console.log('📊 Customer dashboard loading...');
+
+    try {
+      // Wait for auth client to be available
+      if (typeof authClient === 'undefined') {
+        console.log('⏳ Waiting for auth client to load...');
+        await new Promise(resolve => {
+          const checkAuthClient = () => {
+            if (typeof authClient !== 'undefined') {
+              resolve();
+            } else {
+              setTimeout(checkAuthClient, 100);
+            }
+          };
+          checkAuthClient();
+        });
       }
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to fetch profile: ' + res.status + ' ' + res.statusText);
-      return res.json();
-    })
-    .then(data => {
-      if (data.success && data.user) {
-        const user = data.user;
-        const sidebarWelcome = document.querySelector('.sidebar-user-firstname');
-        if (sidebarWelcome) sidebarWelcome.textContent = user.firstName;
 
-        // Load profile content into main dashboard area
-        loadProfileContent(user);
+      // Check authentication using unified auth client
+      const isAuthenticated = await authClient.checkAuth();
 
-        // Fetch dashboard stats after user profile is loaded
-        fetchDashboardStats();
-
-        // Fetch other customer data
-        fetchOrders();
-        fetchAddresses();
-        fetchReviews();
-      } else {
-        console.warn('User not authorized or not logged in');
-        window.location.href = 'login.html';
+      if (!isAuthenticated) {
+        console.warn('❌ User not authenticated, redirecting to login');
+        window.location.href = '/login.html';
+        return;
       }
-    })
-    .catch(error => {
-      console.error('Error fetching user profile:', error);
-      window.location.href = 'login.html';
-    });
 
-  // Logout button handler
+      // Ensure user is customer
+      if (!authClient.isCustomer()) {
+        console.warn('❌ Access denied: User is not a customer');
+        window.location.href = '/login.html';
+        return;
+      }
+
+      const user = authClient.user;
+      console.log('✅ Customer dashboard loaded for:', user.firstName, user.lastName);
+
+      // Update sidebar welcome message
+      const sidebarWelcome = document.querySelector('.sidebar-user-firstname');
+      if (sidebarWelcome) sidebarWelcome.textContent = user.firstName;
+
+      // Load profile content into main dashboard area
+      loadProfileContent(user);
+
+      // Fetch dashboard stats after user profile is loaded
+      fetchDashboardStats();
+
+      // Fetch other customer data
+      fetchOrders();
+      fetchAddresses();
+      fetchReviews();
+
+    } catch (error) {
+      console.error('❌ Error loading customer dashboard:', error);
+      window.location.href = '/login.html';
+    }
+
+  // Logout button handler using unified auth client
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
-    logoutBtn.addEventListener('click', function(e) {
+    logoutBtn.addEventListener('click', async function(e) {
       e.preventDefault();
-      localStorage.clear();
-      window.location.href = 'index.html';
+      console.log('🚪 Logout button clicked');
+      await authClient.logout();
     });
   }
 
@@ -82,7 +101,7 @@
           <div class="card-value" id="total-spent">$0.00</div>
         </div>
 
-     
+
         <div class="dashboard-card" id="card-reviews-count" style="cursor:pointer;">
           <div class="card-header">
             <span class="card-title">Reviews</span>
@@ -127,7 +146,7 @@
       userAvatar.addEventListener('click', () => {
         window.location.href = 'profile.html';
       });
-      
+
       // Optional hover effect via JavaScript (better done in CSS)
       userAvatar.addEventListener('mouseenter', () => {
         userAvatar.style.transform = 'scale(1.05)';

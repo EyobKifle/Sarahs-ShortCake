@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
+const adminController = require('../controllers/adminController');
 const { protect, admin } = require('../middleware/auth');
 const { check, validationResult } = require('express-validator');
 
@@ -38,17 +39,22 @@ const validateLogin = [
 router.post('/register', validateRegister, authController.register);
 router.post('/login', validateLogin, authController.login);
 router.post('/admin/login', authController.adminLogin);
-router.get('/logout', authController.logout);
+router.post('/logout', authController.logout);
+
+// Password reset routes (OTP-based)
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/verify-otp', authController.verifyOTP);
+router.post('/reset-password', authController.resetPassword);
 
 // Protected routes
-router.get('/me', protect, authController.getMe);
+router.get('/me', protect, authController.getProfile);
 router.get('/profile', protect, authController.getProfile);
 
 // Admin management routes
-router.get('/admins', protect, admin, authController.getAllAdmins);
-router.post('/admins', protect, admin, authController.createAdmin);
-router.get('/admins/:id', protect, admin, authController.getAdminById);
-router.put('/admins/:id', protect, admin, authController.updateAdmin);
-router.delete('/admins/:id', protect, admin, authController.deleteAdmin);
+router.get('/admins', protect, admin, adminController.getAllAdmins);
+router.post('/admins', protect, admin, adminController.createAdmin);
+router.get('/admins/:id', protect, admin, adminController.getAdminById);
+router.put('/admins/:id', protect, admin, adminController.updateAdmin);
+router.delete('/admins/:id', protect, admin, adminController.deleteAdmin);
 
 module.exports = router;
