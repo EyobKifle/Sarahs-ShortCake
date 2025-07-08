@@ -4,3 +4,30 @@
 .env.local
 .env.*.local
 docs/project_structure.txt
+
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# OS/Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build/coverage/output
+dist/
+coverage/
+*.tgz
+
+# Uploaded files
+uploads/
+uploads/*
+
+# Local database, test, or temp files
+*.sqlite
+*.bak
+*.tmp

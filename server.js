@@ -18,7 +18,7 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const flavorRoutes = require('./routes/flavor');
 const settingsRoutes = require('./routes/settings');
-const testRoutes = require('./routes/test');
+// const testRoutes = require('./routes/test');
 const mapsRoutes = require('./routes/maps');
 const contactRoutes = require('./routes/contact');
 const productRoutes = require('./routes/product');
@@ -173,7 +173,7 @@ app.use('/api/reports', protect, reportRoutes);
 app.use('/api/admin', protect, adminRoutes);
 app.use('/api/flavors', protect, flavorRoutes);
 app.use('/api/settings', protect, settingsRoutes);
-app.use('/api/test', protect, testRoutes);
+// app.use('/test', testRoutes);
 app.use('/api/products', productRoutes);
 
 // Catch-all route for SPA support
