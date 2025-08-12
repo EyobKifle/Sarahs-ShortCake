@@ -1,23 +1,17 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "serverless.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/serverless.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/serverless.js"
+      "dest": "/Public/$1"
     }
   ],
-  "functions": {
-    "serverless.js": {
-      "maxDuration": 30
-    }
-  },
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "outputDirectory": "Public"
 }
